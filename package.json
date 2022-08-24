@@ -55,12 +55,14 @@
     "style-loader": "^3.0.0"
   },
   "dependencies": {
-    "dmg-license": "^1.0.11",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "simple-git": "^3.13.0",
     "source-map-support": "^0.5.21"
+  },
+  "optionalDependencies" : {
+    "dmg-license": "^1.0.11"
   },
   "config": {
     "forge": {
