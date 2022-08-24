@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-
+      - name: Get Packages
+        run: yarn
       - name: Build/release Electron app
         run: yarn build
