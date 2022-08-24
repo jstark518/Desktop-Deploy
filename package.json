@@ -6,7 +6,10 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "postinstall": "electron-builder install-app-deps",
+    "build": "electron-builder --mac --windows --linux",
+    "release": "electron-builder --mac --windows --linux --publish always"
   },
   "repository": {
     "type": "git",
@@ -31,6 +34,7 @@
     "babel-loader": "^8.2.5",
     "css-loader": "^6.0.0",
     "electron": "20.0.3",
+    "electron-builder": "^23.3.3",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0"
   },
