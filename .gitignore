@@ -106,3 +106,4 @@ dist
 /.webpack/
 /.tmp/
 /.idea/
+/.env.json
