@@ -9,9 +9,11 @@ export default function SimpleRepoList()  {
     const [repos, setRepos] = useState(null);
 
     useEffect(() => {
-        window.repo.list().then((list) => {
-            setRepos(list);
-        });
+        if(repos == null) {
+            window.repo.list().then((list) => {
+                setRepos(list);
+            });
+        }
     })
 
     if(repos == null) return 'Loading...';

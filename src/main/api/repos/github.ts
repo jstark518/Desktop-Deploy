@@ -112,7 +112,7 @@ export class githubRepo {
         const octokit = await this.octokit();
         let tags: listRepoTags = await octokit.request('GET ' + url);
         return tags.data.map((t): Tag => {
-            return {name: t.name, commitHash: "", url: t.commit.url}
+            return {name: t.name, commitHash: t.commit.sha, url: t.commit.url}
         });
     }
 
@@ -122,5 +122,9 @@ export class githubRepo {
         return commits.data.map((c): Commit => {
             return {hash: c.sha, message: c.commit.message, type: CommitType.commit, url: c.url};
         });
+    }
+
+    clone(url: string) {
+
     }
 }
