@@ -1,13 +1,13 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain } from 'electron'
+import {app, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
-import { format as formatUrl } from 'url'
-import {simpleGit} from "simple-git";
+import {githubRepo} from "./api/repos/github.ts";
 
-import {githubRepo} from "./api/repos/github";
+const { dialog } = require('electron')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
 let githubRepoInstance = new githubRepo();
 
 ipcMain.handle("repos.list", (event) => {
@@ -19,7 +19,6 @@ ipcMain.handle("repos.list", (event) => {
 let mainWindow
 
 function createMainWindow() {
-
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
