@@ -9,7 +9,7 @@ import { Box } from '@mui/system';
 export default function MainContainer({exampleData}) {
   return (
     <div>
-        <h1 className='test'>GIT-GUI</h1>
+        <h1>GIT-GUI</h1>
         <Paper
           elevation={1}
         >
