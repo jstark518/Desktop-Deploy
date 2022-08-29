@@ -1,21 +1,33 @@
-import * as React from "react";
+import React, { useState, useEffect } from 'react';
 
-export default class SimpleRepoList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            repos: []
-        };
-    }
+/**
+ * @property {[Repo]} repos
+ * @returns {JSX.Element|string}
+ * @constructor
+ */
+export default function SimpleRepoList()  {
+    const [repos, setRepos] = useState(null);
 
-    componentDidMount() {
-        window.repo.list().then((list) => {
-            this.setState({repos: list})
-        });
-    }
+    useEffect(() => {
+        if(repos == null) {
+            window.repo.list().then((list) => {
+                setRepos(list);
+            });
+        }
+    })
 
-    render() {
-        const {repos} = this.state;
-        return (<ul>{repos.map((repo) => (<li>{repo.full_name}</li>))}</ul>);
-    }
+    if(repos == null) return 'Loading...';
+
+    return (<ul>{repos.map((repo) => (<li>{repo.name}<Branches branches={repo.branches}></Branches></li>))}</ul>);
+}
+
+/**
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ * @property {[Branch]} branches
+ */
+function Branches(props) {
+    const {branches} = props;
+    return (<ul>{branches.map((branch) => (<li>{branch.name}</li>))}</ul>);
 }
