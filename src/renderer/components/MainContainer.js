@@ -1,13 +1,24 @@
 import React,{useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
-import RepositoryTable from './RepositoryTable';
+import RepoList from './RepoList';
+import { ListItemButton, ListItemText, Paper } from '@mui/material';
+import { Box } from '@mui/system';
 
 
-export default function MainContainer() {
+
+export default function MainContainer({exampleData}) {
   return (
     <div>
-        <h2 className='test'>Hello app</h2>
-        <RepositoryTable/>
+        <h1 className='test'>GIT-GUI</h1>
+        <Paper
+          elevation={1}
+        >
+          <Box 
+            sx={{display: 'flex', width: '100%'}}
+          >
+            <RepoList exampleData={exampleData}/>
+          </Box>
+        </Paper>
     </div>
   )
 }
