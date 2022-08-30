@@ -7,18 +7,18 @@ export default function CommitList(cl) {
     const [commitList, setCommitList] = useState(cl.cl); 
     const [open, setOpen] = useState(false)
 
-    //to interact with the Commit dropdown
+    // to interact with the Commit dropdown
     const handleClick = () => {
         setOpen(!open);
     }
 
 
 
-    console.log("This is what CommitList Receives: ");
-    console.log(cl);
-    //Showing the state is just a list of commits
-    console.log("This is the state 'commitList': ");
-    console.log(commitList);
+    // console.log("This is what CommitList Receives: ");
+    // console.log(cl);
+// Showing the state is just a list of commits
+    // console.log("This is the state 'commitList': ");
+    // console.log(commitList);
 
   return (
     <div>
@@ -42,9 +42,11 @@ export default function CommitList(cl) {
                     <ListItem key={index}>
                         <ListItemText
                             primary={commit.message}
-                            secondary={commit.date}
                             sx={{
                                 marginLeft: 1
+                            }}
+                            primaryTypographyProps={{
+                                fontSize: 12
                             }}
                         >
                         </ListItemText>

@@ -1,7 +1,8 @@
-import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Divider, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import React from 'react'
 import CommitList from './CommitList';
 import { useState } from 'react';
+import BranchList from './BranchList';
 
 
 export default function Repo({singleRepo}) {
@@ -12,6 +13,7 @@ export default function Repo({singleRepo}) {
     setOpen(!open)
   }
  
+
   return (
     <div>
           <ListItemButton component='div'
@@ -22,22 +24,12 @@ export default function Repo({singleRepo}) {
               primaryTypographyProps={{
                 fontWeight: 600
               }}  
-            >
-            </ListItemText>
+            ></ListItemText>
           </ListItemButton>
           <CommitList cl={repo.commits}/>
-          
-          <List>
-              {
-                repo.branches.map((branch, index) => (
-                  <ListItem>
-                    <ListItemText
-                      primary={branch}
-                    ></ListItemText>
-                  </ListItem>
-                ))
-              }
-          </List>
+          <BranchList bl={repo.branches}/>
+          <Divider/>
+
     </div>
   )
 }
