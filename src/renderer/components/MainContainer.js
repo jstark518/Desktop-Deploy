@@ -7,28 +7,22 @@ import TreeView from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import RepoTreeView from './RepoTreeView';
 
 
 
 export default function MainContainer({gitRepoAPIData}) {
-  const [repoData, setRepoData] = useState([])
-  console.log(gitRepoAPIData);
-  console.log('repoData:')
-  console.log(repoData);
-
-  useEffect(() => {
-    window.repo.list().then((list) => {
-      setRepoData(list);
-      
-    });
-  }, [])
+  const [repoData, setRepoData] = useState([]);
+ 
 
   
   return (
     <div>
         <h1>GIT-GUI</h1>
 
-        <TreeView
+        <RepoTreeView data={repoData}/>
+
+        {/* <TreeView
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
@@ -52,7 +46,7 @@ export default function MainContainer({gitRepoAPIData}) {
                 ))}
               </TreeItem>
             </TreeItem>)))}
-        </TreeView>
+        </TreeView> */}
 
 
 {/* This is a different way to display the data using more components */}
