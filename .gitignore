@@ -107,3 +107,4 @@ dist
 /.tmp/
 /.idea/
 /.env.json
+/.cache.data.gh.json
