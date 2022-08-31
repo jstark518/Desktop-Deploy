@@ -1,8 +1,13 @@
 interface Repo {
+    /** name of the repo */
     name: string
+    /** The repo's branches */
     branches?: Branch[]
+    /** The repo's tags */
     tags?: Tag[]
+    /** The repo's commits */
     commits?: Commit[]
+    /** url of the repo */
     url?: string
 }
 
@@ -38,4 +43,9 @@ interface Author {
     url?: string
 }
 
-export {Repo, Tag, Branch, CommitType, Commit, Author}
+interface repoCache {
+    lastModified: Date,
+    repos?: Repo[]
+}
+
+export {Repo, Tag, Branch, CommitType, Commit, Author, repoCache}

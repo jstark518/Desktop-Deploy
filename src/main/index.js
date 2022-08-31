@@ -11,9 +11,10 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let githubRepoInstance = new githubRepo();
 
 ipcMain.handle("repos.list", (event) => {
-    return githubRepoInstance.getRepoList();
+    const RepoList = githubRepoInstance.getRepoList();
+    RepoList.then((list) => githubRepoInstance.cache(list))
+    return RepoList;
 })
-
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
