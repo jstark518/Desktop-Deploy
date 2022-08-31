@@ -1,22 +1,30 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import {app, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
-import { format as formatUrl } from 'url'
-import {simpleGit} from "simple-git";
+import {githubRepo} from "./api/repos/github.ts";
+
+const { dialog } = require('electron')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+let githubRepoInstance = new githubRepo();
+
+ipcMain.handle("repos.list", (event) => {
+    const RepoList = githubRepoInstance.getRepoList();
+    RepoList.then((list) => githubRepoInstance.cache(list))
+    return RepoList;
+})
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 
 function createMainWindow() {
-
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+            preload: path.join(app.getAppPath(), "/src/renderer/preload.js"),
         },
     });
 
