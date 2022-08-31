@@ -12,6 +12,7 @@ export default function RepoTreeView(data) {
     const handleSelect = (event, nodeIds) => {
         setSelected(nodeIds);
         console.log(nodeIds);
+        console.log(event);
       };    
 
     useEffect(() => {
@@ -20,6 +21,7 @@ export default function RepoTreeView(data) {
           
         });
       }, [])
+
 
     return (
         <div>
@@ -31,21 +33,23 @@ export default function RepoTreeView(data) {
             
             {repoData.map(((repo, index) => (
                 <TreeItem key={repo.name + index} nodeId={repo.name + index} label={repo.name}>
-                <TreeItem nodeId={'branches' + index} label="Branches">
-                    {repo.branches.map((branch, index) => (
-                    <TreeItem key={branch.name + index} nodeId={branch.name + index} label={branch.name}></TreeItem>
-                    ))}
-                </TreeItem>
-                <TreeItem nodeId={'commits' + index} label='Commits'>
-                    {repo.commits.map((commit, index) => (
-                    <TreeItem key={'commit' + index} nodeId={'commit' + index} label={commit.message}></TreeItem>
-                    ))}
-                </TreeItem>
-                <TreeItem nodeId={'tags' + index} label='Tags'>
-                    {repo.tags.map((tag, index) => (
-                    <TreeItem key={'tag' + index} nodeId={'tag' + index} label={tag.name}></TreeItem>
-                    ))}
-                </TreeItem>
+                    
+                    <TreeItem nodeId={'branches' + index} label="Branches">
+                        {repo.branches.map((branch, index) => (
+                        <TreeItem key={branch.name + index} nodeId={branch.name + index} label={branch.name}>
+                        </TreeItem>
+                        ))}
+                    </TreeItem>
+                    <TreeItem nodeId={'commits' + index} label='Commits'>
+                        {repo.commits.map((commit, index) => (
+                        <TreeItem key={'commit' + index} nodeId={'commit' + index} label={commit.message}></TreeItem>
+                        ))}
+                    </TreeItem>
+                    <TreeItem nodeId={'tags' + index} label='Tags'>
+                        {repo.tags.map((tag, index) => (
+                        <TreeItem key={'tag' + index} nodeId={'tag' + index} label={tag.name}></TreeItem>
+                        ))}
+                    </TreeItem>
                 </TreeItem>)))}
             </TreeView>
         </div>
