@@ -219,7 +219,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.18.6"
     "@babel/plugin-transform-react-pure-annotations" "^7.18.6"
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.17.2", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
   version "7.18.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.9.tgz#b4fcfce55db3d2e5e080d2490f608a3b9f407f4a"
   integrity sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw==
@@ -838,12 +838,12 @@
     "@mui/utils" "^5.10.3"
     prop-types "^15.8.1"
 
-"@mui/styled-engine-sc@^5.10.1":
-  version "5.10.1"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.10.1.tgz#b8dc43365db4adc1b8626f7d2a1323ac6ea61cea"
-  integrity sha512-SCaZYUUofRDsA35zRIyDy7yzF7M1efaPeTo/TtyZIgVq5raWuiOXvKOo4Bus+mnpT/3H+I5tsR2rlozWL5tQdA==
+"@mui/styled-engine-sc@^5.10.3":
+  version "5.10.3"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.10.3.tgz#4ba9b6db83c40ebe4622586abf786cb8952f5ae2"
+  integrity sha512-IHcNTnGEcFCQgghHqBo6BXOzMOpqGXxSu5JEoVCncPVxVZ3/CEtFTyUqnMaiFkpK5DY1Qx1YnqdNBSMhzP1IhQ==
   dependencies:
-    "@babel/runtime" "^7.17.2"
+    "@babel/runtime" "^7.18.9"
     prop-types "^15.8.1"
 
 "@mui/styled-engine@^5.10.3":

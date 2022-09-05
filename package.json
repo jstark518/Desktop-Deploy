@@ -59,7 +59,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/lab": "^5.0.0-alpha.97",
     "@mui/material": "^5.10.3",
-    "@mui/styled-engine-sc": "^5.10.1",
+    "@mui/styled-engine-sc": "^5.10.3",
     "@octokit/auth-oauth-user": "^2.0.3",
     "@octokit/core": "^4.0.5",
     "@octokit/oauth-authorization-url": "^5.0.0",
