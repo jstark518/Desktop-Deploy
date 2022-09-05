@@ -54,7 +54,7 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.0",
+    "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
     "@mui/lab": "^5.0.0-alpha.97",
@@ -63,7 +63,7 @@
     "@octokit/auth-oauth-user": "^2.0.3",
     "@octokit/core": "^4.0.5",
     "@octokit/oauth-authorization-url": "^5.0.0",
-    "@octokit/oauth-methods": "^2.0.2",
+    "@octokit/oauth-methods": "^2.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "materialize-css": "^1.0.0",
     "prop-types": "^15.8.1",
@@ -71,7 +71,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-materialize": "^3.10.0",
-    "simple-git": "^3.13.0",
+    "simple-git": "^3.14.0",
     "source-map-support": "^0.5.21",
     "styled-components": "^5.3.5"
   },
