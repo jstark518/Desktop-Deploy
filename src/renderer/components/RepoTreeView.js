@@ -14,7 +14,7 @@ export default function RepoTreeView({onSelectNode}) {
         const nodeData = JSON.parse(nodeIds);
         console.log(nodeData);
         if(nodeData.type === "commit" || nodeData.type === "branch" || nodeData.type === "tag") {
-            onSelectNode(nodeData);
+            onSelectNode({selection: nodeData, repo: repoData[nodeData.repoIndex]});
         }
       };    
 
@@ -35,19 +35,19 @@ export default function RepoTreeView({onSelectNode}) {
         {repoData.map(((repo, index) => (
             <TreeItem key={repo.name + index} nodeId={JSON.stringify({type: 'repo', index, name: repo.name})} label={repo.name}>
                 <TreeItem nodeId={JSON.stringify({type: 'branches',index})} label="Branches">
-                    {repo.branches.map((branch, index) => (
-                    <TreeItem key={branch.name + index} nodeId={JSON.stringify({type: "branch", ...branch})} label={branch.name}>
+                    {repo.branches.map((branch, i) => (
+                    <TreeItem key={branch.name + i} nodeId={JSON.stringify({type: "branch", repoIndex: index, ...branch})} label={branch.name}>
                     </TreeItem>
                     ))}
                 </TreeItem>
                 <TreeItem nodeId={JSON.stringify({type: 'commits',index})} label='Commits'>
-                    {repo.commits.map((commit, index) => (
-                    <TreeItem key={'commit' + index} nodeId={JSON.stringify({type: "commit", ...commit})} label={commit.message}></TreeItem>
+                    {repo.commits.map((commit, i) => (
+                    <TreeItem key={'commit' + i} nodeId={JSON.stringify({type: "commit", repoIndex: index, ...commit})} label={commit.message}></TreeItem>
                     ))}
                 </TreeItem>
                 <TreeItem nodeId={JSON.stringify({type: 'tags',index})} label='Tags'>
-                    {repo.tags.map((tag, index) => (
-                    <TreeItem key={'tag' + index} nodeId={JSON.stringify({type: "tag", ...tag})} label={tag.name}></TreeItem>
+                    {repo.tags.map((tag, i) => (
+                    <TreeItem key={'tag' + i} nodeId={JSON.stringify({type: "tag", repoIndex: index, ...tag})} label={tag.name}></TreeItem>
                     ))}
                 </TreeItem>
             </TreeItem>)))}

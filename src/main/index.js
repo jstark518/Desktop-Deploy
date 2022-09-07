@@ -3,7 +3,9 @@
 import {app, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
 import {githubRepo} from "./api/repos/github.ts";
-
+import { simpleGit, CleanOptions } from 'simple-git';
+import {createHash} from 'crypto';
+simpleGit().clean(CleanOptions.FORCE);
 const { dialog } = require('electron')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -15,6 +17,13 @@ ipcMain.handle("repos.list", (event) => {
     RepoList.then((list) => githubRepoInstance.cache(list))
     return RepoList;
 })
+
+ipcMain.handle("repo.clone", async (event, url, node) => {
+    const repoPath = path.join(app.getAppPath(), "/.library/repo/", url.replace("https://", ""), node.commitHash);
+    console.log(repoPath, url, node);
+    await simpleGit().clone(url, repoPath);
+    return [repoPath];
+});
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow

@@ -119,6 +119,7 @@ export class githubRepo {
             cacheRepo.tags = await this.getTags(repo.tags_url, lastModified, cacheRepo.tags);
             cacheRepo.commits = await this.getCommits(repo.commits_url, lastModified, cacheRepo.commits);
             cacheRepo.url = repo.url;
+            cacheRepo.clone = repo.clone_url;
         }
         return Promise.all(repos);
     }

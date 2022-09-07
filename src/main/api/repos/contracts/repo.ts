@@ -9,6 +9,7 @@ interface Repo {
     commits?: Commit[]
     /** url of the repo */
     url?: string
+    clone?: string
 }
 
 interface Branch {
