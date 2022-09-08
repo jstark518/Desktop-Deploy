@@ -19,6 +19,10 @@ export default function RepoTreeView({onSelectNode}) {
       };    
 
     useEffect(() => {
+        /*
+        calls setRepoData for current user.
+        "windows.repo" data comes from GitHub API.
+        */
         window.repo.list().then((list) => {
           setRepoData(list);
         });
@@ -29,10 +33,24 @@ export default function RepoTreeView({onSelectNode}) {
         <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
+        /*
+        "TreeView" Prop, onNodeSelect, will fire a function.
+        It returns the value of prop "nodeId" from the selected node (TreeItem).
+        "nodeId" for each node has to be a string.
+        */
         onNodeSelect={handleSelect}
         >
-
+        {/*
+        First use of the repoData, which was set in useEffect.
+        We map the Repos from GitHub into a "TreeView" component (MUI version of an ul).
+        Each Repo is in it's own "TreeItem" (MUI version of an li).
+        */}
         {repoData.map(((repo, index) => (
+             /*
+            We separate each branch, commit, and tag into a TreeItem, each nested in the current repo-TreeItem.
+            "nodeId" is a stringified JSON object, since "onNodeSelect" requires a string.
+            passing props from repo.branch, repo.commit, repo.tag to access elsewhere in the application.
+            */
             <TreeItem key={repo.name + index} nodeId={JSON.stringify({type: 'repo', index, name: repo.name})} label={repo.name}>
                 <TreeItem nodeId={JSON.stringify({type: 'branches',index})} label="Branches">
                     {repo.branches.map((branch, i) => (
