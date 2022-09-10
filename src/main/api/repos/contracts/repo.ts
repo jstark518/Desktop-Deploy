@@ -10,6 +10,7 @@ interface Repo {
     /** url of the repo */
     url?: string
     clone?: string
+    path?: string
 }
 
 interface Branch {
