@@ -25,6 +25,7 @@ export default function RepoTreeView({onSelectNode}) {
         */
         window.repo.list().then((list) => {
           setRepoData(list);
+          console.log(list);
         });
       }, [])
 

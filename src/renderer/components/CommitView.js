@@ -36,7 +36,15 @@ export function BranchView({selectedNode}) {
     }
 
     if(data == null) return (<span>Loading....</span>);
-    return (<div><button onClick={clone}>Clone</button><span>{data.commit.message}</span><table>{data.files.map((file) => FileChanged({file}))}</table></div>);
+    return (
+        <div>
+            <button onClick={clone}>Clone</button>
+            <span>{data.commit.message}</span>
+            <table>
+                {data.files.map((file) => FileChanged({file}))}
+            </table>
+        </div>
+    );
 }
 
 export function TagView({selectedNode}) {

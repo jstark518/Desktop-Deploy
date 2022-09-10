@@ -8,13 +8,14 @@ import {createHash} from 'crypto';
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog } = require('electron')
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 let githubRepoInstance = new githubRepo();
+const RepoList = githubRepoInstance.getRepoList();
+RepoList.then((list) => {githubRepoInstance.cache(list);console.log(list)});
+console.log(RepoList);
 
 ipcMain.handle("repos.list", (event) => {
-    const RepoList = githubRepoInstance.getRepoList();
-    RepoList.then((list) => githubRepoInstance.cache(list))
     return RepoList;
 })
 
@@ -60,5 +61,5 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-    mainWindow = createMainWindow()
+    mainWindow = createMainWindow();
 })
