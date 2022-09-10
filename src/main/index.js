@@ -11,7 +11,9 @@ const { dialog } = require('electron')
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 let githubRepoInstance = new githubRepo();
+//githubRepoInstance.getRepoList() returns a promise.
 const RepoList = githubRepoInstance.getRepoList();
+//Pomise is resolved and cached.
 RepoList.then((list) => {githubRepoInstance.cache(list);console.log(list)});
 console.log(RepoList);
 
@@ -23,6 +25,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     const repoPath = path.join(app.getAppPath(), "/.library/repo/", url.replace("https://", ""), node.commitHash);
     console.log(repoPath, url, node);
     await simpleGit().clone(url, repoPath);
+    
     return [repoPath];
 });
 
