@@ -38,9 +38,10 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     if(repo.path && repo.path === repoPath) {
         /*
          * repo is already checked out
-         * TODO: Fetch remote, switch branch, etc.
          */
-        console.log("Repo is already checked out");
+        const git = simpleGit(repoPath);
+        console.log("Updating Repo...", node.commitHash);
+        await git.fetch().checkout(node.commitHash);
         loadRepoPackageFile(repoPath);
         return repoPath;
     }
@@ -52,7 +53,9 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     }
 
     if(!fs.existsSync(repoPath)) {
-        await simpleGit().clone(url, repoPath);
+        await simpleGit().clone(url, repoPath).checkout(node.commitHash);
+    } else {
+        await simpleGit(repoPath).fetch().checkout(node.commitHash);
     }
 
     resolvedRepoList.find((e) => e.clone === url).path = repoPath;
