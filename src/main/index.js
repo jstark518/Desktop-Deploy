@@ -76,12 +76,39 @@ function loadRepoPackageFile(repoPath) {
         console.table(scripts);
     }
     const packageManagers = {
-        yarn: fs.existsSync(path.join(repoPath, "yarn.lock")),
-        npm: fs.existsSync(path.join(repoPath, "package-lock-json")),
+        yarn: fs.existsSync(path.join(repoPath, "yarn.lock")) && fs.statSync(path.join(repoPath, "yarn.lock")).mtime,
+        npm: fs.existsSync(path.join(repoPath, "package-lock.json")) && fs.statSync(path.join(repoPath, "package-lock.json")).mtime,
         nodeVendor: fs.existsSync(path.join(repoPath, "node_modules")),
-        composer: fs.existsSync(path.join(repoPath, "composer.lock")),
+        composer: fs.existsSync(path.join(repoPath, "composer.lock")) && fs.statSync(path.join(repoPath, "composer.lock")).mtime,
         composerVendor: fs.existsSync(path.join(repoPath, "vendor"))
     };
+
+    if(packageManagers.yarn && packageManagers.nodeVendor) {
+        const mtime = fs.existsSync(path.join(repoPath, "node_modules", ".yarn-integrity")) && fs.statSync(path.join(repoPath, "node_modules", ".yarn-integrity")).mtime,
+            isUpToDate = mtime >= packageManagers.yarn;
+        console.log("node_modules is up to date", isUpToDate);
+    }
+
+    if(packageManagers.npm && packageManagers.nodeVendor) {
+        const mtime = fs.existsSync(path.join(repoPath, "node_modules", ".yarn-integrity")) && fs.statSync(path.join(repoPath, "node_modules", ".package-lock.json")).mtime,
+            isUpToDate = mtime >= packageManagers.npm;
+        console.log("node_modules is up to date", isUpToDate);
+    }
+
+    if((packageManagers.yarn || packageManagers.npm) && !packageManagers.nodeVendor) {
+        console.log("node_modules does not exist, but should");
+    }
+
+    if(packageManagers.composer && packageManagers.composerVendor) {
+        const mtime = fs.existsSync(path.join(repoPath, "vendor", "autoload.php")) && fs.statSync(path.join(repoPath, "vendor", "autoload.php")).mtime,
+            isUpToDate = mtime >= packageManagers.composer;
+        console.log("vendor is up to date", isUpToDate);
+    }
+
+    if(packageManagers.composer && !packageManagers.composerVendor) {
+        console.log("vendor does not exist, but should");
+    }
+
     console.log(packageManagers);
 }
 
