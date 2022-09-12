@@ -123,7 +123,7 @@ function loadRepoPackageFile(repoPath) {
     }
 
     if(packageManagers.npm && packageManagers.nodeVendor) {
-        const mtime = fs.existsSync(path.join(repoPath, "node_modules", ".yarn-integrity")) && fs.statSync(path.join(repoPath, "node_modules", ".package-lock.json")).mtime,
+        const mtime = fs.existsSync(path.join(repoPath, "node_modules", ".package-lock.json")) && fs.statSync(path.join(repoPath, "node_modules", ".package-lock.json")).mtime,
             isUpToDate = mtime >= packageManagers.npm;
         console.log("node_modules is up to date", isUpToDate);
     }
