@@ -39,6 +39,7 @@ const CommitViewContainer = styled.div`
 export default function MainContainer({gitRepoAPIData}) {
   const [repoData, setRepoData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
+  console.log(selectedNode);
   
   return (
     <MainContainerStyle>

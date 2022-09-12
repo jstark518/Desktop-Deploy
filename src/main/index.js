@@ -11,24 +11,42 @@ const { dialog } = require('electron')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 /*
-githubRepoInstance.getRepoList() returns a promise.
-The promise is resolved (RepoList.then....) and returns data from github API
-Data is saved in cache and local variable
+githubRepoInstance is set to the return value of the github class.
+githubRepoInstance.getRepoList() interacts with GitHub APU, returns a promise.
+The promise is resolved (RepoList.then....) and returns data from github API.
+Data is saved in cache (gitHubRepoInstance.cache) and local variable (resolvedRepoList)
 */
 let githubRepoInstance = new githubRepo();
+// RepoList value is a promise
 let RepoList = githubRepoInstance.getRepoList(), resolvedRepoList = null;
+// Resolves the promise
 RepoList.then((list) => {
+    /* Value of list:
+        [            
+            {
+                name: 'g4v',
+                branches: [ [Object], [Object] ],
+                tags: [],
+                commits: [],
+                url: 'https://api.github.com/repos/jasonguo258/g4v',
+                clone: 'https://github.com/jasonguo258/g4v.git'
+            }
+        ]
+    */
+    // Save resolved value in a local cache file
     githubRepoInstance.cache(list);
+    // Save resolved value in a global binding
     resolvedRepoList = list;
 
     console.log("ResolvedRepoList:");
     console.log(list);
 });
 
-//Passing data to the front-end
+// Passing promise to the front-end
 ipcMain.handle("repos.list", (event) => RepoList);
-
+// Value from the front-end component CommitView.js
 ipcMain.handle("repo.clone", async (event, url, node) => {
+    // 
     let repo = resolvedRepoList.find((e) => e.clone === url);
 
     console.log("Clone button output:")

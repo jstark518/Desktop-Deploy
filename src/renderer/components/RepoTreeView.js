@@ -11,17 +11,33 @@ export default function RepoTreeView({onSelectNode}) {
 
     const handleSelect = (event, nodeIds) => {
         setSelected(nodeIds);
+
+        /* Data from the TreeItem selected, nodeId string:
+            {
+                type: 'repo',
+                repoIndex: number,
+                name: repo.name,
+                branches: [obejct],
+                clone: string,
+                commits: [object],
+                tags: [object],
+                url: string
+            }
+        */
         const nodeData = JSON.parse(nodeIds);
+        console.log("TreeItem selected returns string converted to this JSON")
         console.log(nodeData);
-        if(nodeData.type === "commit" || nodeData.type === "branch" || nodeData.type === "tag") {
+        // sending node data to MainContainer.js
+        if(nodeData.type === "repo" || nodeData.type === "commit" || nodeData.type === "branch" || nodeData.type === "tag") {
             onSelectNode({selection: nodeData, repo: repoData[nodeData.repoIndex]});
         }
       };    
 
     useEffect(() => {
         /*
-        calls setRepoData for current user.
-        "windows.repo" data comes from GitHub API.
+        Resolve the promise passed from index.js
+        repo and method list() are exposed to window object from preload.js
+        list() calls the API in index.js
         */
         window.repo.list().then((list) => {
           setRepoData(list);
@@ -52,7 +68,7 @@ export default function RepoTreeView({onSelectNode}) {
             "nodeId" is a stringified JSON object, since "onNodeSelect" requires a string.
             passing props from repo.branch, repo.commit, repo.tag to access elsewhere in the application.
             */
-            <TreeItem key={repo.name + index} nodeId={JSON.stringify({type: 'repo', index, name: repo.name})} label={repo.name}>
+        <TreeItem key={repo.name + index} nodeId={JSON.stringify({type: 'repo', repoIndex: index, name: repo.name, ...repo})} label={repo.name}>
                 <TreeItem nodeId={JSON.stringify({type: 'branches',index})} label="Branches">
                     {repo.branches.map((branch, i) => (
                     <TreeItem key={branch.name + i} nodeId={JSON.stringify({type: "branch", repoIndex: index, ...branch})} label={branch.name}>
