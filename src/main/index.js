@@ -43,13 +43,13 @@ RepoList.then((list) => {
 ipcMain.handle("repos.list", (event) => RepoList);
 // Value from the front-end component CommitView.js
 ipcMain.handle("repo.clone", async (event, url, node) => {
-    // 
-    let repo = resolvedRepoList.find((e) => e.clone === url);
+    let repo = resolvedRepoList.find((e) => e.clone === url), parsedUrl = new URL(url);
+    const auth = await githubRepoInstance.getAuth(),
+        repoPath = path.join(app.getAppPath(), "/.library/repo/", url.replace("https://", ""));
 
-    console.log("Clone button output:")
-    console.log(repo);
+    parsedUrl.username = auth.username.login;
+    parsedUrl.password = auth.token;
 
-    const repoPath = path.join(app.getAppPath(), "/.library/repo/", url.replace("https://", ""));
     if(repo.path && repo.path === repoPath) {
         /*
          * repo is already checked out
@@ -68,7 +68,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     }
 
     if(!fs.existsSync(repoPath)) {
-        await simpleGit().clone(url, repoPath).checkout(node.commitHash);
+        await simpleGit().clone(parsedUrl.toString(), repoPath).checkout(node.commitHash);
     } else {
         await simpleGit(repoPath).fetch().checkout(node.commitHash);
     }
@@ -183,8 +183,8 @@ app.on('activate', () => {
 app.on('ready', () => {
     mainWindow = createMainWindow();
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, async (details, callback) => {
-        const authToken = await githubRepoInstance.getAuth();
-        details.requestHeaders['Authorization'] = 'bearer ' + authToken;
+        const auth = await githubRepoInstance.getAuth();
+        details.requestHeaders['Authorization'] = 'bearer ' + auth.token;
         callback({requestHeaders: details.requestHeaders});
     })
 })
