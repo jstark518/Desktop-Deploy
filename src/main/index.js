@@ -7,7 +7,7 @@ import { simpleGit, CleanOptions } from 'simple-git';
 import {createHash} from 'crypto';
 const fs = require('fs');
 simpleGit().clean(CleanOptions.FORCE);
-const { dialog } = require('electron')
+const { dialog, session } = require('electron')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 /*
@@ -37,9 +37,6 @@ RepoList.then((list) => {
     githubRepoInstance.cache(list);
     // Save resolved value in a global binding
     resolvedRepoList = list;
-
-    console.log("ResolvedRepoList:");
-    console.log(list);
 });
 
 // Passing promise to the front-end
@@ -145,6 +142,10 @@ function loadRepoPackageFile(repoPath) {
     console.log(packageManagers);
 }
 
+const filter = {
+    urls: ['https://api.github.com/*']
+}
+
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 
@@ -181,4 +182,9 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
     mainWindow = createMainWindow();
+    session.defaultSession.webRequest.onBeforeSendHeaders(filter, async (details, callback) => {
+        const authToken = await githubRepoInstance.getAuth();
+        details.requestHeaders['Authorization'] = 'bearer ' + authToken;
+        callback({requestHeaders: details.requestHeaders});
+    })
 })

@@ -105,6 +105,12 @@ export class githubRepo {
         return this.octokitInstance;
     }
 
+    async getAuth() {
+        const octokit = await this.octokit();
+        const auth = await octokit.auth();
+        return auth.token;
+    }
+
     async getRepoList() {
         const cache = this.getCache();
         let {lastModified, repos} = cache;
