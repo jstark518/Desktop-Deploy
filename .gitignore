@@ -109,3 +109,4 @@ dist
 /.env.json
 /.cache.data.gh.json
 .DS_Store
+/.library/

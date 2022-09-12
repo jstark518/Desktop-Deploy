@@ -26,6 +26,7 @@ export class githubRepo {
     private octokitInstance?: typeof Octokit;
     private credentials?: any;
     private config?: authConfig;
+    private user?: any;
 
     getConfig(): authConfig {
         if (this.config == null) {
@@ -97,12 +98,20 @@ export class githubRepo {
     private async octokit(cache = true) {
         if(this.octokitInstance == null || !cache) {
             let auth = await this.auth(cache);
-            this.octokitInstance = new Octokit({
+            this.octokitInstance = await new Octokit({
                 authStrategy: createOAuthUserAuth,
                 auth
             });
+            const user = await this.octokitInstance.request('GET /user');
+            this.user = user.data;
         }
         return this.octokitInstance;
+    }
+
+    async getAuth() {
+        const octokit = await this.octokit();
+        const auth = await octokit.auth();
+        return {username: this.user, token: auth.token};
     }
 
     async getRepoList() {
@@ -119,6 +128,8 @@ export class githubRepo {
             cacheRepo.tags = await this.getTags(repo.tags_url, lastModified, cacheRepo.tags);
             cacheRepo.commits = await this.getCommits(repo.commits_url, lastModified, cacheRepo.commits);
             cacheRepo.url = repo.url;
+            cacheRepo.clone = repo.clone_url;
+            
         }
         return Promise.all(repos);
     }
