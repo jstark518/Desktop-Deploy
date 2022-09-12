@@ -7,7 +7,7 @@ import MainContainer from './components/MainContainer';
 
 //let parsedData = JSON.parse(exampleData);
 
-console.log(window.repo);
+
 
 
 const root = createRoot(document.getElementById('main'));
