@@ -260,17 +260,6 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@electron-forge/async-ora@6.0.0-beta.65":
-  version "6.0.0-beta.65"
-  resolved "https://registry.npmjs.org/@electron-forge/async-ora/-/async-ora-6.0.0-beta.65.tgz"
-  integrity sha512-CREk/7XQsg26q2l5s/oFG6GcomzKzWnpaeCKgRCWfdMleKvOubeDd/OA68LkzhLixMWYGbXCWLbHUhGTdGzcWA==
-  dependencies:
-    chalk "^4.0.0"
-    debug "^4.3.1"
-    log-symbols "^4.0.0"
-    ora "^5.0.0"
-    pretty-ms "^7.0.0"
-
 "@electron-forge/async-ora@6.0.0-beta.66":
   version "6.0.0-beta.66"
   resolved "https://registry.yarnpkg.com/@electron-forge/async-ora/-/async-ora-6.0.0-beta.66.tgz#bb5a862f329ab50e5e9c23f9d532ad70fdd7a7f4"
@@ -406,15 +395,6 @@
     "@malept/cross-spawn-promise" "^2.0.0"
     fs-extra "^10.0.0"
 
-"@electron-forge/maker-base@6.0.0-beta.65":
-  version "6.0.0-beta.65"
-  resolved "https://registry.npmjs.org/@electron-forge/maker-base/-/maker-base-6.0.0-beta.65.tgz"
-  integrity sha512-EhDjppd/qdsIDAr6stjAi+OOmhxPidCswPb02Jte6+yh0Wjk5q5vaYS4B6tzlBkZKYvEAiGLYh4tQ/31dxpTHA==
-  dependencies:
-    "@electron-forge/shared-types" "6.0.0-beta.65"
-    fs-extra "^10.0.0"
-    which "^2.0.2"
-
 "@electron-forge/maker-base@6.0.0-beta.66":
   version "6.0.0-beta.66"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-base/-/maker-base-6.0.0-beta.66.tgz#a96f899819fecd31d02994da42ee969910f4bfc0"
@@ -434,13 +414,13 @@
   optionalDependencies:
     electron-installer-debian "^3.0.0"
 
-"@electron-forge/maker-rpm@^6.0.0-beta.65":
-  version "6.0.0-beta.65"
-  resolved "https://registry.yarnpkg.com/@electron-forge/maker-rpm/-/maker-rpm-6.0.0-beta.65.tgz#9faa5d912aae3c6f8a7bd9069b99701299bce8aa"
-  integrity sha512-FRacW0RIrvz391n7bX4fSYOONvOg5JznNjR7JV6cRF1q8HlJdv9FqtP3LAD+1MFgbyKCeb3DC/Ir9lY66TD7xg==
+"@electron-forge/maker-rpm@^6.0.0-beta.66":
+  version "6.0.0-beta.66"
+  resolved "https://registry.yarnpkg.com/@electron-forge/maker-rpm/-/maker-rpm-6.0.0-beta.66.tgz#e9c7e8f98721ecf0f283f7c23d5a3e156947c931"
+  integrity sha512-z0opMvxEHvsZGB6RteSQ8euUTtG6i608bKO6gPFvFqop0gkoZyWwy0utXAEIZfy00P0U/krXzgf1tMqmGMkMcA==
   dependencies:
-    "@electron-forge/maker-base" "6.0.0-beta.65"
-    "@electron-forge/shared-types" "6.0.0-beta.65"
+    "@electron-forge/maker-base" "6.0.0-beta.66"
+    "@electron-forge/shared-types" "6.0.0-beta.66"
   optionalDependencies:
     electron-installer-redhat "^3.2.0"
 
@@ -497,16 +477,6 @@
   integrity sha512-/uessmmEFDU7oddBLZMyHcJVIhJxZR/Kd4QcSzCjto00xNw7ZyMQBwoAYP9Y8W+3iky1WEomoC8umncc183Rzw==
   dependencies:
     "@electron-forge/shared-types" "6.0.0-beta.66"
-
-"@electron-forge/shared-types@6.0.0-beta.65":
-  version "6.0.0-beta.65"
-  resolved "https://registry.npmjs.org/@electron-forge/shared-types/-/shared-types-6.0.0-beta.65.tgz"
-  integrity sha512-ApxdJgz84l122rmjr8hxDSXIt6gePT54fMXUzxWPIJgPlMR2/dzvmVEWq13UmVD1q0jduQ2lXLNB37EuqsATOQ==
-  dependencies:
-    "@electron-forge/async-ora" "6.0.0-beta.65"
-    electron-packager "^15.4.0"
-    electron-rebuild "^3.2.6"
-    ora "^5.0.0"
 
 "@electron-forge/shared-types@6.0.0-beta.66":
   version "6.0.0-beta.66"
