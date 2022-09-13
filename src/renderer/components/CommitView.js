@@ -145,6 +145,11 @@ export function TagView({selectedNode}) {
 
 export function CommitDetailView({selectedNode}) {
     console.log(selectedNode);
+
+    const clone = () => {
+        console.log(selectedNode.repo.clone);
+        window.repo.clone(selectedNode.repo.clone, selectedNode.selection).then((resp) => console.log(resp));
+    };
     return (
         <RepoContainerStyle>
             <Grid container spacing={2}>
@@ -161,7 +166,7 @@ export function CommitDetailView({selectedNode}) {
                     <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
                 </Grid>
                 <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
-                    <StyledMUIButton variant='contained'>Clone</StyledMUIButton>
+                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
                 </Grid>
             </Grid>
         </RepoContainerStyle>
