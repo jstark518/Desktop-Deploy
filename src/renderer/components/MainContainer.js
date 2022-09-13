@@ -45,8 +45,12 @@ export default function MainContainer({gitRepoAPIData}) {
     <MainContainerStyle>
         <AppHeader>Desktop Deploy</AppHeader>
         <FlexContainer>
-        <TreeViewContainer><RepoTreeView onSelectNode={setSelectedNode}/></TreeViewContainer>
-        <CommitViewContainer><CommitView selectedNode={selectedNode}></CommitView></CommitViewContainer>
+          <TreeViewContainer>
+            <RepoTreeView onSelectNode={setSelectedNode}/>
+          </TreeViewContainer>
+          <CommitViewContainer>
+            <CommitView selectedNode={selectedNode}></CommitView>
+          </CommitViewContainer>
         </FlexContainer>
     </MainContainerStyle>
   )

@@ -1,5 +1,31 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
+import { Container, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid'; // Grid version 1
+import Grid2 from '@mui/material/Unstable_Grid2'; // Grid version 2
+import { Paper, Box, Button } from '@mui/material';
+import {styled} from '@mui/system';
+import { shouldForwardProp } from '@mui/styled-engine';
+// import styled from "styled-components";
+
+
+const RepoContainerStyle = styled('div')({
+    background: '#E6FEE6',
+    padding: 10,
+    borderRadius: '5px'
+})
+
+// Wrapping MUIComponent in a styled component
+const StyledMUIButton = styled(Button, {
+    shouldForwardProp: (props) => props !== 'variant',
+  })({
+    backgroundColor: '#6D20C5',
+    color: 'white',
+    '&:hover': {
+        color: 'black',
+        border: '2px black solid'
+    }
+})
 
 
 export default function CommitView({selectedNode}) {
@@ -45,9 +71,29 @@ export function DefaultRepoView({selectedNode}) {
 
     return (
         <div>
-            <button onClick={clone}>Clone</button>
             {console.log(data)}
-            <span>{data.description}</span>
+            <RepoContainerStyle>
+            <Grid container spacing={2}>
+                <Grid item={true} xs={12}>
+                    <Typography variant='h5' sx={{color: '#71697A'}}>Repo - {selectedNode.selection.name}:</Typography>
+                </Grid>
+                <Grid item={true} xs={12}>
+                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{data.description}</Typography>
+                </Grid>
+                {/* <Grid item={true} xs={12}>
+                    <Paper elevation={3} sx={{padding: '1em', flex: 1}}>
+                        <Typography variant='h6'>Commit Message:</Typography>
+                        {selectedNode.selection.message}
+                    </Paper>
+                </Grid> */}
+                <Grid item={true} xs={8}>
+                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
+                </Grid>
+                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
+                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
+                </Grid>
+            </Grid>
+            </RepoContainerStyle>
         </div>
     )
 }
@@ -98,7 +144,28 @@ export function TagView({selectedNode}) {
 }
 
 export function CommitDetailView({selectedNode}) {
-    return (<span>{selectedNode.selection.url}</span>);
+    console.log(selectedNode);
+    return (
+        <RepoContainerStyle>
+            <Grid container spacing={2}>
+                <Grid item={true} xs={12}>
+                    <Typography variant='h5' sx={{color: '#71697A'}}>Commit - {selectedNode.selection.date}:</Typography>
+                </Grid>
+                <Grid item={true} xs={12}>
+                    <Paper elevation={3} sx={{padding: '1em', flex: 1}}>
+                        <Typography variant='h6'>Commit Message:</Typography>
+                        {selectedNode.selection.message}
+                    </Paper>
+                </Grid>
+                <Grid item={true} xs={8}>
+                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
+                </Grid>
+                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
+                    <StyledMUIButton variant='contained'>Clone</StyledMUIButton>
+                </Grid>
+            </Grid>
+        </RepoContainerStyle>
+    )
 }
 
 export function FileChanged(index, {file}) {
