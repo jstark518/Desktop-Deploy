@@ -56,7 +56,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
          */
         const git = simpleGit(repoPath);
         console.log("Updating Repo...", node.commitHash);
-        await git.fetch().checkout(node.commitHash);
+        await git.fetch().checkout(node.commitHash || node.hash);
         loadRepoPackageFile(repoPath);
         return repoPath;
     }
@@ -70,7 +70,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     if(!fs.existsSync(repoPath)) {
         await simpleGit().clone(parsedUrl.toString(), repoPath).checkout(node.commitHash);
     } else {
-        await simpleGit(repoPath).fetch().checkout(node.commitHash);
+        await simpleGit(repoPath).fetch().checkout(node.commitHash || node.hash);
     }
 
     resolvedRepoList.find((e) => e.clone === url).path = repoPath;
