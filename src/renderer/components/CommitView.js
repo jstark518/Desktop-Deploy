@@ -32,6 +32,7 @@ export default function CommitView({selectedNode}) {
     const commit = selectedNode.selection.type == "commit" ? selectedNode.selection : selectedNode.repo.commits.find((e) => e.hash == selectedNode.selection.commitHash);
 
     console.log(selectedNode.selection);
+    
     if(selectedNode.selection.type === "repo") {
         return (<DefaultRepoView selectedNode={selectedNode}/>)
     }
