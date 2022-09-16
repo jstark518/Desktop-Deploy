@@ -46,6 +46,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     let repo = resolvedRepoList.find((e) => e.clone === url), parsedUrl = new URL(url);
     const auth = await githubRepoInstance.getAuth(),
         repoPath = path.join(app.getAppPath(), "/.library/repo/", url.replace("https://", ""));
+        console.log(repoPath);
 
     parsedUrl.username = auth.username.login;
     parsedUrl.password = auth.token;
@@ -55,10 +56,11 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
          * repo is already checked out
          */
         const git = simpleGit(repoPath);
+        console.log(git);
         console.log("Updating Repo...", node.commitHash);
-        await git.fetch().checkout(node.commitHash);
-        loadRepoPackageFile(repoPath);
-        return repoPath;
+        await git.fetch().checkout(node.commitHash || node.hash);
+        return loadRepoPackageFile(repoPath);
+        //return repoPath;
     }
 
     if(repo.path && repo.path !== repoPath && fs.existsSync(repo.path)) {
@@ -70,7 +72,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     if(!fs.existsSync(repoPath)) {
         await simpleGit().clone(parsedUrl.toString(), repoPath).checkout(node.commitHash);
     } else {
-        await simpleGit(repoPath).fetch().checkout(node.commitHash);
+        await simpleGit(repoPath).fetch().checkout(node.commitHash || node.hash);
     }
 
     resolvedRepoList.find((e) => e.clone === url).path = repoPath;
@@ -93,6 +95,7 @@ function loadRepoPackageFile(repoPath) {
             };
         console.log("Node", details);
         console.table(scripts);
+        return packageJSON
     }
     if(fs.existsSync(composerFile)) {
         const data = fs.readFileSync(composerFile),

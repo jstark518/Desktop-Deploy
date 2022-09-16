@@ -1,13 +1,38 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
+import { Typography } from '@mui/material';
+import Grid from '@mui/material/Grid'; // Grid version 1
+import { Paper, Box, Button } from '@mui/material';
+import {styled} from '@mui/system';
+// import styled from "styled-components";
 
 
+const RepoContainerStyle = styled('div')({
+    background: '#E6FEE6',
+    padding: 10,
+    borderRadius: '5px'
+})
+
+// Wrapping MUIComponent in a styled component
+const StyledMUIButton = styled(Button, {
+    shouldForwardProp: (props) => props !== 'variant',
+  })({
+    backgroundColor: '#6D20C5',
+    color: 'white',
+    '&:hover': {
+        color: 'black',
+        border: '2px black solid'
+    }
+})
+
+// The main viewer. This calls the other views when needed.
 export default function CommitView({selectedNode}) {
     if(selectedNode == null) return (<span>Select a Repo</span>);
 
     const commit = selectedNode.selection.type == "commit" ? selectedNode.selection : selectedNode.repo.commits.find((e) => e.hash == selectedNode.selection.commitHash);
 
     console.log(selectedNode.selection);
+    
     if(selectedNode.selection.type === "repo") {
         return (<DefaultRepoView selectedNode={selectedNode}/>)
     }
@@ -45,9 +70,23 @@ export function DefaultRepoView({selectedNode}) {
 
     return (
         <div>
-            <button onClick={clone}>Clone</button>
             {console.log(data)}
-            <span>{data.description}</span>
+            <RepoContainerStyle>
+            <Grid container spacing={2}>
+                <Grid item={true} xs={12}>
+                    <Typography variant='h5' sx={{color: '#71697A'}}>Repo - {selectedNode.selection.name}:</Typography>
+                </Grid>
+                <Grid item={true} xs={12}>
+                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{data.description}</Typography>
+                </Grid>
+                <Grid item={true} xs={8}>
+                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
+                </Grid>
+                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
+                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
+                </Grid>
+            </Grid>
+            </RepoContainerStyle>
         </div>
     )
 }
@@ -72,33 +111,73 @@ export function BranchView({selectedNode}) {
     };
     
     if(data == null) return (<span>Loading....</span>);
-
+    let localDate = new Date(data.commit.author.date);
     return (
         <div>
-            <button onClick={clone}>Clone</button>
-            <span>{data.commit.message}</span>
-            <table>
-                <thead>
-                    <tr>
-                        <th>filename</th>
-                        <th>add/del</th>
-                        <th>status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.files.map((file, index) => FileChanged(index, {file}))}
-                </tbody>
-            </table>
+            <RepoContainerStyle>
+            <Grid container spacing={2}>
+                <Grid item={true} xs={12}>
+                    <Typography variant='h5' sx={{color: '#71697A'}}>Branch - {selectedNode.selection.name}:</Typography>
+                </Grid>
+                <Grid item={true} xs={2}>
+                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>Latest commit:</Typography>
+                </Grid>
+                <Grid item={true} xs={4}>
+                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{localDate.toLocaleString()}</Typography>
+                </Grid>
+                <Grid item={true} xs={6}>
+                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{data.commit.message}</Typography>
+                </Grid>
+                <Grid item={true} xs={8}>
+                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
+                </Grid>
+                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
+                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
+                </Grid>
+            </Grid>
+            </RepoContainerStyle>
+
         </div>
     )
 }
 
-export function TagView({selectedNode}) {
-    return (<span>{selectedNode.selection.url}</span>);
+export function CommitDetailView({selectedNode}) {
+    console.log(selectedNode);
+
+    const clone = () => {
+        console.log(selectedNode.repo.clone);
+        window.repo.clone(selectedNode.repo.clone, selectedNode.selection).then((resp) => console.log(resp));
+    };
+
+    let localDate = new Date(selectedNode.selection.date);
+
+    return (
+        <RepoContainerStyle>
+            <Grid container spacing={2}>
+                <Grid item={true} xs={12}>
+                    <Typography variant='h5' sx={{color: '#71697A'}}>Commit - {localDate.toLocaleString()}:</Typography>
+                </Grid>
+                <Grid item={true} xs={12}>
+                    <Paper elevation={3} sx={{padding: '1em', flex: 1}}>
+                        <Typography variant='h6'>Commit Message:</Typography>
+                        {selectedNode.selection.message}
+                    </Paper>
+                </Grid>
+                <Grid item={true} xs={8}>
+                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
+                </Grid>
+                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
+                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
+                </Grid>
+            </Grid>
+        </RepoContainerStyle>
+    )
 }
 
-export function CommitDetailView({selectedNode}) {
-    return (<span>{selectedNode.selection.url}</span>);
+export function TagView({selectedNode}) {
+    return (
+        <span>{selectedNode.selection.url}</span>
+    );
 }
 
 export function FileChanged(index, {file}) {
