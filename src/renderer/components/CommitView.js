@@ -4,14 +4,29 @@ import { Typography } from '@mui/material';
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { Paper, Box, Button } from '@mui/material';
 import {styled} from '@mui/system';
+import Stack from '@mui/material/Stack'
 // import styled from "styled-components";
 
 
 const RepoContainerStyle = styled('div')({
-    background: '#E6FEE6',
+    background: '#88D3A0',
     padding: 10,
-    borderRadius: '5px'
+    borderRadius: '5px',
+    marginBottom: '10px'
 })
+
+// const CloneContainerStyle = styled('div')({
+//     background: '#E6FEE6',
+//     padding: 16,
+//     borderRadius: '5px'
+// })
+const CloneContainerStyle = styled(Paper, {
+    shouldForwardProp: (props) => props !== 'elevation',
+  })({
+    background: '#E6FEE6',
+    padding: 16
+})
+
 
 // Wrapping MUIComponent in a styled component
 const StyledMUIButton = styled(Button, {
@@ -27,6 +42,9 @@ const StyledMUIButton = styled(Button, {
 
 // The main viewer. This calls the other views when needed.
 export default function CommitView({selectedNode}) {
+
+    const [cloneData,setCloneData] = useState(null)
+    
     if(selectedNode == null) return (<span>Select a Repo</span>);
 
     const commit = selectedNode.selection.type == "commit" ? selectedNode.selection : selectedNode.repo.commits.find((e) => e.hash == selectedNode.selection.commitHash);
@@ -34,7 +52,9 @@ export default function CommitView({selectedNode}) {
     console.log(selectedNode.selection);
     
     if(selectedNode.selection.type === "repo") {
-        return (<DefaultRepoView selectedNode={selectedNode}/>)
+        return (
+            <DefaultRepoView setCloneData={setCloneData} cloneData={cloneData} selectedNode={selectedNode}/>
+        )
     }
     if(selectedNode.selection.type === "branch") {
         return (<BranchView selectedNode={selectedNode}/>)
@@ -48,7 +68,7 @@ export default function CommitView({selectedNode}) {
 }
 
 
-export function DefaultRepoView({selectedNode}) {
+export function DefaultRepoView({setCloneData, cloneData, selectedNode}) {
     const url = selectedNode.selection.url;
     const [data, setData] = useState(null);
 
@@ -62,7 +82,7 @@ export function DefaultRepoView({selectedNode}) {
 
     const clone = () => {
         console.log(selectedNode.repo.clone);
-        window.repo.clone(selectedNode.repo.clone, selectedNode.selection).then((resp) => console.log(resp));
+        window.repo.clone(selectedNode.repo.clone, selectedNode.selection).then((resp) => setCloneData(resp));
     };
 
     // In case data has not been set
@@ -74,10 +94,10 @@ export function DefaultRepoView({selectedNode}) {
             <RepoContainerStyle>
             <Grid container spacing={2}>
                 <Grid item={true} xs={12}>
-                    <Typography variant='h5' sx={{color: '#71697A'}}>Repo - {selectedNode.selection.name}:</Typography>
+                    <Typography variant='h5'>Repo - {selectedNode.selection.name}:</Typography>
                 </Grid>
                 <Grid item={true} xs={12}>
-                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{data.description}</Typography>
+                    <Typography variant='subtitle1'>{data.description}</Typography>
                 </Grid>
                 <Grid item={true} xs={8}>
                     <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
@@ -87,6 +107,7 @@ export function DefaultRepoView({selectedNode}) {
                 </Grid>
             </Grid>
             </RepoContainerStyle>
+            <CloneView cloneData={cloneData}></CloneView>
         </div>
     )
 }
@@ -183,17 +204,17 @@ export function TagView({selectedNode}) {
 export function FileChanged(index, {file}) {
     /*
     files: Array(10)
-0:
-additions: 2
-blob_url: "https://github.com/jstark518/Desktop-Deploy/blob/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
-changes: 2
-contents_url: "https://api.github.com/repos/jstark518/Desktop-Deploy/contents/.gitignore?ref=3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60"
-deletions: 0
-filename: ".gitignore"
-patch: "@@ -107,3 +107,5 @@ dist\n /.tmp/\n /.idea/\n /.env.json\n+/.cache.data.gh.json\n+.DS_Store"
-raw_url: "https://github.com/jstark518/Desktop-Deploy/raw/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
-sha: "3655ab548616dba12cafa1ec9b3793b1f34b84fe"
-status: "modified"
+        0:
+        additions: 2
+        blob_url: "https://github.com/jstark518/Desktop-Deploy/blob/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
+        changes: 2
+        contents_url: "https://api.github.com/repos/jstark518/Desktop-Deploy/contents/.gitignore?ref=3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60"
+        deletions: 0
+        filename: ".gitignore"
+        patch: "@@ -107,3 +107,5 @@ dist\n /.tmp/\n /.idea/\n /.env.json\n+/.cache.data.gh.json\n+.DS_Store"
+        raw_url: "https://github.com/jstark518/Desktop-Deploy/raw/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
+        sha: "3655ab548616dba12cafa1ec9b3793b1f34b84fe"
+        status: "modified"
      */
     return (
         <tr key={file.filename + index}>
@@ -203,4 +224,60 @@ status: "modified"
         </tr>
 
     );
+}
+
+
+export function CloneView({cloneData}) {
+    console.log(cloneData)
+    if (cloneData !== null){
+        return (
+            <CloneContainerStyle elevation={2}>
+                <Grid container spacing={2}>
+                    <Grid item={true} xs={12} sx={{marginBottom: '16px'}}>
+                        <Typography variant='h5'>Cloned Repo Info:</Typography>
+                        <Typography variant='h6' sx={{fontSize: '18px', color: '#50514F'}}>{cloneData.description}</Typography>
+                        <Typography variant='body1' sx={{fontSize: '14px', color: '#50514F'}}>Version: {cloneData.version}</Typography>
+                        <Typography variant='body1' sx={{fontSize: '14px', color: '#50514F'}}>Author: {cloneData.author}</Typography>
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item={true} xs={6}>
+                            <Typography variant='h6' sx={{fontSize: '16px', marginLeft: '16px'}}>Dependencies:</Typography>
+                        </Grid>
+                        <Grid item={true} xs={6}>
+                            <Typography variant='h6' sx={{fontSize: '16px'}}>Scripts:</Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item={true} xs={6} 
+                          sx={{height: '12rem', overflow: 'scroll', overflowX: 'hidden',
+                          "&::-webkit-scrollbar": {
+                            width: 2
+                            }
+                          }}
+                    >
+                        {console.log(cloneData.dependencies)}
+                        <Stack spacing={1}>
+                            {Object.entries(cloneData.dependencies).map((dep)=> Dependencies({dep}))}
+                        </Stack>
+                    </Grid>
+                    <Grid item={true} xs={6}>
+                        <Stack spacing={1}>
+                            {Object.entries(cloneData.scripts).map((script)=> Scripts({script}))}
+                        </Stack> 
+                    </Grid>
+                </Grid>
+            </CloneContainerStyle>
+        )
+    }
+}
+
+export function Dependencies({dep}){
+    return (
+        <Typography variant='body2' sx={{color: '#50514F', fontSize: '10px'}}>{dep[0]}: {dep[1]}</Typography>
+    )
+}
+
+export function Scripts({script}){
+    return (
+        <Typography variant='body2' sx={{color: '#50514F'}}>{script[0]}: {script[1]}</Typography>
+    )
 }

@@ -68,7 +68,7 @@ export default function RepoTreeView({onSelectNode}) {
             "nodeId" is a stringified JSON object, since "onNodeSelect" requires a string.
             passing props from repo.branch, repo.commit, repo.tag to access elsewhere in the application.
             */
-        <TreeItem key={repo.name + index} nodeId={JSON.stringify({type: 'repo', repoIndex: index, name: repo.name, ...repo})} label={repo.name}>
+            <TreeItem key={repo.name + index} nodeId={JSON.stringify({type: 'repo', repoIndex: index, name: repo.name, ...repo})} label={repo.name} sx={{color: 'white'}}>
                 <TreeItem nodeId={JSON.stringify({type: 'branches',index})} label="Branches">
                     {repo.branches.map((branch, i) => (
                     <TreeItem key={branch.name + i} nodeId={JSON.stringify({type: "branch", repoIndex: index, ...branch})} label={branch.name}>

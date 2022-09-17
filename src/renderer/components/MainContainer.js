@@ -5,11 +5,14 @@ import CommitView from "./CommitView";
 import styled from "styled-components";
 
 const AppHeader = styled.div`
-  background: #d4cdd4;
+  background: #70716F;
   width: 100%;
   font-size: 2rem;
   padding: 0.5em;
   height: 4rem;
+  color: white;
+  font-family: 'Roboto';
+  font-weight: 200;
 `;
 
 const MainContainerStyle = styled.div`
@@ -23,10 +26,11 @@ const FlexContainer = styled.div`
 `;
 
 const TreeViewContainer = styled.div`
-  background: #ede7ed;
+  background: #50514F;
   width: 15rem;
   height:100%;
   overflow: auto;
+  padding-top: 10px;
 `;
 
 const CommitViewContainer = styled.div`
