@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import styled from "styled-components";
 
 import CommitView from "./CommitView";
-import RepoTreeView from './RepoTreeView';
+import RepoTreeView from "./RepoTreeView";
 
 const AppHeader = styled.div`
-  background: #50514F;
+  background: #50514f;
   width: 100%;
   font-size: 2rem;
   padding: 0.5em;
   height: 4rem;
   color: white;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-weight: 200;
 `;
 
@@ -27,9 +27,9 @@ const FlexContainer = styled.div`
 `;
 
 const TreeViewContainer = styled.div`
-  background: #70716F;
+  background: #70716f;
   width: 15rem;
-  height:100%;
+  height: 100%;
   overflow: auto;
   padding-top: 10px;
 `;
@@ -40,18 +40,22 @@ const CommitViewContainer = styled.div`
   overflow-wrap: anywhere;
 `;
 
-export default function MainContainer({gitRepoAPIData}) {
+export default function MainContainer({ gitRepoAPIData }) {
   const [repoData, setRepoData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   console.log(selectedNode);
 
   return (
     <MainContainerStyle>
-        <AppHeader>Desktop Deploy</AppHeader>
-        <FlexContainer>
-        <TreeViewContainer><RepoTreeView onSelectNode={setSelectedNode}/></TreeViewContainer>
-        <CommitViewContainer><CommitView selectedNode={selectedNode}></CommitView></CommitViewContainer>
-        </FlexContainer>
+      <AppHeader>Desktop Deploy</AppHeader>
+      <FlexContainer>
+        <TreeViewContainer>
+          <RepoTreeView onSelectNode={setSelectedNode} />
+        </TreeViewContainer>
+        <CommitViewContainer>
+          <CommitView selectedNode={selectedNode}></CommitView>
+        </CommitViewContainer>
+      </FlexContainer>
     </MainContainerStyle>
-  )
+  );
 }
