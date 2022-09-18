@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
-import CommitView from "./CommitView";
+import MainView from "./MainView";
 import RepoTreeView from "./RepoTreeView";
 
 const AppHeader = styled.div`
@@ -34,7 +34,7 @@ const TreeViewContainer = styled.div`
   padding-top: 10px;
 `;
 
-const CommitViewContainer = styled.div`
+const MainViewContainer = styled.div`
   padding: 1rem;
   flex: 1;
   overflow-wrap: anywhere;
@@ -52,9 +52,9 @@ export default function MainContainer({ gitRepoAPIData }) {
         <TreeViewContainer>
           <RepoTreeView onSelectNode={setSelectedNode} />
         </TreeViewContainer>
-        <CommitViewContainer>
-          <CommitView selectedNode={selectedNode}></CommitView>
-        </CommitViewContainer>
+        <MainViewContainer>
+          <MainView selectedNode={selectedNode}></MainView>
+        </MainViewContainer>
       </FlexContainer>
     </MainContainerStyle>
   );
