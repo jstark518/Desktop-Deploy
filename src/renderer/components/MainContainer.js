@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import CommitView from "./CommitView";
 import RepoTreeView from "./RepoTreeView";
+import Xterm from "./XTerm";
 
 const AppHeader = styled.div`
   background: #50514f;
@@ -24,6 +25,7 @@ const MainContainerStyle = styled.div`
 const FlexContainer = styled.div`
   display: flex;
   height: calc(100vh - 4rem);
+  overflow: hidden;
 `;
 
 const TreeViewContainer = styled.div`
@@ -38,6 +40,8 @@ const CommitViewContainer = styled.div`
   padding: 1rem;
   flex: 1;
   overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
 `;
 
 export default function MainContainer({ gitRepoAPIData }) {
@@ -54,6 +58,7 @@ export default function MainContainer({ gitRepoAPIData }) {
         </TreeViewContainer>
         <CommitViewContainer>
           <CommitView selectedNode={selectedNode}></CommitView>
+          <Xterm></Xterm>
         </CommitViewContainer>
       </FlexContainer>
     </MainContainerStyle>
