@@ -37,12 +37,9 @@ const StyledMUIButton = styled(Button, {
 
 // The main viewer. This calls the other views when needed.
 export default function CommitView({selectedNode}) {
-
     const [cloneData,setCloneData] = useState(null)
     
     if(selectedNode == null) return (<span>Select a Repo</span>);
-
-    const commit = selectedNode.selection.type == "commit" ? selectedNode.selection : selectedNode.repo.commits.find((e) => e.hash == selectedNode.selection.commitHash);
 
     console.log(selectedNode.selection);
     
@@ -107,7 +104,6 @@ export function DefaultRepoView({setCloneData, cloneData, selectedNode}) {
     )
 }
 
-
 export function BranchView({selectedNode}) {
     const url = selectedNode.selection.url;
     const [data, setData] = useState(null);
@@ -127,7 +123,7 @@ export function BranchView({selectedNode}) {
     };
     
     if(data == null) return (<span>Loading....</span>);
-    let localDate = new Date(data.commit.author.date);
+    const localDate = new Date(data.commit.author.date);
     return (
         <div>
             <RepoContainerStyle>
@@ -163,9 +159,8 @@ export function CommitDetailView({selectedNode}) {
     const clone = () => {
         console.log(selectedNode.repo.clone);
         window.repo.clone(selectedNode.repo.clone, selectedNode.selection).then((resp) => console.log(resp));
-    };
-
-    let localDate = new Date(selectedNode.selection.date);
+    },
+        localDate = new Date(selectedNode.selection.date);
 
     return (
         <RepoContainerStyle>
