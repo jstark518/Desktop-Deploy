@@ -2,13 +2,13 @@
 const os = require('os');
 const pty = require('node-pty');
 const crypto = require('crypto');
-import { app, BrowserWindow, ipcMain } from "electron";
+import {app, BrowserWindow, ipcMain} from "electron";
 import * as path from "path";
-import { githubRepo } from "./api/repos/github.ts";
-import { simpleGit, CleanOptions } from "simple-git";
+import {githubRepo} from "./api/repos/github.ts";
+import {simpleGit, CleanOptions} from "simple-git";
 const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
-const { dialog, session } = require("electron");
+const {dialog, session} = require("electron");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 /*
@@ -20,8 +20,7 @@ Data is saved in cache (gitHubRepoInstance.cache) and local variable
 */
 let githubRepoInstance = new githubRepo();
 // RepoList value is a promise
-let RepoList = githubRepoInstance.getRepoList(),
-  resolvedRepoList = null;
+let RepoList = githubRepoInstance.getRepoList(), resolvedRepoList = null;
 // Resolves the promise
 RepoList.then((list) => {
   /* Value of list:
@@ -43,24 +42,22 @@ RepoList.then((list) => {
 });
 
 ipcMain.on("terminal.ready", (event) => {
-    const shellName = os.platform() === 'win32' ? 'powershell.exe' : "/bin/zsh",
+  const shellName = os.platform() === 'win32' ? 'powershell.exe' : "/bin/zsh",
         ptyProcess = pty.spawn(shellName, [], {
-            name: 'xterm-color',
-            cols: 90,
-            rows: 30,
-            cwd: process.env.HOME,
-            env: process.env,
-            encoding: "UTF-8",
+          name : 'xterm-color',
+          cols : 90,
+          rows : 30,
+          cwd : process.env.HOME,
+          env : process.env,
+          encoding : "UTF-8",
         });
-    ptyProcess.on('data', function (data) {
-        // Filter out the weird line with just a % sign
-        if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
-            mainWindow.webContents.send("terminal.incomingData", data);
-        }
-    });
-    ipcMain.on("terminal.keystroke", (event, key) => {
-        ptyProcess.write(key);
-    });
+  ptyProcess.on('data', function(data) {
+    // Filter out the weird line with just a % sign
+    if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
+      mainWindow.webContents.send("terminal.incomingData", data);
+    }
+  });
+  ipcMain.on("terminal.keystroke", (event, key) => { ptyProcess.write(key); });
 });
 
 // Passing promise to the front-end
@@ -68,13 +65,10 @@ ipcMain.handle("repos.list", (event) => RepoList);
 // Value from the front-end component CommitView.js
 ipcMain.handle("repo.clone", async (event, url, node) => {
   let repo = resolvedRepoList.find((e) => e.clone === url),
-    parsedUrl = new URL(url);
+      parsedUrl = new URL(url);
   const auth = await githubRepoInstance.getAuth(),
-    repoPath = path.join(
-      app.getAppPath(),
-      "/.library/repo/",
-      url.replace("https://", "")
-    );
+        repoPath = path.join(app.getAppPath(), "/.library/repo/",
+                             url.replace("https://", ""));
   console.log(repoPath);
 
   parsedUrl.username = auth.username.login;
@@ -93,97 +87,82 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
   }
 
   if (repo.path && repo.path !== repoPath && fs.existsSync(repo.path)) {
-    fs.rmdir(
-      repo.path,
-      {
-        recursive: true,
-      },
-      (e) => e && console.log(e)
-    );
+    fs.rmdir(repo.path, {
+      recursive : true,
+    },
+             (e) => e && console.log(e));
   }
 
   if (!fs.existsSync(repoPath)) {
     await simpleGit()
-      .clone(parsedUrl.toString(), repoPath)
-      .checkout(node.commitHash);
+        .clone(parsedUrl.toString(), repoPath)
+        .checkout(node.commitHash);
   } else {
-    await simpleGit(repoPath)
-      .fetch()
-      .checkout(node.commitHash || node.hash);
+    await simpleGit(repoPath).fetch().checkout(node.commitHash || node.hash);
   }
 
   resolvedRepoList.find((e) => e.clone === url).path = repoPath;
   githubRepoInstance.cache(resolvedRepoList);
   loadRepoPackageFile(repoPath);
-  return [repoPath];
+  return [ repoPath ];
 });
 
 function loadRepoPackageFile(repoPath) {
   const packageFile = path.join(repoPath, "package.json"),
-    composerFile = path.join(repoPath, "composer.json");
+        composerFile = path.join(repoPath, "composer.json");
   if (fs.existsSync(packageFile)) {
-    const data = fs.readFileSync(packageFile),
-      packageJSON = JSON.parse(data),
-      scripts = packageJSON.scripts,
-      details = {
-        name: packageJSON.name,
-        version: packageJSON.version,
-        description: packageJSON.description,
-        author: packageJSON.author,
-      };
+    const data = fs.readFileSync(packageFile), packageJSON = JSON.parse(data),
+          scripts = packageJSON.scripts, details = {
+            name : packageJSON.name,
+            version : packageJSON.version,
+            description : packageJSON.description,
+            author : packageJSON.author,
+          };
     console.log("Node", details);
     console.table(scripts);
     return packageJSON;
   }
   if (fs.existsSync(composerFile)) {
-    const data = fs.readFileSync(composerFile),
-      composerJSON = JSON.parse(data),
-      scripts = composerJSON.scripts,
-      details = {
-        name: composerJSON.name,
-        description: composerJSON.description,
-      };
+    const data = fs.readFileSync(composerFile), composerJSON = JSON.parse(data),
+          scripts = composerJSON.scripts, details = {
+            name : composerJSON.name,
+            description : composerJSON.description,
+          };
     console.log("Composer", details);
     console.table(scripts);
   }
   const packageManagers = {
-    yarn:
-      fs.existsSync(path.join(repoPath, "yarn.lock")) &&
-      fs.statSync(path.join(repoPath, "yarn.lock")).mtime,
-    npm:
-      fs.existsSync(path.join(repoPath, "package-lock.json")) &&
-      fs.statSync(path.join(repoPath, "package-lock.json")).mtime,
-    nodeVendor: fs.existsSync(path.join(repoPath, "node_modules")),
-    composer:
-      fs.existsSync(path.join(repoPath, "composer.lock")) &&
-      fs.statSync(path.join(repoPath, "composer.lock")).mtime,
-    composerVendor: fs.existsSync(path.join(repoPath, "vendor")),
+    yarn : fs.existsSync(path.join(repoPath, "yarn.lock")) &&
+               fs.statSync(path.join(repoPath, "yarn.lock")).mtime,
+    npm : fs.existsSync(path.join(repoPath, "package-lock.json")) &&
+              fs.statSync(path.join(repoPath, "package-lock.json")).mtime,
+    nodeVendor : fs.existsSync(path.join(repoPath, "node_modules")),
+    composer : fs.existsSync(path.join(repoPath, "composer.lock")) &&
+                   fs.statSync(path.join(repoPath, "composer.lock")).mtime,
+    composerVendor : fs.existsSync(path.join(repoPath, "vendor")),
   };
 
   if (packageManagers.yarn && packageManagers.nodeVendor) {
     const mtime =
         fs.existsSync(path.join(repoPath, "node_modules", ".yarn-integrity")) &&
         fs.statSync(path.join(repoPath, "node_modules", ".yarn-integrity"))
-          .mtime,
-      isUpToDate = mtime >= packageManagers.yarn;
+            .mtime,
+          isUpToDate = mtime >= packageManagers.yarn;
     console.log("node_modules is up to date", isUpToDate);
   }
 
   if (packageManagers.npm && packageManagers.nodeVendor) {
     const mtime =
         fs.existsSync(
-          path.join(repoPath, "node_modules", ".package-lock.json")
-        ) &&
+            path.join(repoPath, "node_modules", ".package-lock.json")) &&
         fs.statSync(path.join(repoPath, "node_modules", ".package-lock.json"))
-          .mtime,
-      isUpToDate = mtime >= packageManagers.npm;
+            .mtime,
+          isUpToDate = mtime >= packageManagers.npm;
     console.log("node_modules is up to date", isUpToDate);
   }
 
-  if (
-    (packageManagers.yarn || packageManagers.npm) &&
-    !packageManagers.nodeVendor
-  ) {
+  if ((packageManagers.yarn || packageManagers.npm) &&
+      !packageManagers.nodeVendor) {
     console.log("node_modules does not exist, but should");
   }
 
@@ -191,7 +170,7 @@ function loadRepoPackageFile(repoPath) {
     const mtime =
         fs.existsSync(path.join(repoPath, "vendor", "autoload.php")) &&
         fs.statSync(path.join(repoPath, "vendor", "autoload.php")).mtime,
-      isUpToDate = mtime >= packageManagers.composer;
+          isUpToDate = mtime >= packageManagers.composer;
     console.log("vendor is up to date", isUpToDate);
   }
 
@@ -203,7 +182,7 @@ function loadRepoPackageFile(repoPath) {
 }
 
 const filter = {
-  urls: ["https://api.github.com/*"],
+  urls : [ "https://api.github.com/*" ],
 };
 
 // global reference to mainWindow (necessary to prevent window from being
@@ -211,13 +190,13 @@ const filter = {
 let mainWindow;
 
 function createMainWindow() {
-    const mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 800,
-        webPreferences: {
-            preload: path.join(app.getAppPath(), "/src/renderer/preload.js"),
-        },
-    });
+  const mainWindow = new BrowserWindow({
+    width : 1000,
+    height : 800,
+    webPreferences : {
+      preload : path.join(app.getAppPath(), "/src/renderer/preload.js"),
+    },
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
@@ -246,16 +225,11 @@ app.on("activate", () => {
 app.on("ready", () => {
   mainWindow = createMainWindow();
   session.defaultSession.webRequest.onBeforeSendHeaders(
-    filter,
-    async (details, callback) => {
-      const auth = await githubRepoInstance.getAuth();
-      details.requestHeaders["Authorization"] = "bearer " + auth.token;
-      callback({ requestHeaders: details.requestHeaders });
-    }
-  );
+      filter, async (details, callback) => {
+        const auth = await githubRepoInstance.getAuth();
+        details.requestHeaders["Authorization"] = "bearer " + auth.token;
+        callback({requestHeaders : details.requestHeaders});
+      });
 });
 
-
-function md5 (str) {
-    return crypto.createHash('md5').update(str).digest('hex')
-}
+function md5(str) { return crypto.createHash('md5').update(str).digest('hex') }
