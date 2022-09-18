@@ -5,7 +5,7 @@ import CommitView from "./CommitView";
 import styled from "styled-components";
 
 const AppHeader = styled.div`
-  background: #70716F;
+  background: #50514F;
   width: 100%;
   font-size: 2rem;
   padding: 0.5em;
@@ -26,7 +26,7 @@ const FlexContainer = styled.div`
 `;
 
 const TreeViewContainer = styled.div`
-  background: #50514F;
+  background: #70716F;
   width: 15rem;
   height:100%;
   overflow: auto;

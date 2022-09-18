@@ -10,16 +10,11 @@ import Stack from '@mui/material/Stack'
 
 const RepoContainerStyle = styled('div')({
     background: '#88D3A0',
-    padding: 10,
+    padding: 16,
     borderRadius: '5px',
     marginBottom: '10px'
 })
 
-// const CloneContainerStyle = styled('div')({
-//     background: '#E6FEE6',
-//     padding: 16,
-//     borderRadius: '5px'
-// })
 const CloneContainerStyle = styled(Paper, {
     shouldForwardProp: (props) => props !== 'elevation',
   })({
