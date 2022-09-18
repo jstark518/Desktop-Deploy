@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
@@ -44,22 +44,23 @@ const CommitViewContainer = styled.div`
   flex-direction: column;
 `;
 
-export default function MainContainer({gitRepoAPIData}) {
+export default function MainContainer({ gitRepoAPIData }) {
   const [repoData, setRepoData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   console.log(selectedNode);
 
   return (
-      <MainContainerStyle><AppHeader>Desktop Deploy<
-          /AppHeader>
+    <MainContainerStyle>
+      <AppHeader>Desktop Deploy</AppHeader>
       <FlexContainer>
         <TreeViewContainer>
           <RepoTreeView onSelectNode={setSelectedNode} />
-      </TreeViewContainer>
+        </TreeViewContainer>
         <CommitViewContainer>
           <CommitView selectedNode={selectedNode}></CommitView>
-      <Xterm></Xterm>
+          <Xterm></Xterm>
         </CommitViewContainer>
       </FlexContainer>
-    </MainContainerStyle>);
+    </MainContainerStyle>
+  );
 }
