@@ -1,13 +1,13 @@
-import {styled} from "@mui/system";
-import React, {useEffect, useRef, useState} from "react";
-import {Terminal} from "xterm";
+import { styled } from "@mui/system";
+import React, { useEffect, useRef, useState } from "react";
+import { Terminal } from "xterm";
 
 require("xterm/css/xterm.css");
 
 const XTermStyle = styled("div")({
-  maxHeight : "30vh",
-  flex : 0,
-  margin : "0 -1rem",
+  maxHeight: "30vh",
+  flex: 0,
+  margin: "0 -1rem",
 });
 
 export default function Xterm() {
@@ -25,5 +25,5 @@ export default function Xterm() {
     }
   }, []);
 
-  return <XTermStyle ref = {termElement}>< /XTermStyle>;
+  return <XTermStyle ref={termElement}></XTermStyle>;
 }
