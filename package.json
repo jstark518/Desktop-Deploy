@@ -67,13 +67,18 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "materialize-css": "^1.0.0",
+    "node-pty": "^0.10.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-materialize": "^3.10.0",
     "simple-git": "^3.14.0",
     "source-map-support": "^0.5.21",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "xterm": "^4.19.0"
+  },
+  "resolutions": {
+    "nan": "github:jstark518/nan"
   },
   "optionalDependencies": {
     "dmg-license": "^1.0.11"

@@ -8,15 +8,21 @@ import { useEffect, useState } from "react";
 // import styled from "styled-components";
 
 const RepoContainerStyle = styled("div")({
+  flex: 1,
   background: "#88D3A0",
   padding: 16,
   borderRadius: "5px",
   marginBottom: "10px",
 });
 
+const RepoFlexContainerStyle = styled("div")({
+  flex: 1
+});
+
+
 const CloneContainerStyle = styled(Paper, {
   shouldForwardProp: (props) => props !== "elevation",
-})({ background: "#E6FEE6", padding: 16 });
+})({ background: "#E6FEE6", padding: 16, flex: 1 });
 
 // Wrapping MUIComponent in a styled component
 const StyledMUIButton = styled(Button, {
@@ -31,7 +37,7 @@ const StyledMUIButton = styled(Button, {
 export default function CommitView({ selectedNode }) {
   const [cloneData, setCloneData] = useState(null);
 
-  if (selectedNode == null) return <span>Select a Repo</span>;
+  if (selectedNode == null) return (<RepoFlexContainerStyle><span>Select a Repo</span></RepoFlexContainerStyle>);
 
   console.log(selectedNode.selection);
 
@@ -76,11 +82,10 @@ export function DefaultRepoView({ setCloneData, cloneData, selectedNode }) {
   };
 
   // In case data has not been set
-  if (data == null) return <span>Loading... .</span>;
+  if (data == null) return (<RepoFlexContainerStyle><span>Loading... .</span></RepoFlexContainerStyle>);
 
   return (
-    <div>
-      {console.log(data)}
+    <RepoFlexContainerStyle>
       <RepoContainerStyle>
         <Grid container spacing={2}>
           <Grid item={true} xs={12}>
@@ -108,7 +113,7 @@ export function DefaultRepoView({ setCloneData, cloneData, selectedNode }) {
         </Grid>
       </RepoContainerStyle>
       <CloneView cloneData={cloneData}></CloneView>
-    </div>
+    </RepoFlexContainerStyle>
   );
 }
 
@@ -134,7 +139,6 @@ export function BranchView({ selectedNode }) {
   if (data == null) return <span>Loading....</span>;
   const localDate = new Date(data.commit.author.date);
   return (
-    <div>
       <RepoContainerStyle>
         <Grid container spacing={2}>
           <Grid item={true} xs={12}>
@@ -182,7 +186,6 @@ export function BranchView({ selectedNode }) {
           </Grid>
         </Grid>
       </RepoContainerStyle>
-    </div>
   );
 }
 
