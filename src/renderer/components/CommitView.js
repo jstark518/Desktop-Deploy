@@ -1,61 +1,56 @@
-import React from 'react';
-import {useState, useEffect} from 'react';
-import { Typography } from '@mui/material';
+import {Box, Button, Paper, Typography} from '@mui/material';
 import Grid from '@mui/material/Grid'; // Grid version 1
-import { Paper, Box, Button } from '@mui/material';
-import {styled} from '@mui/system';
 import Stack from '@mui/material/Stack'
+import {styled} from '@mui/system';
+import React from 'react';
+import {useEffect, useState} from 'react';
+
 // import styled from "styled-components";
 
-
 const RepoContainerStyle = styled('div')({
-    background: '#88D3A0',
-    padding: 16,
-    borderRadius: '5px',
-    marginBottom: '10px'
+  background : '#88D3A0',
+  padding : 16,
+  borderRadius : '5px',
+  marginBottom : '10px'
 })
 
 const CloneContainerStyle = styled(Paper, {
-    shouldForwardProp: (props) => props !== 'elevation',
-  })({
-    background: '#E6FEE6',
-    padding: 16
-})
-
+  shouldForwardProp : (props) => props !== 'elevation',
+})({background : '#E6FEE6', padding : 16})
 
 // Wrapping MUIComponent in a styled component
 const StyledMUIButton = styled(Button, {
-    shouldForwardProp: (props) => props !== 'variant',
-  })({
-    backgroundColor: '#6D20C5',
-    color: 'white',
-    '&:hover': {
-        color: 'black',
-        border: '2px black solid'
-    }
+  shouldForwardProp : (props) => props !== 'variant',
+})({
+  backgroundColor : '#6D20C5',
+  color : 'white',
+  '&:hover' : {color : 'black', border : '2px black solid'}
 })
 
 // The main viewer. This calls the other views when needed.
 export default function CommitView({selectedNode}) {
-    const [cloneData,setCloneData] = useState(null)
-    
-    if(selectedNode == null) return (<span>Select a Repo</span>);
+  const [cloneData, setCloneData] = useState(null)
+
+  if (selectedNode == null) return (
+      <span>Select a Repo<
+          /span>);
 
     console.log(selectedNode.selection);
     
     if(selectedNode.selection.type === "repo") {
         return (
-            <DefaultRepoView setCloneData={setCloneData} cloneData={cloneData} selectedNode={selectedNode}/>
-        )
-    }
-    if(selectedNode.selection.type === "branch") {
-        return (<BranchView selectedNode={selectedNode}/>)
+            <DefaultRepoView setCloneData={setCloneData} cloneData={cloneData} selectedNode={selectedNode}/>)
+} if (selectedNode.selection.type === "branch") {
+  return (<BranchView selectedNode = {
+    selectedNode
+  } />)
     }
     if(selectedNode.selection.type === "tag") {
         return (<TagView selectedNode={selectedNode}/>)
-    }   
-    if(selectedNode.selection.type === "commit") {
-        return (<CommitDetailView selectedNode={selectedNode}/>)
+}
+if (selectedNode.selection.type === "commit") {
+        return (<CommitDetailView selectedNode={
+    selectedNode}/>)
     }
 }
 
@@ -78,7 +73,9 @@ export function DefaultRepoView({setCloneData, cloneData, selectedNode}) {
     };
 
     // In case data has not been set
-    if(data == null) return (<span>Loading....</span>);
+        if (data ==
+            null) return (<span>Loading...
+                              .</span>);
 
     return (
         <div>
@@ -87,20 +84,17 @@ export function DefaultRepoView({setCloneData, cloneData, selectedNode}) {
             <Grid container spacing={2}>
                 <Grid item={true} xs={12}>
                     <Typography variant='h5'>Repo - {selectedNode.selection.name}:</Typography>
-                </Grid>
+                          </Grid>
                 <Grid item={true} xs={12}>
                     <Typography variant='subtitle1'>{data.description}</Typography>
-                </Grid>
+                          </Grid>
                 <Grid item={true} xs={8}>
                     <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
-                </Grid>
+                          </Grid>
                 <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
-                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
-                </Grid>
-            </Grid>
-            </RepoContainerStyle>
-            <CloneView cloneData={cloneData}></CloneView>
-        </div>
+                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton></Grid>
+            </Grid></RepoContainerStyle>
+            <CloneView cloneData={cloneData}></CloneView></div>
     )
 }
 
@@ -123,33 +117,58 @@ export function BranchView({selectedNode}) {
     };
     
     if(data == null) return (<span>Loading....</span>);
-    const localDate = new Date(data.commit.author.date);
-    return (
-        <div>
-            <RepoContainerStyle>
-            <Grid container spacing={2}>
-                <Grid item={true} xs={12}>
-                    <Typography variant='h5' sx={{color: '#71697A'}}>Branch - {selectedNode.selection.name}:</Typography>
+            const localDate = new Date(data.commit.author.date);
+            return (<div><RepoContainerStyle><Grid container spacing = {2}>
+                    <Grid item = {true} xs = {12}>
+                    <Typography variant = 'h5' sx = {{ color: '#71697A' }}>
+                        Branch -
+                    {selectedNode.selection.name}:
+                        </Typography>
                 </Grid>
-                <Grid item={true} xs={2}>
-                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>Latest commit:</Typography>
+                    <Grid item = {true} xs = {2}>
+                    <Typography variant =
+                         'subtitle1' sx = {{ color: '#71697A' }}>Latest commit:
+                        </Typography>
                 </Grid>
-                <Grid item={true} xs={4}>
-                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{localDate.toLocaleString()}</Typography>
+                    <Grid item = {true} xs = {4}>
+                    <Typography variant =
+                         'subtitle1' sx = {{ color: '#71697A' }}>{
+                        localDate.toLocaleString()}<
+                        /Typography>
                 </Grid>
-                <Grid item={true} xs={6}>
-                    <Typography variant='subtitle1' sx={{color: '#71697A'}}>{data.commit.message}</Typography>
+                    <Grid item = {true} xs = {6}>
+                    <Typography variant =
+                         'subtitle1' sx = {{ color: '#71697A' }}>{
+                        data.commit
+                            .message}</Typography>
+                </Grid><
+                        Grid item = {true} xs = {8}><Typography
+                                                         variant =
+                                                             'body1' sx = {
+                                                               {
+                                                                 flex: 1,
+                                                                     fontSize:
+                                                                         '12px'
+                                                               }
+                                                             }>URL -
+                    {selectedNode.selection
+                         .url}: </Typography>
+                </Grid><Grid
+                                                                          item =
+                                                                              {true} xs = {4} sx = {
+                                                                                {
+                                                                                  display:
+                                                                                      'flex',
+                                                                                      justifyContent:
+                                                                                          'right'
+                                                                                }
+                                                                              }>
+                    <StyledMUIButton onClick = {clone} variant = 'contained'>Clone</StyledMUIButton>
                 </Grid>
-                <Grid item={true} xs={8}>
-                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
-                </Grid>
-                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
-                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
-                </Grid>
-            </Grid>
+                    </Grid>
             </RepoContainerStyle>
 
-        </div>
+                    </div>
     )
 }
 
@@ -167,22 +186,27 @@ export function CommitDetailView({selectedNode}) {
             <Grid container spacing={2}>
                 <Grid item={true} xs={12}>
                     <Typography variant='h5' sx={{color: '#71697A'}}>Commit - {localDate.toLocaleString()}:</Typography>
-                </Grid>
+                    </Grid>
                 <Grid item={true} xs={12}>
                     <Paper elevation={3} sx={{padding: '1em', flex: 1}}>
-                        <Typography variant='h6'>Commit Message:</Typography>
-                        {selectedNode.selection.message}
-                    </Paper>
+                        <Typography variant='h6'>Commit Message:</Typography>{selectedNode
+                                                                                                                                                                                                                                  .selection
+                                                                                                                                                                                                                                  .message}<
+                        /Paper>
                 </Grid>
-                <Grid item={true} xs={8}>
-                    <Typography variant='body1' sx={{flex: 1, fontSize: '12px'}}>URL - {selectedNode.selection.url}:</Typography>
+                    <Grid item = {true} xs = {8}>
+                    <Typography variant =
+                         'body1' sx = {{ flex: 1, fontSize: '12px' }}>URL -
+                    {selectedNode.selection.url}:
+                        </Typography>
                 </Grid>
-                <Grid item={true} xs={4} sx={{display: 'flex', justifyContent: 'right'}}>
-                    <StyledMUIButton onClick={clone} variant='contained'>Clone</StyledMUIButton>
+                    <Grid item = {true} xs = {4} sx =
+                         {{ display: 'flex', justifyContent: 'right' }}>
+                    <StyledMUIButton onClick = {clone} variant = 'contained'>
+                        Clone</StyledMUIButton>
                 </Grid>
-            </Grid>
-        </RepoContainerStyle>
-    )
+                    </Grid>
+        </RepoContainerStyle>)
 }
 
 export function TagView({selectedNode}) {
@@ -194,16 +218,19 @@ export function TagView({selectedNode}) {
 export function FileChanged(index, {file}) {
     /*
     files: Array(10)
-        0:
-        additions: 2
-        blob_url: "https://github.com/jstark518/Desktop-Deploy/blob/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
-        changes: 2
-        contents_url: "https://api.github.com/repos/jstark518/Desktop-Deploy/contents/.gitignore?ref=3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60"
-        deletions: 0
-        filename: ".gitignore"
-        patch: "@@ -107,3 +107,5 @@ dist\n /.tmp/\n /.idea/\n /.env.json\n+/.cache.data.gh.json\n+.DS_Store"
-        raw_url: "https://github.com/jstark518/Desktop-Deploy/raw/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
-        sha: "3655ab548616dba12cafa1ec9b3793b1f34b84fe"
+    0: additions: 2
+    blob_url:
+        "https://github.com/jstark518/Desktop-Deploy/blob/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
+    changes: 2
+    contents_url:
+        "https://api.github.com/repos/jstark518/Desktop-Deploy/contents/.gitignore?ref=3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60"
+    deletions: 0
+    filename: ".gitignore"
+    patch:
+        "@@ -107,3 +107,5 @@ dist\n /.tmp/\n /.idea/\n /.env.json\n+/.cache.data.gh.json\n+.DS_Store"
+    raw_url:
+        "https://github.com/jstark518/Desktop-Deploy/raw/3824a4009637cfa0f0bb0c0adc7abcf7a5e81c60/.gitignore"
+    sha: "3655ab548616dba12cafa1ec9b3793b1f34b84fe"
         status: "modified"
      */
     return (
@@ -225,16 +252,20 @@ export function CloneView({cloneData}) {
                 <Grid container spacing={2}>
                     <Grid item={true} xs={12} sx={{marginBottom: '16px'}}>
                         <Typography variant='h5'>Cloned Repo Info:</Typography>
-                        <Typography variant='h6' sx={{fontSize: '18px', color: '#50514F'}}>{cloneData.description}</Typography>
+                        <Typography variant='h6' sx={{
+    fontSize: '18px', color: '#50514F'}}>{cloneData.description}</Typography>
                         <Typography variant='body1' sx={{fontSize: '14px', color: '#50514F'}}>Version: {cloneData.version}</Typography>
-                        <Typography variant='body1' sx={{fontSize: '14px', color: '#50514F'}}>Author: {cloneData.author}</Typography>
+                        <Typography variant='body1' sx={{
+    fontSize: '14px', color: '#50514F'}}>Author: {cloneData.author}</Typography>
                     </Grid>
                     <Grid container spacing={2}>
                         <Grid item={true} xs={6}>
-                            <Typography variant='h6' sx={{fontSize: '16px', marginLeft: '16px'}}>Dependencies:</Typography>
+                            <Typography variant='h6' sx={{
+    fontSize: '16px', marginLeft: '16px'}}>Dependencies:</Typography>
                         </Grid>
                         <Grid item={true} xs={6}>
-                            <Typography variant='h6' sx={{fontSize: '16px'}}>Scripts:</Typography>
+                            <Typography variant='h6' sx={{
+    fontSize: '16px'}}>Scripts:</Typography>
                         </Grid>
                     </Grid>
                     <Grid item={true} xs={6} 
@@ -266,8 +297,9 @@ export function Dependencies({dep}){
     )
 }
 
-export function Scripts({script}){
+export function Scripts({script}) {
     return (
-        <Typography variant='body2' sx={{color: '#50514F'}}>{script[0]}: {script[1]}</Typography>
+        <Typography variant='body2' sx={{
+    color: '#50514F'}}>{script[0]}: {script[1]}</Typography>
     )
 }

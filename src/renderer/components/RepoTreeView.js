@@ -1,54 +1,54 @@
-import React from 'react';
-import {useState, useEffect} from 'react';
-import TreeView from '@mui/lab/TreeView';
-import TreeItem from '@mui/lab/TreeItem';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TreeItem from '@mui/lab/TreeItem';
+import TreeView from '@mui/lab/TreeView';
+import React from 'react';
+import {useEffect, useState} from 'react';
 
 export default function RepoTreeView({onSelectNode}) {
-    const [repoData, setRepoData] = useState([]);
-    const [selected, setSelected] = useState([]);
+  const [repoData, setRepoData] = useState([]);
+  const [selected, setSelected] = useState([]);
 
-    const handleSelect = (event, nodeIds) => {
-        setSelected(nodeIds);
+  const handleSelect = (event, nodeIds) => {
+    setSelected(nodeIds);
 
-        /* Data from the TreeItem selected, nodeId string:
-            {
-                type: 'repo',
-                repoIndex: number,
-                name: repo.name,
-                branches: [obejct],
-                clone: string,
-                commits: [object],
-                tags: [object],
-                url: string
-            }
-        */
-        const nodeData = JSON.parse(nodeIds);
-        console.log("TreeItem selected returns string converted to this JSON")
-        console.log(nodeData);
-        // sending node data to MainContainer.js
-        if(nodeData.type === "repo" || nodeData.type === "commit" || nodeData.type === "branch" || nodeData.type === "tag") {
-            onSelectNode({selection: nodeData, repo: repoData[nodeData.repoIndex]});
+    /* Data from the TreeItem selected, nodeId string:
+        {
+            type: 'repo',
+            repoIndex: number,
+            name: repo.name,
+            branches: [obejct],
+            clone: string,
+            commits: [object],
+            tags: [object],
+            url: string
         }
-      };    
+    */
+    const nodeData = JSON.parse(nodeIds);
+    console.log("TreeItem selected returns string converted to this JSON")
+    console.log(nodeData);
+    // sending node data to MainContainer.js
+    if (nodeData.type === "repo" || nodeData.type === "commit" ||
+        nodeData.type === "branch" || nodeData.type === "tag") {
+      onSelectNode({selection : nodeData, repo : repoData[nodeData.repoIndex]});
+    }
+  };
 
-    useEffect(() => {
-        /*
-        Resolve the promise passed from index.js
-        repo and method list() are exposed to window object from preload.js
-        list() calls the API in index.js
-        */
-        window.repo.list().then((list) => {
-          setRepoData(list);
-          console.log(list);
-        });
-      }, [])
-
+  useEffect(() => {
+    /*
+    Resolve the promise passed from index.js
+    repo and method list() are exposed to window object from preload.js
+    list() calls the API in index.js
+    */
+    window.repo.list().then((list) => {
+      setRepoData(list);
+      console.log(list);
+    });
+  }, [])
 
     return (
         <TreeView
-        defaultCollapseIcon={<ExpandMoreIcon />}
+    defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         /*
         "TreeView" Prop, onNodeSelect, will fire a function.

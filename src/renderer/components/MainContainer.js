@@ -1,8 +1,9 @@
-import React,{useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
-import RepoTreeView from './RepoTreeView';
-import CommitView from "./CommitView";
 import styled from "styled-components";
+
+import CommitView from "./CommitView";
+import RepoTreeView from './RepoTreeView';
 
 const AppHeader = styled.div`
   background: #50514F;
@@ -39,12 +40,11 @@ const CommitViewContainer = styled.div`
   overflow-wrap: anywhere;
 `;
 
-
 export default function MainContainer({gitRepoAPIData}) {
   const [repoData, setRepoData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   console.log(selectedNode);
-  
+
   return (
     <MainContainerStyle>
         <AppHeader>Desktop Deploy</AppHeader>
