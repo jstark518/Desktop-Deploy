@@ -46,7 +46,7 @@ ipcMain.on("terminal.ready", (event) => {
   const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
     ptyProcess = pty.spawn(shellName, [], {
       name: "xterm-color",
-      cols: 90,
+      cols: 80,
       rows: 30,
       cwd: process.env.HOME,
       env: process.env,

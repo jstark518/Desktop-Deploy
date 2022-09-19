@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import styled from "styled-components";
-
-import CommitView from "./CommitView";
+import { Container, Button } from '@mui/material'
+import MainView from "./MainView";
 import RepoTreeView from "./RepoTreeView";
 import Xterm from "./XTerm";
 
@@ -36,31 +35,50 @@ const TreeViewContainer = styled.div`
   padding-top: 10px;
 `;
 
-const CommitViewContainer = styled.div`
+const MainViewContainer = styled.div`
   padding: 1rem;
   flex: 1;
   overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+`;
+
+const BottomViewContainer = styled.div`
+  flex: 1;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 export default function MainContainer({ gitRepoAPIData }) {
-  const [repoData, setRepoData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   console.log(selectedNode);
 
   return (
     <MainContainerStyle>
       <AppHeader>Desktop Deploy</AppHeader>
+
       <FlexContainer>
         <TreeViewContainer>
           <RepoTreeView onSelectNode={setSelectedNode} />
         </TreeViewContainer>
-        <CommitViewContainer>
-          <CommitView selectedNode={selectedNode}></CommitView>
+        <MainViewContainer>
+          <MainView selectedNode={selectedNode}></MainView>
+          <BottomViewContainer>
+          <Container>
+            <Button>Test</Button>
+          </Container>
           <Xterm></Xterm>
-        </CommitViewContainer>
+          </BottomViewContainer>
+        </MainViewContainer>
       </FlexContainer>
     </MainContainerStyle>
   );
+}
+
+
+export function BottomMenu(){
+
 }

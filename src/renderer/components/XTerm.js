@@ -1,3 +1,4 @@
+import { Hidden } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect, useRef, useState } from "react";
 import { Terminal } from "xterm";
@@ -5,9 +6,10 @@ import { Terminal } from "xterm";
 require("xterm/css/xterm.css");
 
 const XTermStyle = styled("div")({
-  maxHeight: "30vh",
-  flex: 0,
+  maxHeight: '20vh',
+  flex: 1,
   margin: "0 -1rem",
+  paddingLeft: '8px'
 });
 
 export default function Xterm() {
