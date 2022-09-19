@@ -16,7 +16,7 @@ export default function Xterm() {
   useEffect(() => {
     if (termElement) {
       const terminal = new Terminal();
-      terminal.setOption("fontSize", 10);
+      terminal.options.fontSize = 10;
       terminal.open(termElement.current);
       setTerm(terminal);
       window.termAPI.onData((e, data) => terminal.write(data));
