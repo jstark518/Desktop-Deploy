@@ -72,7 +72,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-materialize": "^3.10.0",
-    "simple-git": "^3.14.0",
+    "simple-git": "^3.14.1",
     "source-map-support": "^0.5.21",
     "styled-components": "^5.3.5",
     "xterm": "^4.19.0"
