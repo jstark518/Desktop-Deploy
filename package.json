@@ -58,7 +58,7 @@
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
     "@mui/lab": "^5.0.0-alpha.99",
-    "@mui/material": "^5.10.4",
+    "@mui/material": "^5.10.5",
     "@mui/styled-engine-sc": "^5.10.3",
     "@octokit/auth-oauth-user": "^2.0.3",
     "@octokit/core": "^4.0.5",
