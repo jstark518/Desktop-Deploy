@@ -5,6 +5,7 @@ import MainView from "./MainView";
 import RepoTreeView from "./RepoTreeView";
 import Xterm from "./XTerm";
 import { TroubleshootRounded } from "@mui/icons-material";
+import TerminalIcon from '@mui/icons-material/Terminal';
 
 const AppHeader = styled.div`
   background: #50514f;
@@ -63,12 +64,6 @@ export default function MainContainer({ gitRepoAPIData }) {
   const [bottomCont, setBottomCont] = useState('');
   console.log(selectedNode);
 
-  function handleTermClick(){
-    if(bottomCont){
-      setBottomCont('term')
-    }
-  }
-
   return (
     <MainContainerStyle>
       <AppHeader>Desktop Deploy</AppHeader>
@@ -81,12 +76,15 @@ export default function MainContainer({ gitRepoAPIData }) {
           <MainView selectedNode={selectedNode}></MainView>
           <BottomViewContainer>
             <Container>
-              <Button 
+              <Button variant='contained' startIcon={<TerminalIcon/>}
                 onClick={()=> {
-                  console.log('hello')
+                  if(bottomCont==''){
+                    setBottomCont('term')
+                  }else{setBottomCont('')}
                 }}
+                sx={{fontSize: '12px', height: '20px', padding: '5px', borderRadius: '5px 5px 0 0'}}
               >
-                Test
+                Terminal
               </Button>
             </Container>
             <Box sx={{display: bottomCont == 'term' ?'block':'none'}}><Xterm></Xterm></Box>
