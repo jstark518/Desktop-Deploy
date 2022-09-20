@@ -7,7 +7,8 @@ import CloneViewer from "./CloneViewer";
 
 const RepoContainerStyle = styled("div")({
     background: "#88D3A0",
-    padding: 16,
+    padding: '16px',
+    margin: '16px',
     borderRadius: "5px",
     marginBottom: "10px",
   });

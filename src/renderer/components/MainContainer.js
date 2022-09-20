@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Container, Button } from '@mui/material'
+import { Container, Button, Box } from '@mui/material'
 import MainView from "./MainView";
 import RepoTreeView from "./RepoTreeView";
 import Xterm from "./XTerm";
+import { TroubleshootRounded } from "@mui/icons-material";
 
 const AppHeader = styled.div`
   background: #50514f;
@@ -21,6 +22,10 @@ const MainContainerStyle = styled.div`
   padding: 0;
 `;
 
+const MainViewStyle = styled.div`
+  padding: '10px';
+`;
+
 const FlexContainer = styled.div`
   display: flex;
   height: calc(100vh - 4rem);
@@ -36,7 +41,6 @@ const TreeViewContainer = styled.div`
 `;
 
 const MainViewContainer = styled.div`
-  padding: 1rem;
   flex: 1;
   overflow-wrap: anywhere;
   display: flex;
@@ -50,11 +54,20 @@ const BottomViewContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  justify-content: end;
 `;
+
 
 export default function MainContainer({ gitRepoAPIData }) {
   const [selectedNode, setSelectedNode] = useState(null);
+  const [bottomCont, setBottomCont] = useState('');
   console.log(selectedNode);
+
+  function handleTermClick(){
+    if(bottomCont){
+      setBottomCont('term')
+    }
+  }
 
   return (
     <MainContainerStyle>
@@ -67,10 +80,16 @@ export default function MainContainer({ gitRepoAPIData }) {
         <MainViewContainer>
           <MainView selectedNode={selectedNode}></MainView>
           <BottomViewContainer>
-          <Container>
-            <Button>Test</Button>
-          </Container>
-          <Xterm></Xterm>
+            <Container>
+              <Button 
+                onClick={()=> {
+                  console.log('hello')
+                }}
+              >
+                Test
+              </Button>
+            </Container>
+            <Box sx={{display: bottomCont == 'term' ?'block':'none'}}><Xterm></Xterm></Box>
           </BottomViewContainer>
         </MainViewContainer>
       </FlexContainer>

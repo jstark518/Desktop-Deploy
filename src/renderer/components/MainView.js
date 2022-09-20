@@ -7,7 +7,7 @@ import CommitDetailViewer from "./CommitDetailViewer";
 import TagViewer from "./TagViewer";
 
 
-const RepoFlexContainerStyle = styled("div")({ flex: 1 });
+const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
 
 // The main viewer. This calls the other views when needed.
 export default function MainView({ selectedNode }) {
@@ -22,6 +22,7 @@ export default function MainView({ selectedNode }) {
 
   console.log(selectedNode.selection);
 
+  
   if (selectedNode.selection.type === "repo") {
     return (
       <DefaultRepoViewer

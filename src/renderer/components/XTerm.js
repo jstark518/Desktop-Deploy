@@ -7,9 +7,7 @@ require("xterm/css/xterm.css");
 
 const XTermStyle = styled("div")({
   maxHeight: '20vh',
-  flex: 1,
-  margin: "0 -1rem",
-  paddingLeft: '8px'
+  flex: 1
 });
 
 export default function Xterm() {
