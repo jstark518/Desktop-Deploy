@@ -13,6 +13,7 @@ const XTermStyle = styled("div")({
 export default function Xterm() {
   const [term, setTerm] = useState(null);
   const termElement = useRef(null);
+
   useEffect(() => {
     if (termElement) {
       const terminal = new Terminal();
@@ -23,6 +24,7 @@ export default function Xterm() {
       terminal.onData((e) => window.termAPI.send(e));
       window.termAPI.ready();
     }
+    console.trace();
   }, []);
 
   return <XTermStyle ref={termElement}></XTermStyle>;

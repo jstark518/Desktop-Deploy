@@ -1,6 +1,6 @@
 "use strict";
-const os = require("os");
-const pty = require("node-pty");
+const os = require("os"); // node.js module providing operating system related utility and methods
+const pty = require("node-pty"); // Useful for writing the terminal emulator (using xterm.js)
 const crypto = require("crypto");
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
@@ -60,7 +60,7 @@ ipcMain.on("terminal.ready", (event) => {
   });
   ipcMain.on("terminal.keystroke", (event, key) => {
     ptyProcess.write(key);
-  });
+  }); 
 });
 
 // Passing promise to the front-end
