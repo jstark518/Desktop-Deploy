@@ -87,7 +87,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     const git = simpleGit(repoPath);
     console.log(git);
     console.log("Updating Repo...", node.commitHash);
-    await git.fetch().checkout(node.commitHash || node.hash);
+    await git.fetch().checkout(node.commitHash || node.hash, ["-f"]);
     return loadRepoPackageFile(repoPath);
     // return repoPath;
   }

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import CloneViewer from "./CloneViewer";
 import CloneButton from "./MUIButton";
 
+const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '16px' });
+
 const RepoContainerStyle = styled("div")({
     background: "#88D3A0",
     padding: '16px',
@@ -37,7 +39,13 @@ export default function DefaultRepoViewer({ setCloneData, cloneData, selectedNod
     };
   
     // In case data has not been set
-    if (data == null) return <span>Loading... .</span>;
+    if (data == null) 
+    return(
+      <RepoFlexContainerStyle>
+        <span>Loading....</span>
+      </RepoFlexContainerStyle>
+    );
+  
   
     return (
       <div>

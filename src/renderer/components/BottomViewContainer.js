@@ -27,7 +27,7 @@ export default function BottomViewContainer() {
                         setBottomCont('term')
                         }else{setBottomCont('')}
                     }}
-                    sx={{fontSize: '12px', height: '20px', padding: '5px', borderRadius: '5px 5px 0 0'}}
+                    sx={{fontSize: '10px', height: '18px', padding: '5px', borderRadius: '5px 5px 0 0'}}
                 >
                 Terminal
                 </Button>

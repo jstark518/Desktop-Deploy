@@ -25,24 +25,31 @@ export default function MainView({ selectedNode }) {
 
   
   if (selectedNode.selection.type === "repo") {
-    return (
-      <DefaultRepoViewer
-        cloneData={cloneData}
-        selectedNode={selectedNode}
-        setCloneData={setCloneData}
-      />
-    );
+    return <DefaultRepoViewer
+      cloneData={cloneData}
+      selectedNode={selectedNode}
+      setCloneData={setCloneData}
+    />;
   }
   if (selectedNode.selection.type === "branch") {
-    return <BranchViewer selectedNode={selectedNode} />;
+    return <BranchViewer 
+      cloneData={cloneData}
+      setCloneData={setCloneData}
+      selectedNode={selectedNode} 
+    />;
   }
   if (selectedNode.selection.type === "tag") {
-    return <TagViewer selectedNode={selectedNode} />;
+    return <TagViewer 
+      cloneData={cloneData}
+      setCloneData={setCloneData}
+      selectedNode={selectedNode} 
+    />;
   }
   if (selectedNode.selection.type === "commit") {
     return <CommitDetailViewer 
-    cloneData={cloneData}
-    setCloneData={setCloneData}
-    selectedNode={selectedNode} />;
-  }
+      cloneData={cloneData}
+      setCloneData={setCloneData}
+      selectedNode={selectedNode} 
+    />;
+    }
 }

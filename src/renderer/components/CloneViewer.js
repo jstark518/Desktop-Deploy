@@ -91,8 +91,8 @@ export default function CloneViewer({ cloneData }) {
                   {console.log(cloneData.dependencies)}
                   <FlexListStyle>
                     <Stack spacing={1}>
-                      {Object.entries(cloneData.dependencies).map((dep) =>
-                        Dependencies({ dep })
+                      {Object.entries(cloneData.dependencies).map((dep, index) =>
+                        Dependencies({ dep, index })
                       )}
                     </Stack>
                   </FlexListStyle>
@@ -101,8 +101,8 @@ export default function CloneViewer({ cloneData }) {
                 <Grid item={true} xs={6}>
                   <FlexListStyle>
                     <Stack spacing={1}>
-                      {Object.entries(cloneData.scripts).map((script) =>
-                        Scripts({ script })
+                      {Object.entries(cloneData.scripts).map((script, index) =>
+                        Scripts({ script, index })
                       )}
                     </Stack>
                   </FlexListStyle>
@@ -116,9 +116,10 @@ export default function CloneViewer({ cloneData }) {
     }
   }
   
-  export function Dependencies({ dep }) {
+  export function Dependencies({ dep, index }) {
     return (
-      <Typography variant="body2" 
+      <Typography variant="body2"
+      key={'dep-' + index}
         sx={{ 
           color: "#50514F", 
           fontSize: "10px" 
@@ -129,9 +130,10 @@ export default function CloneViewer({ cloneData }) {
     );
   }
   
-  export function Scripts({ script }) {
+  export function Scripts({ script, index }) {
     return (
       <Typography variant="body2"
+        key={'script-' + index}
         sx={{
           color: "#50514F",
           fontSize: '10px'

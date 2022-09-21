@@ -27,7 +27,7 @@ export default function CommitDetailView({ cloneData, setCloneData, selectedNode
       console.log(selectedNode.repo.clone);
       window.repo
         .clone(selectedNode.repo.clone, selectedNode.selection)
-        .then((resp) => console.log(resp));
+        .then((resp) => setCloneData(resp));
       },
     localDate = new Date(selectedNode.selection.date);
   

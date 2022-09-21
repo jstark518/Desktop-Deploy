@@ -4,8 +4,9 @@ import Grid from "@mui/material/Grid"; // Grid version 1
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import CloneButton from './MUIButton';
+import CloneViewer from './CloneViewer';
 
-const RepoFlexContainerStyle = styled("div")({ flex: 1 });
+const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '16px' });
 
 const RepoContainerStyle = styled("div")({
     flex: 1,
@@ -16,7 +17,7 @@ const RepoContainerStyle = styled("div")({
     marginBottom: "10px",
 });
 
-export default function BranchViewer({ selectedNode }) {
+export default function BranchViewer({ selectedNode, setCloneData, cloneData }) {
     const url = selectedNode.selection.url;
     const [data, setData] = useState(null);
     console.log(selectedNode);
@@ -28,12 +29,16 @@ export default function BranchViewer({ selectedNode }) {
           console.log(data);
           setData(data);
         });
+        // resets CloneViewer when changing repos
+        setCloneData(null)
     }, [url]);
     console.log(data);
 
     const clone = () => {
       console.log(selectedNode.repo.clone);
-      window.repo.clone(selectedNode.repo.clone, selectedNode.selection);
+      window.repo
+        .clone(selectedNode.repo.clone, selectedNode.selection)
+        .then((resp) => setCloneData(resp));
     };
 
     if (data == null)
@@ -97,6 +102,7 @@ export default function BranchViewer({ selectedNode }) {
             </Grid>
           </Grid>
         </RepoContainerStyle>
+        <CloneViewer cloneData={cloneData} />
       </div>
     );
   }
