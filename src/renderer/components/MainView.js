@@ -9,6 +9,7 @@ import TagViewer from "./TagViewer";
 
 const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
 
+
 // The main viewer. This calls the other views when needed.
 export default function MainView({ selectedNode }) {
   const [cloneData, setCloneData] = useState(null);
@@ -26,9 +27,9 @@ export default function MainView({ selectedNode }) {
   if (selectedNode.selection.type === "repo") {
     return (
       <DefaultRepoViewer
-        setCloneData={setCloneData}
         cloneData={cloneData}
         selectedNode={selectedNode}
+        setCloneData={setCloneData}
       />
     );
   }
@@ -39,6 +40,9 @@ export default function MainView({ selectedNode }) {
     return <TagViewer selectedNode={selectedNode} />;
   }
   if (selectedNode.selection.type === "commit") {
-    return <CommitDetailViewer selectedNode={selectedNode} />;
+    return <CommitDetailViewer 
+    cloneData={cloneData}
+    setCloneData={setCloneData}
+    selectedNode={selectedNode} />;
   }
 }

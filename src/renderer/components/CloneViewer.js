@@ -21,7 +21,7 @@ const FlexListStyle = styled("div")({
 
 const CloneContainerStyle = styled(Paper, {
     shouldForwardProp: (props) => props !== "elevation",
-})({ background: "#E6FEE6", padding: 16, flex: 1 });
+})({ background: "#E6FEE6", padding: '16px', margin: '16px', flex: 1 });
 
 export default function CloneViewer({ cloneData }) {
     console.log(cloneData);

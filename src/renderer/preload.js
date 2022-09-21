@@ -10,7 +10,3 @@ contextBridge.exposeInMainWorld("termAPI", {
   send: (e) => ipcRenderer.send("terminal.keystroke", e),
   onData: (callback) => ipcRenderer.on("terminal.incomingData", callback),
 });
-
-/*
-node:
-*/

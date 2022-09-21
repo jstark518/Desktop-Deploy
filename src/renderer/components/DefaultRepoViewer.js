@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid"; // Grid version 1
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import CloneViewer from "./CloneViewer";
+import CloneButton from "./MUIButton";
 
 const RepoContainerStyle = styled("div")({
     background: "#88D3A0",
@@ -11,15 +12,6 @@ const RepoContainerStyle = styled("div")({
     margin: '16px',
     borderRadius: "5px",
     marginBottom: "10px",
-  });
-
-  // Wrapping MUIComponent in a styled component
-const StyledMUIButton = styled(Button, {
-    shouldForwardProp: (props) => props !== "variant",
-  })({
-    backgroundColor: "#6D20C5",
-    color: "white",
-    "&:hover": { color: "black", border: "2px black solid" },
   });
 
 export default function DefaultRepoViewer({ setCloneData, cloneData, selectedNode }) {
@@ -70,9 +62,7 @@ export default function DefaultRepoViewer({ setCloneData, cloneData, selectedNod
               xs={4}
               sx={{ display: "flex", justifyContent: "right" }}
             >
-              <StyledMUIButton onClick={clone} variant="contained">
-                Clone
-              </StyledMUIButton>
+              <CloneButton onClick={clone}/>
             </Grid>
           </Grid>
         </RepoContainerStyle>
