@@ -5,6 +5,7 @@ import BranchViewer from "./BranchViewer";
 import DefaultRepoViewer from "./DefaultRepoViewer";
 import CommitDetailViewer from "./CommitDetailViewer";
 import TagViewer from "./TagViewer";
+import CloneViewer from "./CloneViewer";
 
 
 const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
@@ -23,20 +24,51 @@ export default function MainView({ selectedNode }) {
 
   console.log(selectedNode.selection);
 
+  if (selectedNode.selection.type === "branches") {
+    return (
+      <RepoFlexContainerStyle>
+        <span>Select a Branch</span>
+      </RepoFlexContainerStyle>
+    )
+  }
+
+  if (selectedNode.selection.type === "commits") {
+    return (
+      <RepoFlexContainerStyle>
+        <span>Select a Commit</span>
+      </RepoFlexContainerStyle>
+    )
+  }
+
+  if (selectedNode.selection.type === "tags") {
+    return (
+      <RepoFlexContainerStyle>
+        <span>Select a Tag</span>
+      </RepoFlexContainerStyle>
+    )
+  }
   
   if (selectedNode.selection.type === "repo") {
-    return <DefaultRepoViewer
-      cloneData={cloneData}
-      selectedNode={selectedNode}
-      setCloneData={setCloneData}
-    />;
+    return (
+      <div>
+      <DefaultRepoViewer
+        selectedNode={selectedNode}
+        setCloneData={setCloneData}
+      />
+      <CloneViewer cloneData={cloneData} />
+      </div>
+    );
   }
   if (selectedNode.selection.type === "branch") {
-    return <BranchViewer 
-      cloneData={cloneData}
-      setCloneData={setCloneData}
-      selectedNode={selectedNode} 
-    />;
+    return (
+      <div>
+        <BranchViewer
+          setCloneData={setCloneData}
+          selectedNode={selectedNode} 
+        />
+        <CloneViewer cloneData={cloneData} />
+      </div>
+    );
   }
   if (selectedNode.selection.type === "tag") {
     return <TagViewer 

@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 
 const RepoFlexContainerStyle = styled("div")({ flex: 1, height: '30vh' });
 
+const LoadingFlexContainerStyle = styled("div")({ flex: 1, padding: '16px' });
+
 const FlexListStyle = styled("div")({ 
   flex: 1, 
   height: '5rem',
@@ -25,10 +27,8 @@ const CloneContainerStyle = styled(Paper, {
 
 export default function CloneViewer({ cloneData }) {
     console.log(cloneData);
-    if (cloneData == null)
-      return
-
-    if (cloneData !== null) {
+  
+    if (cloneData !== null && cloneData !== undefined) {
       return (
           <CloneContainerStyle elevation={2}>
           <RepoFlexContainerStyle>

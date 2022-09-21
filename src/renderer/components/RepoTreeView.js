@@ -27,12 +27,16 @@ export default function RepoTreeView({ onSelectNode }) {
     const nodeData = JSON.parse(nodeIds);
     console.log("TreeItem selected returns string converted to this JSON");
     console.log(nodeData);
+    console.log(repoData);
     // sending node data to MainContainer.js
     if (
       nodeData.type === "repo" ||
       nodeData.type === "commit" ||
       nodeData.type === "branch" ||
-      nodeData.type === "tag"
+      nodeData.type === "tag" ||
+      nodeData.type === "branches" ||
+      nodeData.type === "commits" ||
+      nodeData.type === "tags"
     ) {
       onSelectNode({ selection: nodeData, repo: repoData[nodeData.repoIndex] });
     }
@@ -40,8 +44,8 @@ export default function RepoTreeView({ onSelectNode }) {
 
   useEffect(() => {
     /*
-    Resolve the promise passed from index.js
-    repo and method list() are exposed to window object from preload.js
+    Resolve the promise passed from index.js.
+    repo() and list() are exposed to window object from preload.js.
     list() calls the API in index.js
     */
     window.repo.list().then((list) => {

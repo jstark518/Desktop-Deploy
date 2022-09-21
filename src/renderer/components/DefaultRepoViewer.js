@@ -16,7 +16,7 @@ const RepoContainerStyle = styled("div")({
     marginBottom: "10px",
   });
 
-export default function DefaultRepoViewer({ setCloneData, cloneData, selectedNode }) {
+export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
     const url = selectedNode.selection.url;
     const [data, setData] = useState(null);
 
@@ -74,7 +74,6 @@ export default function DefaultRepoViewer({ setCloneData, cloneData, selectedNod
             </Grid>
           </Grid>
         </RepoContainerStyle>
-        <CloneViewer cloneData={cloneData}/>
       </div>
     );
   }
