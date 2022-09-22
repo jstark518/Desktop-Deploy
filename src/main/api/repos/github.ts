@@ -31,7 +31,8 @@ export class githubRepo {
     getConfig(): authConfig {
         if (this.config == null) {
             const fs = require('fs'),
-                file = path.join(app.getAppPath(), '.env.json'), data = fs.readFileSync(file);
+                file = path.join(app.getAppPath(), '.env.json'),
+                data = fs.readFileSync(file);
             this.config = JSON.parse(data) as authConfig;
         }
         return this.config;
@@ -61,25 +62,26 @@ export class githubRepo {
                 resolve(self.credentials);
             } else {
                 const {clientId, clientSecret, callback} = this.getConfig().github,
-                    oauthApp =
-                        oauthAuthorizationUrl({
-                            clientType: "oauth-app",
-                            clientId: clientId,
-                            redirectUrl: callback,
-                            scopes: ["repo"]
-                        }),
-                    server = http.createServer(async function (req, res) {
-                        const queryObject = url.parse(req.url, true).query;
-                        res.writeHead(200, {'Content-Type': 'text/plain'});
-                        res.write('Good to go, you can close this window now.');
-                        res.end();
-                        if (typeof queryObject.code != "undefined") {
-                            server.close();
-                            self.credentials = await self.processOauth(queryObject.code as string);
-                            Store.set(githubStoreKey, self.credentials);
-                            resolve(self.credentials);
-                        }
-                    }).listen(8415);
+                oauthApp =
+                    oauthAuthorizationUrl({
+                        clientType: "oauth-app",
+                        clientId: clientId,
+                        redirectUrl: callback,
+                        scopes: ["repo"]
+                    }),
+                server = http.createServer(async function (req, res) {
+                    const queryObject = url.parse(req.url, true).query;
+                    console.log(queryObject);
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    res.write('Good to go, you can close this window now.');
+                    res.end();
+                    if (typeof queryObject.code != "undefined") {
+                        server.close();
+                        self.credentials = await self.processOauth(queryObject.code as string);
+                        Store.set(githubStoreKey, self.credentials);
+                        resolve(self.credentials);
+                    }
+                }).listen(8415);
                 await shell.openExternal(oauthApp.url);
             }
         });
