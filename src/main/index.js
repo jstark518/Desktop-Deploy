@@ -6,6 +6,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { githubRepo } from "./api/repos/github.ts";
 import { simpleGit, CleanOptions } from "simple-git";
+import { Bitbucket } from "./api/repos/bitbucket.ts";
 const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
@@ -19,6 +20,12 @@ Data is saved in cache (gitHubRepoInstance.cache) and local variable
 (resolvedRepoList)
 */
 let githubRepoInstance = new githubRepo();
+
+let bitbucketRepoInstance = new Bitbucket();
+
+console.log(bitbucketRepoInstance);
+
+
 // RepoList value is a promise
 let RepoList = githubRepoInstance.getRepoList(),
   resolvedRepoList = null;
