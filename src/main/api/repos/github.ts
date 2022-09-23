@@ -182,7 +182,8 @@ export class githubRepo {
 
     cache(list: Repo[]) {
          const fs = require('fs'),
-            file = path.join(app.getAppPath(), cacheDataFile), writeToCache = {
+            file = path.join(app.getAppPath(), cacheDataFile),
+            writeToCache = {
             lastModified: this.getNewestCommit(list),
             repos: list
         }

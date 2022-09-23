@@ -43,7 +43,7 @@ const cacheDataFile = ".cache.data.bb.json";
 export class bitbucketRepo {
     data: any = null;
     private config?: authConfig;
-    private token?: string;
+    private token?: any;
     private user?: any;
     private cache?: repoCache;
 
@@ -55,6 +55,28 @@ export class bitbucketRepo {
             this.config = JSON.parse(data) as authConfig;
         }
         return this.config;
+    }
+
+    async auth() {
+        const self = this;
+        return new Promise(async (resolve, reject) => {
+            const {clientId, clientSecret, callback} = this.getConfig().bitbucket,
+            server = http.createServer(async (req, res) => {
+                const query = url.parse(req.url, true).query;
+                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.write('<html><head><title>Bitbucket Auth</title></head><body><h1>Bitbucket Auth</h1><p>Authenticating...</p></body></html>');
+                if (query.code) {
+                    const code = query.code as string;
+                    const token = await self.getToken(code);
+                    self.token = token;
+                    Store.set(bitbucketStoreKey, token);
+                    resolve(token);
+                }
+                res.end();
+            }).listen(8416);
+            const authUrl = `https://bitbucket.org/site/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${callback}`;
+            await shell.openExternal(authUrl);
+        });
     }
 
     async getToken(code: string): Promise<string> {
@@ -89,25 +111,40 @@ export class bitbucketRepo {
         });
     }
 
-    async auth() {
-        const self = this;
-        return new Promise(async (resolve, reject) => {
-            const {clientId, clientSecret, callback} = this.getConfig().bitbucket,
-            server = http.createServer(async (req, res) => {
-                const query = url.parse(req.url, true).query;
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.write('<html><head><title>Bitbucket Auth</title></head><body><h1>Bitbucket Auth</h1><p>Authenticating...</p></body></html>');
-                if (query.code) {
-                    const code = query.code as string;
-                    const token = await self.getToken(code);
-                    self.token = token;
-                    Store.set(bitbucketStoreKey, token);
-                    resolve(token);
+    async getUser(): Promise<any> {
+        if (this.user == null) { 
+            this.user = await fetch("https://api.bitbucket.org/2.0/user", {
+                headers: {
+                    "Authorization": `Bearer ${this.token}`
                 }
-                res.end();
-            }).listen(8416);
-            const authUrl = `https://bitbucket.org/site/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${callback}`;
-            await shell.openExternal(authUrl);
+            }).then(res => res.json());
+        }
+        return this.user;
+    }
+
+    async getAuth() {
+        if (this.token == null) {
+            this.token = Store.get(bitbucketStoreKey);
+        }
+        return this.token;
+    }
+
+    async getRepos(): Promise<Repo[]> {
+        const user = await this.getUser();
+        const repos = await fetch(`https://api.bitbucket.org/2.0/repositories/${user.username}`, {
+            headers: {
+                "Authorization": `Bearer ${this.token}`
+            }
+        }).then(res => res.json());
+        return repos.values.map((repo: any) => {
+            return {
+                name: repo.name,
+                description: repo.description,
+                url: repo.links.html.href,
+                branches: [],
+                tags: [],
+                commits: []
+            } as Repo;
         });
     }
 

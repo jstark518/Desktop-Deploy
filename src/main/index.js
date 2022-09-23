@@ -6,7 +6,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { githubRepo } from "./api/repos/github.ts";
 import { simpleGit, CleanOptions } from "simple-git";
-import {bitbucket} from "./api/repos/bitbucket.ts";
+import {bitbucketRepo} from "./api/repos/bitbucket.ts";
 const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
@@ -20,12 +20,6 @@ Data is saved in cache (gitHubRepoInstance.cache) and local variable
 (resolvedRepoList)
 */
 let githubRepoInstance = new githubRepo();
-
-let bitbucketRepoInstance = new bitbucket();
-
-console.log(bitbucketRepoInstance);
-
-
 // RepoList value is a promise
 let RepoList = githubRepoInstance.getRepoList(),
   resolvedRepoList = null;
@@ -48,6 +42,17 @@ RepoList.then((list) => {
   // Save resolved value in a global binding
   resolvedRepoList = list;
 });
+
+
+let bitbucketRepoInstance = new bitbucketRepo();
+let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
+resolvedBitbucketRepoList = null;
+bitbucketRepoList.then((data) => {
+  resolvedBitbucketRepoList = data;
+}); // resolvedBitbucketRepoList is set to the return value of the promise
+
+console.log(resolvedBitbucketRepoList);
+
 
 ipcMain.on("terminal.ready", (event) => {
   const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
