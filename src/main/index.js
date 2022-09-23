@@ -6,7 +6,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { githubRepo } from "./api/repos/github.ts";
 import { simpleGit, CleanOptions } from "simple-git";
-import { Bitbucket } from "./api/repos/bitbucket.ts";
+import {bitbucket} from "./api/repos/bitbucket.ts";
 const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
@@ -21,7 +21,7 @@ Data is saved in cache (gitHubRepoInstance.cache) and local variable
 */
 let githubRepoInstance = new githubRepo();
 
-let bitbucketRepoInstance = new Bitbucket();
+let bitbucketRepoInstance = new bitbucket();
 
 console.log(bitbucketRepoInstance);
 
