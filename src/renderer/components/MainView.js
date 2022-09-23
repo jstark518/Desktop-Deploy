@@ -6,7 +6,7 @@ import DefaultRepoViewer from "./DefaultRepoViewer";
 import CommitDetailViewer from "./CommitDetailViewer";
 import TagViewer from "./TagViewer";
 import CloneViewer from "./CloneViewer";
-import Bitbucket from "./Bitbucket";
+
 
 
 const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
@@ -20,7 +20,6 @@ export default function MainView({ selectedNode }) {
     return (
       <RepoFlexContainerStyle>
         <span>Select a Repo</span>
-        <Bitbucket></Bitbucket>
       </RepoFlexContainerStyle>
     )
 
