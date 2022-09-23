@@ -1,7 +1,7 @@
 "use strict";
-const os = require('os');
-const pty = require('node-pty');
-const crypto = require('crypto');
+const os = require("os"); // node.js module providing operating system related utility and methods
+const pty = require("node-pty"); // Useful for writing the terminal emulator (using xterm.js)
+const crypto = require("crypto");
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { githubRepo } from "./api/repos/github.ts";
@@ -43,24 +43,24 @@ RepoList.then((list) => {
 });
 
 ipcMain.on("terminal.ready", (event) => {
-    const shellName = os.platform() === 'win32' ? 'powershell.exe' : "/bin/zsh",
-        ptyProcess = pty.spawn(shellName, [], {
-            name: 'xterm-color',
-            cols: 90,
-            rows: 30,
-            cwd: process.env.HOME,
-            env: process.env,
-            encoding: "UTF-8",
-        });
-    ptyProcess.on('data', function (data) {
-        // Filter out the weird line with just a % sign
-        if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
-            mainWindow.webContents.send("terminal.incomingData", data);
-        }
+  const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
+    ptyProcess = pty.spawn(shellName, [], {
+      name: "xterm-color",
+      cols: 80,
+      rows: 30,
+      cwd: process.env.HOME,
+      env: process.env,
+      encoding: "UTF-8",
     });
-    ipcMain.on("terminal.keystroke", (event, key) => {
-        ptyProcess.write(key);
-    });
+  ptyProcess.on("data", function (data) {
+    // Filter out the weird line with just a % sign
+    if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
+      mainWindow.webContents.send("terminal.incomingData", data);
+    }
+  });
+  ipcMain.on("terminal.keystroke", (event, key) => {
+    ptyProcess.write(key);
+  }); 
 });
 
 // Passing promise to the front-end
@@ -87,7 +87,7 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
     const git = simpleGit(repoPath);
     console.log(git);
     console.log("Updating Repo...", node.commitHash);
-    await git.fetch().checkout(node.commitHash || node.hash);
+    await git.fetch().checkout(node.commitHash || node.hash, ["-f"]);
     return loadRepoPackageFile(repoPath);
     // return repoPath;
   }
@@ -211,13 +211,13 @@ const filter = {
 let mainWindow;
 
 function createMainWindow() {
-    const mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 800,
-        webPreferences: {
-            preload: path.join(app.getAppPath(), "/src/renderer/preload.js"),
-        },
-    });
+  const mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 800,
+    webPreferences: {
+      preload: path.join(app.getAppPath(), "/src/renderer/preload.js"),
+    },
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
@@ -255,7 +255,6 @@ app.on("ready", () => {
   );
 });
 
-
-function md5 (str) {
-    return crypto.createHash('md5').update(str).digest('hex')
+function md5(str) {
+  return crypto.createHash("md5").update(str).digest("hex");
 }

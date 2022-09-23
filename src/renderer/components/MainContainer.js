@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-
-import CommitView from "./CommitView";
+import { Container, Button, Box } from '@mui/material'
+import MainView from "./MainView";
 import RepoTreeView from "./RepoTreeView";
 import Xterm from "./XTerm";
+import { TroubleshootRounded } from "@mui/icons-material";
+import TerminalIcon from '@mui/icons-material/Terminal';
+import BottomViewContainer from "./BottomViewContainer";
 
 const AppHeader = styled.div`
   background: #50514f;
@@ -22,6 +24,10 @@ const MainContainerStyle = styled.div`
   padding: 0;
 `;
 
+const MainViewStyle = styled.div`
+  padding: '10px';
+`;
+
 const FlexContainer = styled.div`
   display: flex;
   height: calc(100vh - 4rem);
@@ -36,17 +42,17 @@ const TreeViewContainer = styled.div`
   padding-top: 10px;
 `;
 
-const CommitViewContainer = styled.div`
-  padding: 1rem;
+const MainViewContainer = styled.div`
   flex: 1;
   overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 export default function MainContainer({ gitRepoAPIData }) {
-  const [repoData, setRepoData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
+  
   console.log(selectedNode);
 
   return (
@@ -56,10 +62,10 @@ export default function MainContainer({ gitRepoAPIData }) {
         <TreeViewContainer>
           <RepoTreeView onSelectNode={setSelectedNode} />
         </TreeViewContainer>
-        <CommitViewContainer>
-          <CommitView selectedNode={selectedNode}></CommitView>
-          <Xterm></Xterm>
-        </CommitViewContainer>
+        <MainViewContainer>
+          <MainView selectedNode={selectedNode}></MainView>
+          <BottomViewContainer/>
+        </MainViewContainer>
       </FlexContainer>
     </MainContainerStyle>
   );
