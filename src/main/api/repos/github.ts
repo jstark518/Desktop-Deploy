@@ -77,7 +77,7 @@ export class githubRepo {
                     res.end();
                     if (typeof queryObject.code != "undefined") {
                         server.close();
-                        self.credentials = await self.processOauth(queryObject.code as string);
+                        self.credentials = await self.processOauth(queryObject.code as string); 
                         Store.set(githubStoreKey, self.credentials);
                         resolve(self.credentials);
                     }

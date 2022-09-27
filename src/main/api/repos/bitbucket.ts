@@ -1,151 +1,99 @@
-import * as React from 'react';
-import { useEffect, FC, ReactElement } from 'react'
 import * as path from 'path';
 import * as http from 'http';
 import * as url from 'url';
 import { authConfig } from './contracts/auth';
 import * as ElectronStore from 'electron-store';
-import {Branch, Commit, CommitType, Repo, repoCache, Tag} from "./contracts/repo";
-
-
-// function to get config files from the app path
-// const getConfig = (): authConfig => {
-//     const fs = require('fs'),
-//         file = path.join(app.getAppPath(), '.env.json'),
-//         data = fs.readFileSync(file);
-//     return JSON.parse(data) as authConfig;
-// }
-
-
-// export default function Bitbucket({}: Props) {
-
-//     const [ token, setToken ] = React.useState<string | null>(null);
-
-//     useEffect(() => {
-//         console.log("Bitbucket API Called");
-//         const {clientId, clientSecret, callback} = getConfig().bitbucket;
-//         fetch(`https://bitbucket.org/site/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${callback}`)
-//             .then(res => res.json())
-//             .then(json => setToken(json.access_token))
-//     }, [])
-
-
-//   if(token !== null)
-//     return token
-// }
+import fetch from 'node-fetch';
+// Implementing the interface WIP
+import {Branch, Commit, CommitType, Repo, repoCache} from "./contracts/repo";
 
 
 const {app, shell} = require('electron');
 const Store: ElectronStore = new ElectronStore();
-const bitbucketStoreKey = "bitbucket-oauth";
-const cacheDataFile = ".cache.data.bb.json";
+const bitbucketAccessToken = "bitbucket-access-token";
 
 export class bitbucketRepo {
     data: any = null;
     private config?: authConfig;
-    private token?: any;
-    private user?: any;
-    private cache?: repoCache;
+    private AccessToken?: any;
+    private oAuthCode?: string = null;
 
     getConfig(): authConfig {
         if (this.config == null) {
+            // Load fs module, used to read the config file (.env.json)
             const fs = require('fs'),
+                // Get the path to the config file
                 file = path.join(app.getAppPath(), '.env.json'),
+                // Read the config file
                 data = fs.readFileSync(file);
+            // Parse the config file, this.config is now an object containing the config credentials
             this.config = JSON.parse(data) as authConfig;
         }
         return this.config;
     }
 
-    async auth() {
+   async auth() {
         const self = this;
         return new Promise(async (resolve, reject) => {
-            const {clientId, clientSecret, callback} = this.getConfig().bitbucket,
-            server = http.createServer(async (req, res) => {
-                const query = url.parse(req.url, true).query;
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.write('<html><head><title>Bitbucket Auth</title></head><body><h1>Bitbucket Auth</h1><p>Authenticating...</p></body></html>');
-                if (query.code) {
-                    const code = query.code as string;
-                    const token = await self.getToken(code);
-                    self.token = token;
-                    Store.set(bitbucketStoreKey, token);
-                    resolve(token);
-                }
-                res.end();
-            }).listen(8416);
-            const authUrl = `https://bitbucket.org/site/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${callback}`;
-            await shell.openExternal(authUrl);
-        });
-    }
-
-    async getToken(code: string): Promise<string> {
-        const {clientId, clientSecret, callback} = this.getConfig().bitbucket;
-
-        return new Promise((resolve, reject) => {
-            const request = http.request({
-                hostname: "bitbucket.org",
-                path: "/site/oauth2/access_token",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`
-                }
-            }, (response) => {
-                let data = "";
-                response.on("data", (chunk) => {
-                    data += chunk;
-                });
-                response.on("end", () => {
-                    const json = JSON.parse(data);
-                    if (json.error) {
-                        reject(json.error_description);
-                    } else {
-                        this.token = json.access_token;
-                        resolve(this.token);
-                    }
-                });
-            });
-            request.write(`grant_type=authorization_code&code=${code}&redirect_uri=${callback}`);
-            request.end();
-        });
-    }
-
-    async getUser(): Promise<any> {
-        if (this.user == null) { 
-            this.user = await fetch("https://api.bitbucket.org/2.0/user", {
-                headers: {
-                    "Authorization": `Bearer ${this.token}`
-                }
-            }).then(res => res.json());
-        }
-        return this.user;
-    }
-
-    async getAuth() {
-        if (this.token == null) {
-            this.token = Store.get(bitbucketStoreKey);
-        }
-        return this.token;
-    }
-
-    async getRepos(): Promise<Repo[]> {
-        const user = await this.getUser();
-        const repos = await fetch(`https://api.bitbucket.org/2.0/repositories/${user.username}`, {
-            headers: {
-                "Authorization": `Bearer ${this.token}`
+            const fromCache = Store.get(bitbucketAccessToken) ? Store.get(bitbucketAccessToken) : null;
+            // Check if we have an AccessToken in Electron Store
+            if(fromCache != null) {
+                    console.log(" Loading bitbucket oAuth from cache...");
+                self.AccessToken = fromCache as string;
+                    console.log(" bitbucket Access Token:");
+                    console.log(self.AccessToken);
+                resolve(self.AccessToken);
             }
-        }).then(res => res.json());
-        return repos.values.map((repo: any) => {
-            return {
-                name: repo.name,
-                description: repo.description,
-                url: repo.links.html.href,
-                branches: [],
-                tags: [],
-                commits: []
-            } as Repo;
+            // Return AccessToken if we have one in class in case we are in the middle of the auth process
+            else if (self.AccessToken != null) {
+                resolve(self.AccessToken);
+            // Otherwise, we need to get a oAuthCode from bitbucket API
+            } else {
+                // Get the config credentials
+                const { clientId } = self.getConfig().bitbucket,
+                // Initial oAuth URL to get the code from the callback. Using the clientId from the config file
+                authUrl = `https://bitbucket.org/site/oauth2/authorize?client_id=${clientId}&response_type=code`,
+                // Create a new local server to listen for the callback from bitbucket
+                server = http.createServer(async (req, res) => {
+                    // Get the query object from the callback URL.
+                    const query = url.parse(req.url || '', true).query;
+                    res.writeHead(200, { 'Content-Type': 'text/plain' });
+                    res.write('Bitbucket oAuth successful! You can close this window.');
+                    res.end();
+                    // If the query has a code property, we have the code from bitbucket
+                    if (typeof query.code !== 'undefined') {
+                        // Server is no longer needed, close it
+                        server.close();
+                        // Get the code from query
+                        self.oAuthCode = query.code as string;
+                        // Get the AccessToken by passing the code to the getAccessToken method
+                        self.AccessToken = await self.getAccessToken(self.oAuthCode);
+                        // Save the AccessToken in Electron Store
+                        Store.set(bitbucketAccessToken, self.AccessToken);
+                        // Resolve the promise with the AccessToken, for use in other methods
+                        resolve (self.AccessToken);
+                    }
+                }).listen(8416);
+                // Open the authUrl in the default browser to make the request to bitbucket. Our local server will listen for the callback
+                await shell.openExternal(authUrl);
+            }
         });
     }
-
+    // Get the AccessToken from bitbucket API
+    async getAccessToken(code: string): Promise<any> {
+        const self = this;
+        const { clientId, clientSecret } = self.getConfig().bitbucket;
+        // Make a POST request to bitbucket API with the code and credentials
+        return new Promise(async (resolve, reject) => {
+            const token = await fetch(`https://bitbucket.org/site/oauth2/access_token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `grant_type=authorization_code&code=${code}&client_id=${clientId}&client_secret=${clientSecret}`
+            // Parse the response as JSON
+            }).then(res => res.json());
+            resolve(token);
+        });
+    }
 }

@@ -12,20 +12,15 @@ simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
-/*
-githubRepoInstance is set to the return value of the github class.
-githubRepoInstance.getRepoList() interacts with GitHub APU, returns a promise.
-The promise is resolved (RepoList.then....) and returns data from github API.
-Data is saved in cache (gitHubRepoInstance.cache) and local variable
-(resolvedRepoList)
-*/
+
+// Create a new instance of the gitHubRepo class
 let githubRepoInstance = new githubRepo();
-// RepoList value is a promise
+// Returns the repo list as a promise from the githubRepo class
 let RepoList = githubRepoInstance.getRepoList(),
-  resolvedRepoList = null;
+// Used to store the repo list as a JSON object
+resolvedRepoList = null;
 // Resolves the promise
-RepoList.then((list) => {
-  /* Value of list:
+/* Value of list:
       [
           {
               name: 'g4v',
@@ -37,22 +32,16 @@ RepoList.then((list) => {
           }
       ]
   */
+RepoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
   // Save resolved value in a global binding
   resolvedRepoList = list;
 });
 
-
+// Create a new instance of the bitbucket class
 let bitbucketRepoInstance = new bitbucketRepo();
-let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
-resolvedBitbucketRepoList = null;
-bitbucketRepoList.then((data) => {
-  resolvedBitbucketRepoList = data;
-}); // resolvedBitbucketRepoList is set to the return value of the promise
-
-console.log(resolvedBitbucketRepoList);
-
+const firstAuth = bitbucketRepoInstance.auth();
 
 ipcMain.on("terminal.ready", (event) => {
   const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
@@ -263,7 +252,14 @@ app.on("ready", () => {
       const auth = await githubRepoInstance.getAuth();
       details.requestHeaders["Authorization"] = "bearer " + auth.token;
       callback({ requestHeaders: details.requestHeaders });
-    }
+    },
+   async () => {
+    const auth = await bitbucketRepoInstance.getAuth();
+    details.requestHeaders["Authorization"] = "bearer " + auth.token;
+    callback({ requestHeaders: details.requestHeaders });
+
+  }
+
   );
 });
 

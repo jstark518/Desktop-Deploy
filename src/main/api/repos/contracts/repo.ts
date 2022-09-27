@@ -11,6 +11,7 @@ interface Repo {
     url?: string
     clone?: string
     path?: string
+    description?: string
 }
 
 interface Branch {
