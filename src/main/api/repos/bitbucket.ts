@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as http from 'http';
 import * as url from 'url';
-import { authConfig } from './contracts/auth';
+import { authConfig, bitBucketCredentials } from './contracts/auth';
 import * as ElectronStore from 'electron-store';
 import fetch from 'node-fetch';
 // Implementing the interface WIP
@@ -11,6 +11,7 @@ import {Branch, Commit, CommitType, Repo, repoCache} from "./contracts/repo";
 const {app, shell} = require('electron');
 const Store: ElectronStore = new ElectronStore();
 const bitbucketAccessToken = "bitbucket-access-token";
+
 
 export class bitbucketRepo {
     data: any = null;
@@ -35,14 +36,20 @@ export class bitbucketRepo {
    async auth() {
         const self = this;
         return new Promise(async (resolve, reject) => {
-            const fromCache = Store.get(bitbucketAccessToken) ? Store.get(bitbucketAccessToken) : null;
+            const fromCache: any = Store.get(bitbucketAccessToken) ? Store.get(bitbucketAccessToken) : null;
             // Check if we have an AccessToken in Electron Store
             if(fromCache != null) {
-                    console.log(" Loading bitbucket oAuth from cache...");
-                self.AccessToken = fromCache as string;
+                // Check if the AccessToken is expired
+                if (fromCache.expires_in < Date.now()) {
+                    // Refresh the AccessToken
+                    console.log(" Reloading bitbucket oAuth from cache...");
+                    const token = await self.refreshAccessToken(fromCache.refresh_token);
+                    self.AccessToken = token;
+                    resolve(token);
                     console.log(" bitbucket Access Token:");
-                    console.log(self.AccessToken);
-                resolve(self.AccessToken);
+                    console.log(token);
+                    resolve(token);
+                }
             }
             // Return AccessToken if we have one in class in case we are in the middle of the auth process
             else if (self.AccessToken != null) {
@@ -94,6 +101,49 @@ export class bitbucketRepo {
             // Parse the response as JSON
             }).then(res => res.json());
             resolve(token);
+        });
+    }
+
+    async refreshAccessToken(rToken?: string): Promise<any> {
+        const self = this;
+        const { clientId, clientSecret } = self.getConfig().bitbucket;
+        // Make a POST request to bitbucket API with the code and credentials
+        return new Promise(async (resolve, reject) => {
+            const token = await fetch(`https://bitbucket.org/site/oauth2/access_token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `grant_type=refresh_token&refresh_token=${rToken}&client_id=${clientId}&client_secret=${clientSecret}`
+            // Parse the response as JSON
+            }).then(res => res.json())
+            .catch(err => {
+                console.log(err);
+            });
+            Store.set(bitbucketAccessToken, token);
+            resolve(token);
+        });
+    }
+
+    async getRepos(): Promise <any> {
+        const self = this;
+        return new Promise(async (resolve, reject) => {
+            // Get the AccessToken
+            const auth = self.AccessToken || await self.auth();
+            // Make a GET request to bitbucket API with the AccessToken
+            const repos = await fetch(`https://api.bitbucket.org/2.0/repositories`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${auth.access_token}`
+                }
+            // Parse the response as JSON
+            }).then(res => {
+                resolve(res.json());
+            }).catch(async (err) => {
+                if (err.status === 401) {
+                    console.log("Unable to get repos");
+                }
+            });    
         });
     }
 }

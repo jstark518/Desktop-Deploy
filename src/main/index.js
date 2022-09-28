@@ -41,7 +41,16 @@ RepoList.then((list) => {
 
 // Create a new instance of the bitbucket class
 let bitbucketRepoInstance = new bitbucketRepo();
-const firstAuth = bitbucketRepoInstance.auth();
+// Returns the repo list as a promise from the bitbucket class
+// let firstAuth = bitbucketRepoInstance.auth();
+let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
+bitResolvedRepoList = null;
+// Resolves the promise
+bitbucketRepoList.then((list) => {
+  // Save resolved value in a local cache file
+  bitResolvedRepoList = list;
+  console.log(bitResolvedRepoList);
+});
 
 ipcMain.on("terminal.ready", (event) => {
   const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
@@ -204,7 +213,7 @@ function loadRepoPackageFile(repoPath) {
 }
 
 const filter = {
-  urls: ["https://api.github.com/*"],
+  urls: ["https://api.github.com/*", "https://api.bitbucket.org/*"],
 };
 
 // global reference to mainWindow (necessary to prevent window from being
@@ -249,17 +258,17 @@ app.on("ready", () => {
   session.defaultSession.webRequest.onBeforeSendHeaders(
     filter,
     async (details, callback) => {
-      const auth = await githubRepoInstance.getAuth();
-      details.requestHeaders["Authorization"] = "bearer " + auth.token;
-      callback({ requestHeaders: details.requestHeaders });
-    },
-   async () => {
-    const auth = await bitbucketRepoInstance.getAuth();
-    details.requestHeaders["Authorization"] = "bearer " + auth.token;
-    callback({ requestHeaders: details.requestHeaders });
-
-  }
-
+      const auth = null;
+      if (details.url.includes('https;//api.github.com/')){
+        auth = await githubRepoInstance.getAuth();
+        details.requestHeaders["Authorization"] = "bearer " + auth.token;
+        callback({ requestHeaders: details.requestHeaders });
+      }else if (details.url.includes('https;//api.bitbucket.org/')){
+        auth = await bitbucketRepoInstance.auth();
+        details.requestHeaders["Authorization"] = "bearer " + auth.access_token;
+        callback({ requestHeaders: details.requestHeaders });
+      }
+    }
   );
 });
 
