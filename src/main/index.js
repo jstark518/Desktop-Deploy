@@ -43,14 +43,14 @@ RepoList.then((list) => {
 let bitbucketRepoInstance = new bitbucketRepo();
 // Returns the repo list as a promise from the bitbucket class
 // let firstAuth = bitbucketRepoInstance.auth();
-let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
-bitResolvedRepoList = null;
-// Resolves the promise
-bitbucketRepoList.then((list) => {
-  // Save resolved value in a local cache file
-  bitResolvedRepoList = list;
-  console.log(bitResolvedRepoList);
+let bitbucketUserInfo = bitbucketRepoInstance.getUser(),
+resolvedBitbucketUserInfo = null;
+bitbucketUserInfo.then((data) => {
+  resolvedBitbucketUserInfo = data;
+  console.log(resolvedBitbucketUserInfo);
 });
+let bitbucketRepoList = bitbucketRepoInstance.getRepos();
+
 
 ipcMain.on("terminal.ready", (event) => {
   const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as http from 'http';
 import * as url from 'url';
-import { authConfig, bitBucketCredentials } from './contracts/auth';
+import { authConfig } from './contracts/auth';
 import * as ElectronStore from 'electron-store';
 import fetch from 'node-fetch';
 // Implementing the interface WIP
@@ -125,25 +125,42 @@ export class bitbucketRepo {
         });
     }
 
+    async getUser (): Promise<any> {
+        const self = this;
+        return new Promise(async (resolve, reject) => {
+            const auth = await self.auth() as any;
+            const user = await fetch(`https://api.bitbucket.org/2.0/user`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${auth.access_token}`
+                } 
+            }).then(res => res.json());
+            resolve(user);
+        });
+    }
+
     async getRepos(): Promise <any> {
         const self = this;
+        const userInfo = await self.getUser();
+        const repoUrl = userInfo.links.repositories.href;
+        console.log(' Bitbucket User Info in getRepos:');
+        console.log(userInfo);
         return new Promise(async (resolve, reject) => {
             // Get the AccessToken
             const auth = self.AccessToken || await self.auth();
             // Make a GET request to bitbucket API with the AccessToken
-            const repos = await fetch(`https://api.bitbucket.org/2.0/repositories`, {
+            const repos: any = await fetch(`${repoUrl}`, {
                 method: 'GET',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${auth.access_token}`
                 }
             // Parse the response as JSON
-            }).then(res => {
-                resolve(res.json());
-            }).catch(async (err) => {
-                if (err.status === 401) {
-                    console.log("Unable to get repos");
-                }
-            });    
+            }).then(res => res.json());
+            console.log(' Bitbucket Repos:');
+            console.log(repos.values);
+            resolve(repos);
         });
     }
 }
