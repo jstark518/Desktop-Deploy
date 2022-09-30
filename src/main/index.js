@@ -6,25 +6,21 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { githubRepo } from "./api/repos/github.ts";
 import { simpleGit, CleanOptions } from "simple-git";
+import {bitbucketRepo} from "./api/repos/bitbucket.ts";
 const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
-/*
-githubRepoInstance is set to the return value of the github class.
-githubRepoInstance.getRepoList() interacts with GitHub APU, returns a promise.
-The promise is resolved (RepoList.then....) and returns data from github API.
-Data is saved in cache (gitHubRepoInstance.cache) and local variable
-(resolvedRepoList)
-*/
+
+// Create a new instance of the gitHubRepo class
 let githubRepoInstance = new githubRepo();
-// RepoList value is a promise
+// Returns the repo list as a promise from the githubRepo class
 let RepoList = githubRepoInstance.getRepoList(),
-  resolvedRepoList = null;
+// Used to store the repo list as a JSON object
+resolvedRepoList = null;
 // Resolves the promise
-RepoList.then((list) => {
-  /* Value of list:
+/* Value of list:
       [
           {
               name: 'g4v',
@@ -36,11 +32,25 @@ RepoList.then((list) => {
           }
       ]
   */
+RepoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
   // Save resolved value in a global binding
   resolvedRepoList = list;
 });
+
+// Create a new instance of the bitbucket class
+let bitbucketRepoInstance = new bitbucketRepo();
+// Returns the repo list as a promise from the bitbucket class
+// let firstAuth = bitbucketRepoInstance.auth();
+let bitbucketUserInfo = bitbucketRepoInstance.getUser(),
+resolvedBitbucketUserInfo = null;
+bitbucketUserInfo.then((data) => {
+  resolvedBitbucketUserInfo = data;
+  console.log(resolvedBitbucketUserInfo);
+});
+let bitbucketRepoList = bitbucketRepoInstance.getRepos();
+
 
 ipcMain.on("terminal.ready", (event) => {
   const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
@@ -203,7 +213,7 @@ function loadRepoPackageFile(repoPath) {
 }
 
 const filter = {
-  urls: ["https://api.github.com/*"],
+  urls: ["https://api.github.com/*", "https://api.bitbucket.org/*"],
 };
 
 // global reference to mainWindow (necessary to prevent window from being
@@ -248,9 +258,16 @@ app.on("ready", () => {
   session.defaultSession.webRequest.onBeforeSendHeaders(
     filter,
     async (details, callback) => {
-      const auth = await githubRepoInstance.getAuth();
-      details.requestHeaders["Authorization"] = "bearer " + auth.token;
-      callback({ requestHeaders: details.requestHeaders });
+      const auth = null;
+      if (details.url.includes('https;//api.github.com/')){
+        auth = await githubRepoInstance.getAuth();
+        details.requestHeaders["Authorization"] = "bearer " + auth.token;
+        callback({ requestHeaders: details.requestHeaders });
+      }else if (details.url.includes('https;//api.bitbucket.org/')){
+        auth = await bitbucketRepoInstance.auth();
+        details.requestHeaders["Authorization"] = "bearer " + auth.access_token;
+        callback({ requestHeaders: details.requestHeaders });
+      }
     }
   );
 });
