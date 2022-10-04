@@ -15,11 +15,10 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Create a new instance of the gitHubRepo class
 let githubRepoInstance = new githubRepo();
-// Returns the repo list as a promise from the githubRepo class
+// Returns github repo list from the githubRepo class as a promise
 let RepoList = githubRepoInstance.getRepoList(),
-// Used to store the repo list as a JSON object
+// The resolved value will be stored in this variable
 resolvedRepoList = null;
-// Resolves the promise
 /* Value of list:
       [
           {
@@ -32,24 +31,30 @@ resolvedRepoList = null;
           }
       ]
   */
+
+// Resolves the promise
 RepoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
-  // Save resolved value in a global binding
+  // resolved valued is in JSON format
+  console.log(" Github Resolved value: ", list);
   resolvedRepoList = list;
 });
 
 // Create a new instance of the bitbucket class
 let bitbucketRepoInstance = new bitbucketRepo();
 // Returns the repo list as a promise from the bitbucket class
-// let firstAuth = bitbucketRepoInstance.auth();
-let bitbucketUserInfo = bitbucketRepoInstance.getUser(),
-resolvedBitbucketUserInfo = null;
-bitbucketUserInfo.then((data) => {
-  resolvedBitbucketUserInfo = data;
-  console.log(resolvedBitbucketUserInfo);
+let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
+resolvedbitbucketRepoList = null;
+bitbucketRepoList.then((list) => {
+  // Save resolved value in a local cache file
+  // bitbucketRepoInstance.cache(list);
+  // resolved valued is in JSON format
+  resolvedbitbucketRepoList = list;
+  console.log("Bitbucket Resolved value: ", resolvedbitbucketRepoList);
 });
-let bitbucketRepoList = bitbucketRepoInstance.getRepos();
+
+
 
 
 ipcMain.on("terminal.ready", (event) => {

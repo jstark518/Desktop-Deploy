@@ -11,6 +11,8 @@ import {Branch, Commit, CommitType, Repo, repoCache} from "./contracts/repo";
 const {app, shell} = require('electron');
 const Store: ElectronStore = new ElectronStore();
 const bitbucketAccessToken = "bitbucket-access-token";
+const cacheDataFile = ".cache.data.bb.json";
+
 
 
 export class bitbucketRepo {
@@ -31,6 +33,17 @@ export class bitbucketRepo {
             this.config = JSON.parse(data) as authConfig;
         }
         return this.config;
+    }
+
+    getCache(): repoCache {
+        const fs = require('fs'),
+            file = path.join(app.getAppPath(), cacheDataFile), data = fs.readFileSync(file, {flag: "a+"});
+        try {
+            return JSON.parse(data) as repoCache;
+        }
+        catch (e) {
+            return {lastModified: new Date(0), repos: []} as repoCache;
+        }
     }
 
    async auth() {
@@ -140,9 +153,13 @@ export class bitbucketRepo {
         });
     }
 
-    async getRepos(): Promise <any> {
+    async getRepos(): Promise <Repo []> {
         const self = this;
+        // load data from cache
+        const cache = self.getCache();
+        let { lastModified, repos } = cache;
         const userInfo = await self.getUser();
+        // url for user repos
         const repoUrl = userInfo.links.repositories.href;
         console.log(' Bitbucket User Info in getRepos:');
         console.log(userInfo);
@@ -150,7 +167,7 @@ export class bitbucketRepo {
             // Get the AccessToken
             const auth = self.AccessToken || await self.auth();
             // Make a GET request to bitbucket API with the AccessToken
-            const repos: any = await fetch(`${repoUrl}`, {
+            const userRepos: any = await fetch(`${repoUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -159,8 +176,54 @@ export class bitbucketRepo {
             // Parse the response as JSON
             }).then(res => res.json());
             console.log(' Bitbucket Repos:');
-            console.log(repos.values);
+            console.log(userRepos.values);
+            // Save the repos in the cache
+            for (let repo of userRepos.values) {
+                let repoCache = cache.repos.find((r: any) => r.name === repo.full_name) || self.pushAndReturn(repos,{name: repo.name, branches: [], tags: [], commits: []});
+                repoCache.branches = await this.getBranches(repo.links.branches.href, lastModified, repoCache.branches);
+            }
             resolve(repos);
         });
     }
+
+    async getBranches(branchUrl: string, since: Date, cache: Branch[]): Promise <Branch []> {
+        const self = this;
+        const auth = self.AccessToken || await self.auth();
+        let userBranches: any = await fetch(`${branchUrl}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth.access_token}`
+            }
+        }).then(res => res.json());
+        console.log(' Bitbucket Branches:');
+        console.log(userBranches.values);
+        for(let branch of userBranches.values) {
+            let branchCache = cache.find((b: any) => b.name === branch.name) || self.pushAndReturn(cache, {name: branch.name}) as Branch;
+            branchCache.commitHash = branch.target.hash;
+            branchCache.url = branch.links.html.href;
+        };
+        
+        return cache;
+    }
+
+
+    pushAndReturn(dest: any, e: any) {
+        dest.push(e);
+        return e;
+    }
+
+    cache(list: Repo[]) {
+        const fs = require('fs'),
+           file = path.join(app.getAppPath(), cacheDataFile),
+           writeToCache = {
+           lastModified: this.getNewestCommit(list),
+           repos: list
+       }
+       fs.writeFileSync(file, JSON.stringify(writeToCache));
+    }
+
+    // Initial Date is 1970-01-01, reduce iterates through every commit in each repo and returns the date of the newest commit. 
+    // Once all repos are iterated through, the newest commit date is returned as the lastModified date.
+    getNewestCommit = (list: Repo[]): Date => list.reduce((repo_carry, repo) => repo.commits.reduce((carry, commit) => commit.date > carry ? commit.date : carry, repo_carry), new Date(0));
 }

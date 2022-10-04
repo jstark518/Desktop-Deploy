@@ -30,7 +30,7 @@ export default function CloneViewer({ cloneData }) {
   
     if (cloneData !== null && cloneData !== undefined) {
       return (
-          <CloneContainerStyle elevation={2}>
+        <CloneContainerStyle elevation={2}>
           <RepoFlexContainerStyle>
             <Grid container spacing={2}>
               <Grid item={true} xs={12} sx={{ marginBottom: "16px" }}>
@@ -109,8 +109,8 @@ export default function CloneViewer({ cloneData }) {
                 </Grid>
               </Grid>
             </Grid>
-            </RepoFlexContainerStyle>  
-          </CloneContainerStyle>
+          </RepoFlexContainerStyle>  
+        </CloneContainerStyle>
         
       );
     }

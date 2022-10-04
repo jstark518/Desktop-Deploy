@@ -117,6 +117,7 @@ export class githubRepo {
     }
 
     async getRepoList() {
+        //
         const cache = this.getCache();
         let {lastModified, repos} = cache;
         if(!(lastModified instanceof Date)) {
@@ -189,6 +190,7 @@ export class githubRepo {
         }
         fs.writeFileSync(file, JSON.stringify(writeToCache));
     }
-
+    // Initial Date is 1970-01-01, reduce iterates through every commit in each repo and returns the date of the newest commit. 
+    // Once all repos are iterated through, the newest commit date is returned as the lastModified date.
     getNewestCommit = (list: Repo[]): Date => list.reduce((repo_carry, repo) => repo.commits.reduce((carry, commit) => commit.date > carry ? commit.date : carry, repo_carry), new Date(0));
 }
