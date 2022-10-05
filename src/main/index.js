@@ -48,7 +48,7 @@ let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
 resolvedbitbucketRepoList = null;
 bitbucketRepoList.then((list) => {
   // Save resolved value in a local cache file
-  // bitbucketRepoInstance.cache(list);
+  bitbucketRepoInstance.cache(list);
   // resolved valued is in JSON format
   resolvedbitbucketRepoList = list;
   console.log("Bitbucket Resolved value: ", resolvedbitbucketRepoList);
