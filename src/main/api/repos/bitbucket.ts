@@ -5,7 +5,7 @@ import { authConfig } from './contracts/auth';
 import * as ElectronStore from 'electron-store';
 import fetch from 'node-fetch';
 // Implementing the interface WIP
-import {Branch, Commit, CommitType, Repo, repoCache} from "./contracts/repo";
+import {Branch, Tag, Commit, CommitType, Repo, repoCache} from "./contracts/repo";
 
 
 const {app, shell} = require('electron');
@@ -159,28 +159,30 @@ export class bitbucketRepo {
         const cache = self.getCache();
         let { lastModified, repos } = cache;
         const userInfo = await self.getUser();
-        // url for user repos
+        // url for user repos from userInfo
         const repoUrl = userInfo.links.repositories.href;
         console.log(' Bitbucket User Info in getRepos:');
         console.log(userInfo);
         return new Promise(async (resolve, reject) => {
             // Get the AccessToken
             const auth = self.AccessToken || await self.auth();
-            // Make a GET request to bitbucket API with the AccessToken
+            // Make a GET request to bitbucket API with the AccessToken and the repoUrl
+            // Response is a list of repos
             const userRepos: any = await fetch(`${repoUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${auth.access_token}`
                 }
-            // Parse the response as JSON
             }).then(res => res.json());
             console.log(' Bitbucket Repos:');
             console.log(userRepos.values);
-            // Save the repos in the cache
+            // Iterate through the repos to save in cache
             for (let repo of userRepos.values) {
                 let repoCache = cache.repos.find((r: any) => r.name === repo.full_name) || self.pushAndReturn(repos,{name: repo.name, branches: [], tags: [], commits: []});
                 repoCache.branches = await this.getBranches(repo.links.branches.href, lastModified, repoCache.branches);
+                repoCache.tags = await this.getTags(repo.links.tags.href, lastModified, repoCache.tags);
+                repoCache.commits = await this.getCommits(repo.links.commits.href, lastModified, repoCache.commits);
             }
             resolve(repos);
         });
@@ -188,8 +190,9 @@ export class bitbucketRepo {
 
     async getBranches(branchUrl: string, since: Date, cache: Branch[]): Promise <Branch []> {
         const self = this;
+        // Get access token for request
         const auth = self.AccessToken || await self.auth();
-        let userBranches: any = await fetch(`${branchUrl}`, {
+        let repoBranches: any = await fetch(`${branchUrl}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -197,15 +200,58 @@ export class bitbucketRepo {
             }
         }).then(res => res.json());
         console.log(' Bitbucket Branches:');
-        console.log(userBranches.values);
-        for(let branch of userBranches.values) {
+        console.log(repoBranches.values);
+        // Iterate through the branches to save in cache
+        for(let branch of repoBranches.values) {
             let branchCache = cache.find((b: any) => b.name === branch.name) || self.pushAndReturn(cache, {name: branch.name}) as Branch;
             branchCache.commitHash = branch.target.hash;
-            branchCache.url = branch.links.html.href;
+            branchCache.url = branch.links.self.href;
         };
         
         return cache;
     }
+
+    async getTags(tagUrl: string, since: Date, cache: Tag[]): Promise <Tag []> {
+        const self = this;
+        const auth = self.AccessToken || await self.auth();
+        let repoTags: any = await fetch(`${tagUrl}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth.access_token}`
+            }
+        }).then(res => res.json());
+        console.log(' Bitbucket Tags:');
+        console.log(repoTags.values);
+        for(let tag of repoTags.values) {
+            let tagCache = cache.find((t: any) => t.name === tag.name) || self.pushAndReturn(cache, {name: tag.name, date: tag.date, }) as Tag;
+            tagCache.commitHash = tag.target.hash;
+            tagCache.url = tag.links.html.href;
+        };
+
+        return cache;
+    }
+
+    async getCommits(commitUrl: string, since: Date, cache: Commit[]): Promise <Commit []> {
+        const self = this;
+        const auth = self.AccessToken || await self.auth();
+        let repoCommits: any = await fetch(`${commitUrl}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth.access_token}`
+            }
+        }).then(res => res.json());
+        console.log(' Bitbucket Commits:');
+        console.log(repoCommits.values);
+        for(let commit of repoCommits.values) {
+            let commitCache = cache.find((c: any) => c.hash === commit.hash) || self.pushAndReturn(cache, {hash: commit.hash, date: commit.date, message: commit.message, author: commit.author.raw}) as Commit;
+            commitCache.url = commit.links.html.href;
+        };
+        
+        return cache;
+    }
+    
 
 
     pushAndReturn(dest: any, e: any) {
