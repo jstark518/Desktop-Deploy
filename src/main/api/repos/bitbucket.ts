@@ -157,7 +157,12 @@ export class bitbucketRepo {
         const self = this;
         // load data from cache
         const cache = self.getCache();
+        // Destructure the cache object
         let { lastModified, repos } = cache;
+        if(!(lastModified instanceof Date)) {
+            lastModified = new Date(lastModified);
+        }
+        // Get bitbucket user data, to be used in the request
         const userInfo = await self.getUser();
         // url for user repos from userInfo
         const repoUrl = userInfo.links.repositories.href;
@@ -166,8 +171,7 @@ export class bitbucketRepo {
         return new Promise(async (resolve, reject) => {
             // Get the AccessToken
             const auth = self.AccessToken || await self.auth();
-            // Make a GET request to bitbucket API with the AccessToken and the repoUrl
-            // Response is a list of repos
+            // Make a GET request to bitbucket API with the AccessToken and the repoUrl. Response is a list of repos
             const userRepos: any = await fetch(`${repoUrl}`, {
                 method: 'GET',
                 headers: {
@@ -177,9 +181,10 @@ export class bitbucketRepo {
             }).then(res => res.json());
             console.log(' Bitbucket Repos:');
             console.log(userRepos.values);
-            // Iterate through the repos to save in cache
+            // Iterate through repos, if it already exists in cache, declare repoCache to it's value, if not, create and save the cache using pushAndReturn method
             for (let repo of userRepos.values) {
                 let repoCache = cache.repos.find((r: any) => r.name === repo.full_name) || self.pushAndReturn(repos,{name: repo.name, branches: [], tags: [], commits: []});
+                // If the repo has been modified since the last time we checked, get the branches, tags, and commits
                 repoCache.branches = await this.getBranches(repo.links.branches.href, lastModified, repoCache.branches);
                 repoCache.tags = await this.getTags(repo.links.tags.href, lastModified, repoCache.tags);
                 repoCache.commits = await this.getCommits(repo.links.commits.href, lastModified, repoCache.commits);
