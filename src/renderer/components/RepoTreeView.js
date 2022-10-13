@@ -4,10 +4,14 @@ import TreeItem from "@mui/lab/TreeItem";
 import TreeView from "@mui/lab/TreeView";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useAuth } from "./CustomHooks/useAuth";
 
-export default function RepoTreeView({ onSelectNode }) {
+export default function RepoTreeView({ onSelectNode, currentAuthType }) {
   const [repoData, setRepoData] = useState([]);
   const [selected, setSelected] = useState([]);
+  const {authType } = useAuth();
+
+  
 
   const handleSelect = (event, nodeIds) => {
     setSelected(nodeIds);
@@ -48,10 +52,16 @@ export default function RepoTreeView({ onSelectNode }) {
     repo() and list() are exposed to window object from preload.js.
     list() calls the API in index.js
     */
-    window.repo.list().then((list) => {
+   if (currentAuthType === "bitbucket") {
+    window.repo.bblist().then((list) => {
       setRepoData(list);
       console.log(list);
-    });
+    })};
+    if (currentAuthType === "github") {
+      window.repo.ghlist().then((list) => {
+        setRepoData(list);
+        console.log(list);
+      })}
   }, []);
 
   return (

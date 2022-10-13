@@ -4,6 +4,7 @@ import { Container, Button, Box } from '@mui/material'
 import MainView from '../renderer/components/MainView';
 import RepoTreeView from "../renderer/components/RepoTreeView";
 import BottomViewContainer from "../renderer/components/BottomViewContainer";
+import {useAuth} from '../renderer/components/CustomHooks/useAuth';
 
 const AppHeader = styled.div`
   background: #50514f;
@@ -47,17 +48,22 @@ const MainViewContainer = styled.div`
   overflow: hidden;
 `;
 
-export default function MainContainer({ gitRepoAPIData }) {
+
+export default function MainContainer({ authed, authType, logout }) {
   const [selectedNode, setSelectedNode] = useState(null);
   
+  console.log("currentAuthType: " + authType);
   console.log(selectedNode);
+  console.log(authType);
 
-  return (
+
+  if (authed) {
+    return (
     <MainContainerStyle>
       <AppHeader>Desktop Deploy</AppHeader>
       <FlexContainer>
         <TreeViewContainer>
-          <RepoTreeView onSelectNode={setSelectedNode} />
+          <RepoTreeView onSelectNode={setSelectedNode} currentAuthType={authType} />
         </TreeViewContainer>
         <MainViewContainer>
           <MainView selectedNode={selectedNode}></MainView>
@@ -65,5 +71,5 @@ export default function MainContainer({ gitRepoAPIData }) {
         </MainViewContainer>
       </FlexContainer>
     </MainContainerStyle>
-  );
+  )};
 }

@@ -7,6 +7,7 @@ import Xterm from "./XTerm";
 import { TroubleshootRounded } from "@mui/icons-material";
 import TerminalIcon from '@mui/icons-material/Terminal';
 import BottomViewContainer from "./BottomViewContainer";
+import { useAuth } from "./CustomHooks/useAuth";
 
 const AppHeader = styled.div`
   background: #50514f;
@@ -52,15 +53,19 @@ const MainViewContainer = styled.div`
 
 export default function MainContainer({ gitRepoAPIData }) {
   const [selectedNode, setSelectedNode] = useState(null);
-  
+  const { authType, authed } = useAuth();
+  console.log("currentAuthType: " + currentAuthType);
   console.log(selectedNode);
+  console.log(authType);
 
-  return (
+
+  if (authed) {
+    return (
     <MainContainerStyle>
       <AppHeader>Desktop Deploy</AppHeader>
       <FlexContainer>
         <TreeViewContainer>
-          <RepoTreeView onSelectNode={setSelectedNode} />
+          <RepoTreeView onSelectNode={setSelectedNode} authType={authType} />
         </TreeViewContainer>
         <MainViewContainer>
           <MainView selectedNode={selectedNode}></MainView>
@@ -68,5 +73,5 @@ export default function MainContainer({ gitRepoAPIData }) {
         </MainViewContainer>
       </FlexContainer>
     </MainContainerStyle>
-  );
+  )};
 }

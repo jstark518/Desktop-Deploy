@@ -1,30 +1,51 @@
-import { Button, Card, CardContent } from '@mui/material'
-import { Typography } from '@mui/material'
-import React, { useState } from 'react'
+// react component serving as the main entrance to the application, including a login page and the main page
+import React from 'react';
+import { useEffect } from 'react';
+import {useAuth} from '../renderer/components/CustomHooks/useAuth.js';
+import MainContainer from './MainContainer.jsx';
+import {Card, CardContent, Typography, Button} from '@mui/material';
 import BitbucketIcon from '../renderer/components/CustomIcons/BitbucketIcon.js'
 import GitHubIcon from '@mui/icons-material/GitHub';
-import {useAuth} from '../renderer/components/CustomHooks/useAuth.js'
 import {createBrowserRouter, RouterProvider, useNavigate, HashRouter, Routes, Route, redirect} from 'react-router-dom';
 
-
-export default function LoginPage(bitbucketLogin, githubLogin) {
+export default function MainEntrance() {
     const navigate = useNavigate();
+    const {authed, authType, bitbucketLogin, githubLogin, logout} = useAuth();
+
+    useEffect(() => {
+        if (authed) {
+            navigate('/main')
+        } else {
+            navigate('/login')
+        }
+    }, [authed])
 
 
+    return (
+        <Routes>
+            <Route
+                path='/login'
+                element={<LoginPage bitbucketLogin={bitbucketLogin} githubLogin={githubLogin} />}    
+            ></Route>
 
-    const handleBitBucketLogin = async () => {
-        bitbucketLogin().then((res) => {
-            setTimeout(() => {
-                
-            console.log(res)
-            }, 5000);
-        })
+            <Route 
+                path='/main'
+                element={<MainContainer authed={authed} authType={authType} />}
+            ></Route>
+        </Routes>
+    )
+}
+
+function LoginPage({bitbucketLogin, githubLogin}) {
+
+    const handleBitBucketLogin = () => {
+        console.log(bitbucketLogin)
+        bitbucketLogin();
     }
 
     const handleGithubLogin = () => {
-            githubLogin().then((res) => {
-                console.log(res)
-        })
+        console.log(githubLogin)
+        githubLogin();
     }
 
     return (
@@ -44,7 +65,7 @@ export default function LoginPage(bitbucketLogin, githubLogin) {
                         sx={{marginTop: '20px', width: '100%', textTransform: 'none'}} 
                         endIcon={<BitbucketIcon />}
                     >
-                        Sign in dd Bitbucket
+                        Sign in with Bitbucket
                     </Button>
                     <Button 
                         onClick={

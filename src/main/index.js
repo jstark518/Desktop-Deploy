@@ -11,7 +11,10 @@ const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
 
+
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+
 
 // Create a new instance of the gitHubRepo class
 let githubRepoInstance = new githubRepo();
@@ -78,8 +81,17 @@ ipcMain.on("terminal.ready", (event) => {
   }); 
 });
 
+ipcMain.handle("bbUser", async (event) => {  
+  // Create a new instance of the bitbucket class
+  let bitbucketRepoInstance = new bitbucketRepo();
+  let bbUser = await bitbucketRepoInstance.getUser();
+  console.log("bbUser: ", bbUser);
+  return bbUser;
+});
+
 // Passing promise to the front-end
-ipcMain.handle("repos.list", (event) => RepoList);
+ipcMain.handle("ghrepos.list", (event) => RepoList);
+ipcMain.handle("bbrepos.list", (event) => bitbucketRepoList);
 // Value from the front-end component CommitView.js
 ipcMain.handle("repo.clone", async (event, url, node) => {
   let repo = resolvedRepoList.find((e) => e.clone === url),

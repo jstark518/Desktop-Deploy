@@ -71,6 +71,7 @@ export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
               sx={{ display: "flex", justifyContent: "right" }}
             >
               <CloneButton onClick={clone}/>
+              <Button variant="contained" sx={{ marginLeft: "10px" }} onCLick={window.repo.bbAuth()}>Test Button</Button>
             </Grid>
           </Grid>
         </RepoContainerStyle>
