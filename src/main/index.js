@@ -22,26 +22,12 @@ let githubRepoInstance = new githubRepo();
 let RepoList = githubRepoInstance.getRepoList(),
 // The resolved value will be stored in this variable
 resolvedRepoList = null;
-/* Value of list:
-      [
-          {
-              name: 'g4v',
-              branches: [ [Object], [Object] ],
-              tags: [],
-              commits: [],
-              url: 'https://api.github.com/repos/jasonguo258/g4v',
-              clone: 'https://github.com/jasonguo258/g4v.git'
-          }
-      ]
-  */
-
 // Resolves the promise
 RepoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
   // resolved valued is in JSON format
-  console.log(" Github Resolved value: ", list);
-  resolvedRepoList = list;
+  console.log(" Github resolved in index: ", list);
 });
 
 // Create a new instance of the bitbucket class
@@ -49,12 +35,11 @@ let bitbucketRepoInstance = new bitbucketRepo();
 // Returns the repo list as a promise from the bitbucket class
 let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
 resolvedbitbucketRepoList = null;
+// Resolves the promise
 bitbucketRepoList.then((list) => {
   // Save resolved value in a local cache file
   bitbucketRepoInstance.cache(list);
-  // resolved valued is in JSON format
-  resolvedbitbucketRepoList = list;
-  console.log("Bitbucket Resolved value: ", resolvedbitbucketRepoList);
+  console.log("Bitbucket resolved in index", list);
 });
 
 

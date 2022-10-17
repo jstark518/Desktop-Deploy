@@ -119,6 +119,7 @@ export class githubRepo {
     async getRepoList() {
         //
         const cache = this.getCache();
+        // Destructure response from getCache()
         let {lastModified, repos} = cache;
         if(!(lastModified instanceof Date)) {
             lastModified = new Date(lastModified);

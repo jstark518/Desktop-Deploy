@@ -34,7 +34,7 @@ export class bitbucketRepo {
         }
         return this.config;
     }
-
+    // 
     getCache(): repoCache {
         const fs = require('fs'),
             file = path.join(app.getAppPath(), cacheDataFile), data = fs.readFileSync(file, {flag: "a+"});
@@ -159,15 +159,16 @@ export class bitbucketRepo {
         const cache = self.getCache();
         // Destructure the cache object
         let { lastModified, repos } = cache;
-        if(!(lastModified instanceof Date)) {
-            lastModified = new Date(lastModified);
-        }
+        console.log("lastModified value in cache: " + lastModified);
+        console.log("repos value in cache: " + repos);
+       
         // Get bitbucket user data, to be used in the request
         const userInfo = await self.getUser();
-        // url for user repos from userInfo
-        const repoUrl = userInfo.links.repositories.href;
         console.log(' Bitbucket User Info in getRepos:');
         console.log(userInfo);
+        const repoUrl = ('https://api.bitbucket.org/2.0/repositories/' + userInfo.username + '?' + new URLSearchParams({q: 'updated_on>' + lastModified}));
+        console.log("repoUrl: " + repoUrl);
+        
         return new Promise(async (resolve, reject) => {
             // Get the AccessToken
             const auth = self.AccessToken || await self.auth();
@@ -179,12 +180,14 @@ export class bitbucketRepo {
                     'Authorization': `Bearer ${auth.access_token}`
                 }
             }).then(res => res.json());
-            console.log(' Bitbucket Repos:');
+            console.log(' Bitbucket Repos from fetch:');
             console.log(userRepos.values);
-            // Iterate through repos, if it already exists in cache, declare repoCache to it's value, if not, create and save the cache using pushAndReturn method
+            // Iterate through response repos, if it already exists in cache, repoCache becomes a reference to cache, otherwise new value gets added to cache
             for (let repo of userRepos.values) {
-                let repoCache = cache.repos.find((r: any) => r.name === repo.full_name) || self.pushAndReturn(repos,{name: repo.name, branches: [], tags: [], commits: []});
-                // If the repo has been modified since the last time we checked, get the branches, tags, and commits
+                console.log('lastModified: ' + lastModified);
+                // repoCache is a reference to cache
+                let repoCache = cache.repos.find((r: any) => r.name === repo.name) || self.pushAndReturn(repos,{name: repo.name, branches: [], tags: [], commits: []});
+                repoCache.updated_on = repo.updated_on
                 repoCache.branches = await this.getBranches(repo.links.branches.href, lastModified, repoCache.branches);
                 repoCache.tags = await this.getTags(repo.links.tags.href, lastModified, repoCache.tags);
                 repoCache.commits = await this.getCommits(repo.links.commits.href, lastModified, repoCache.commits);
@@ -195,6 +198,9 @@ export class bitbucketRepo {
 
     async getBranches(branchUrl: string, since: Date, cache: Branch[]): Promise <Branch []> {
         const self = this;
+        console.log(branchUrl, since, cache);
+        const filterUrl = `${branchUrl}?${new URLSearchParams({q: 'target.date>' + since})}`;
+        console.log('Branch filterUrl: ',filterUrl);
         // Get access token for request
         const auth = self.AccessToken || await self.auth();
         let repoBranches: any = await fetch(`${branchUrl}`, {
@@ -219,7 +225,8 @@ export class bitbucketRepo {
     async getTags(tagUrl: string, since: Date, cache: Tag[]): Promise <Tag []> {
         const self = this;
         const auth = self.AccessToken || await self.auth();
-        let repoTags: any = await fetch(`${tagUrl}`, {
+        const filterUrl = `${tagUrl}?${new URLSearchParams({q: 'date>' + since})}`;
+        let repoTags: any = await fetch(`${filterUrl}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -240,7 +247,11 @@ export class bitbucketRepo {
     async getCommits(commitUrl: string, since: Date, cache: Commit[]): Promise <Commit []> {
         const self = this;
         const auth = self.AccessToken || await self.auth();
-        let repoCommits: any = await fetch(`${commitUrl}`, {
+        const filterUrl = `${commitUrl}?${new URLSearchParams({q: 'date>' + since})}`;
+        console.log('commitUrl: ',filterUrl);
+        console.log('since: ',since);
+        console.log('cache: ',cache);
+        let repoCommits: any = await fetch(`${filterUrl}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -250,8 +261,9 @@ export class bitbucketRepo {
         console.log(' Bitbucket Commits:');
         console.log(repoCommits.values);
         for(let commit of repoCommits.values) {
-            let commitCache = cache.find((c: any) => c.hash === commit.hash) || self.pushAndReturn(cache, {hash: commit.hash, date: commit.date, message: commit.message, author: commit.author.raw}) as Commit;
+            let commitCache = cache.find((c: any) => c.hash === commit.hash) || self.pushAndReturn(cache, {hash: commit.hash, message: commit.message, author: commit.author.raw}) as Commit;
             commitCache.url = commit.links.html.href;
+            commitCache.date = new Date(commit.date);
         };
         
         return cache;
@@ -276,5 +288,5 @@ export class bitbucketRepo {
 
     // Initial Date is 1970-01-01, reduce iterates through every commit in each repo and returns the date of the newest commit. 
     // Once all repos are iterated through, the newest commit date is returned as the lastModified date.
-    getNewestCommit = (list: Repo[]): Date => list.reduce((repo_carry, repo) => repo.commits.reduce((carry, commit) => commit.date > carry ? commit.date : carry, repo_carry), new Date(0));
+    getNewestCommit = (list: Repo[]): Date => list.reduce((repo_carry, repo) => repo.updated_on < repo_carry ? repo_carry: repo.updated_on, new Date(0));
 }

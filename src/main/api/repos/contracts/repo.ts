@@ -12,6 +12,7 @@ interface Repo {
     clone?: string
     path?: string
     description?: string
+    updated_on?: Date
 }
 
 interface Branch {
