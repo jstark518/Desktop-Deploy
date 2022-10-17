@@ -55,12 +55,12 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
    if (currentAuthType === "bitbucket") {
     window.repo.bblist().then((list) => {
       setRepoData(list);
-      console.log(list);
+      console.log('From useEffect: ',list);
     })};
     if (currentAuthType === "github") {
       window.repo.ghlist().then((list) => {
         setRepoData(list);
-        console.log(list);
+        console.log('From useEffect: ',list);
       })}
   }, []);
 

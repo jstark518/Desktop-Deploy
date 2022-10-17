@@ -48,7 +48,7 @@ interface Author {
 }
 
 interface repoCache {
-    lastModified: Date,
+    lastModified: any,
     repos?: Repo[]
 }
 

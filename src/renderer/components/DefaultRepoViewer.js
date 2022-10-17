@@ -18,6 +18,7 @@ const RepoContainerStyle = styled("div")({
 
 export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
     const url = selectedNode.selection.url;
+    console.log(url);
     const [data, setData] = useState(null);
 
     useEffect(() => {

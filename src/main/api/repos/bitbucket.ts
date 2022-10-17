@@ -6,6 +6,8 @@ import * as ElectronStore from 'electron-store';
 import fetch from 'node-fetch';
 // Implementing the interface WIP
 import {Branch, Tag, Commit, CommitType, Repo, repoCache} from "./contracts/repo";
+import { any } from 'prop-types';
+import { ContactlessOutlined } from '@mui/icons-material';
 
 
 const {app, shell} = require('electron');
@@ -42,7 +44,9 @@ export class bitbucketRepo {
             return JSON.parse(data) as repoCache;
         }
         catch (e) {
-            return {lastModified: new Date(0), repos: []} as repoCache;
+            const originalDate = new Date(0),
+            ISOFormattedDate = originalDate.toISOString();
+            return {lastModified: ISOFormattedDate , repos: []} as repoCache;
         }
     }
 
@@ -159,7 +163,8 @@ export class bitbucketRepo {
         const cache = self.getCache();
         // Destructure the cache object
         let { lastModified, repos } = cache;
-        console.log("lastModified value in cache: " + lastModified);
+        
+        console.log("lastModified value in getRepos cache: " + lastModified);
         console.log("repos value in cache: " + repos);
        
         // Get bitbucket user data, to be used in the request
@@ -168,7 +173,7 @@ export class bitbucketRepo {
         console.log(userInfo);
         const repoUrl = ('https://api.bitbucket.org/2.0/repositories/' + userInfo.username + '?' + new URLSearchParams({q: 'updated_on>' + lastModified}));
         console.log("repoUrl: " + repoUrl);
-        
+
         return new Promise(async (resolve, reject) => {
             // Get the AccessToken
             const auth = self.AccessToken || await self.auth();
@@ -179,7 +184,11 @@ export class bitbucketRepo {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${auth.access_token}`
                 }
-            }).then(res => res.json());
+            }).then(res => res.json())
+            .catch(err => {
+                console.log(err);
+            });
+
             console.log(' Bitbucket Repos from fetch:');
             console.log(userRepos.values);
             // Iterate through response repos, if it already exists in cache, repoCache becomes a reference to cache, otherwise new value gets added to cache
@@ -188,6 +197,7 @@ export class bitbucketRepo {
                 // repoCache is a reference to cache
                 let repoCache = cache.repos.find((r: any) => r.name === repo.name) || self.pushAndReturn(repos,{name: repo.name, branches: [], tags: [], commits: []});
                 repoCache.updated_on = repo.updated_on
+                repoCache.url = repo.links.self.href;
                 repoCache.branches = await this.getBranches(repo.links.branches.href, lastModified, repoCache.branches);
                 repoCache.tags = await this.getTags(repo.links.tags.href, lastModified, repoCache.tags);
                 repoCache.commits = await this.getCommits(repo.links.commits.href, lastModified, repoCache.commits);
@@ -198,7 +208,9 @@ export class bitbucketRepo {
 
     async getBranches(branchUrl: string, since: Date, cache: Branch[]): Promise <Branch []> {
         const self = this;
-        console.log(branchUrl, since, cache);
+        console.log('branchUrl: ',branchUrl);
+        console.log('since in getBranches: ', since);
+        console.log('cache in getBranches: ', cache);
         const filterUrl = `${branchUrl}?${new URLSearchParams({q: 'target.date>' + since})}`;
         console.log('Branch filterUrl: ',filterUrl);
         // Get access token for request
@@ -249,8 +261,8 @@ export class bitbucketRepo {
         const auth = self.AccessToken || await self.auth();
         const filterUrl = `${commitUrl}?${new URLSearchParams({q: 'date>' + since})}`;
         console.log('commitUrl: ',filterUrl);
-        console.log('since: ',since);
-        console.log('cache: ',cache);
+        console.log('since in getCommits: ',since);
+        console.log('cache in getCommits: ',cache);
         let repoCommits: any = await fetch(`${filterUrl}`, {
             method: 'GET',
             headers: {
