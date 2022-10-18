@@ -1,15 +1,20 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TreeItem from "@mui/lab/TreeItem";
+import TreeItem, { treeItemClasses } from "@mui/lab/TreeItem";
 import TreeView from "@mui/lab/TreeView";
 import React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "./CustomHooks/useAuth";
+import RightArrowIcon from "./CustomIcons/RightArrowIcon";
+import { Box } from "@mui/system";
+import { Typography } from "@mui/material";
 
 export default function RepoTreeView({ onSelectNode, currentAuthType }) {
   const [repoData, setRepoData] = useState([]);
   const [selected, setSelected] = useState([]);
   const {authType } = useAuth();
+
+  const [listTitle, setListTitle] = useState('Repositories:');
 
   
 
@@ -54,11 +59,14 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
     */
    if (currentAuthType === "bitbucket") {
     window.repo.bblist().then((list) => {
+      setListTitle('Bitbucket Repositories:');
       setRepoData(list);
       console.log('From useEffect: ',list);
-    })};
+    })
+  };
     if (currentAuthType === "github") {
       window.repo.ghlist().then((list) => {
+        setListTitle('Github Repositories:');
         setRepoData(list);
         console.log('From useEffect: ',list);
       })}
@@ -74,7 +82,9 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
         "nodeId" for each node has to be a string.
         */
       onNodeSelect={handleSelect}
+      sx={{ padding: "20px" }}
     >
+      <Typography variant="3" sx={{ fontSize: "20px", fontFamily: "Roboto", fontWeight: 400 }}>{listTitle}</Typography>
       {/*
         First use of the repoData, which was set in useEffect.
         We map the Repos from GitHub into a "TreeView" component (MUI version of an ul).
@@ -95,7 +105,22 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
             ...repo,
           })}
           label={repo.name}
-          sx={{ color: "white" }}
+          sx={{ 
+            color: "black", 
+            borderRadius: "5px", 
+            backgroundColor: "#d9d9d9", 
+            fontFamily: "Roboto",
+            fontSize: "1rem",
+            padding: '5px', 
+            margin: "10px", 
+            [`& .${treeItemClasses.content}`]: 
+              {'&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': 
+                {
+                  backgroundColor: "#CFEDD9",
+                  borderRadius: "5px"
+                }
+              } 
+          }}
         >
           <TreeItem
             nodeId={JSON.stringify({ type: "branches", index })}
@@ -110,6 +135,7 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
                   ...branch,
                 })}
                 label={branch.name}
+
               ></TreeItem>
             ))}
           </TreeItem>

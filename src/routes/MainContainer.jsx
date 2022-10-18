@@ -14,7 +14,7 @@ const AppHeader = styled.div`
   height: 4rem;
   color: white;
   font-family: "Roboto";
-  font-weight: 200;
+  font-weight: 400;
 `;
 
 const MainContainerStyle = styled.div`
@@ -33,7 +33,7 @@ const FlexContainer = styled.div`
 `;
 
 const TreeViewContainer = styled.div`
-  background: #70716f;
+  background: #E2E2E2;
   width: 15rem;
   height: 100%;
   overflow: auto;
@@ -56,7 +56,7 @@ export default function MainContainer({ authed, authType, logout }) {
   console.log(selectedNode);
   console.log(authType);
 
-
+  // Authentication hook used as the auth layer for the app
   if (authed) {
     return (
     <MainContainerStyle>
