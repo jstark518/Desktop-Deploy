@@ -66,7 +66,7 @@ export default function MainContainer({ authed, authType, logout }) {
           <RepoTreeView onSelectNode={setSelectedNode} currentAuthType={authType} />
         </TreeViewContainer>
         <MainViewContainer>
-          <MainView selectedNode={selectedNode}></MainView>
+          <MainView selectedNode={selectedNode} authType={authType}></MainView>
           <BottomViewContainer/>
         </MainViewContainer>
       </FlexContainer>
