@@ -6,16 +6,17 @@ import { styled } from "@mui/system";
 import React from "react";
 import { useEffect, useState } from "react";
 import RightArrowIcon from "./CustomIcons/RightArrowIcon";
+import RepoIcon from "./CustomIcons/RepoIcon";
+import RepoBranchIcon from "./CustomIcons/RepoBranchIcon";
 import { Box } from "@mui/system";
 import { Typography } from "@mui/material";
 
-const RepoStyledTreeItem = styled(TreeItem, {
+const RepoStyledTreeItemRoot = styled(TreeItem, {
   shouldForwardProp: (props) => props !== "key" || props !== "nodeId" || props !== "label"})({
     color: "black", 
     borderRadius: "5px", 
     backgroundColor: "#d9d9d9", 
     fontFamily: "Roboto",
-    padding: '5px 0 5px 0', 
     margin: "10px", 
     [`& .${treeItemClasses.content}`]: {
       '&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': {
@@ -26,19 +27,16 @@ const RepoStyledTreeItem = styled(TreeItem, {
     }
   })
 
-function StyledTreeItem(props) {
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other } = props;
+function RepoStyledTreeItem(props) {
+  const { labelText, labelIcon: LabelIcon, color, bgColor, ...other } = props;
 
   return (
-    <RepoStyledTreeItem
+    <RepoStyledTreeItemRoot
       label={
-        <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pl: 1, pr: 1, m: 0 }}>
+        <Box sx={{ justifyContent: 'left', display: 'flex', alignItems: 'center', p: 0.5, pl: 1, pr: 1, m: 0 }}>
           <LabelIcon color="inherit" sx={{ mr: 1 }} />
-          <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1, mr: 1, ml: 0.5 }}>
             {labelText}
-          </Typography>
-          <Typography variant="caption" color="inherit">
-            {labelInfo}
           </Typography>
         </Box>
       }
@@ -47,15 +45,32 @@ function StyledTreeItem(props) {
   );
 }
 
-const BranchStyledTreeItem = styled(TreeItem, {
+const BranchStyledTreeItemRoot = styled(TreeItem, {
   shouldForwardProp: (props) => props !== "key" || props !== "nodeId" || props !== "label"})({
     [`& .${treeItemClasses.label}`]: {
       '&.MuiTreeItem-label': {
         fontSize: "0.7rem",
-        overflowWrap: "break-word",
+        overflow: "hidden",
       }
     }
   })
+
+function BranchStyledTreeItem(props) {
+  const { labelText, labelIcon: LabelIcon, color, bgColor, ...other } = props;
+  return (
+    <BranchStyledTreeItemRoot
+      label={
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5 }}>
+          <LabelIcon color="inherit" />
+          <Typography variant="body2" sx={{ fontWeight: 'inherit', fontSize: 'inherit', flexGrow: 1, mr: 1, ml: 0.5 }}>
+            {labelText.slice(0, 15)}
+          </Typography>
+        </Box>
+      }
+      {...other}
+    />
+  );
+}
 
 const CommitStyledTreeItem = styled(TreeItem, {
   shouldForwardProp: (props) => props !== "key" || props !== "nodeId" || props !== "label"})({
@@ -150,7 +165,7 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
           We separate each Repo into its Default Repo, branches, commits, and tags, placing each into a TreeItem.
           "nodeId" is a stringified JSON object, since "onNodeSelect" requires a string.
         */
-        <StyledTreeItem
+        <RepoStyledTreeItem
           key={repo.name + index}
           nodeId={JSON.stringify({
             type: "repo",
@@ -159,7 +174,7 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
             ...repo,
           })}
           labelText={repo.name}
-          labelIcon={RightArrowIcon}
+          labelIcon={RepoIcon}
         > 
           <TreeItem
             nodeId={JSON.stringify({ type: "branches", index })}
@@ -173,7 +188,8 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
                   repoIndex: index,
                   ...branch,
                 })}
-                label={branch.name}                
+                labelText={branch.name}
+                labelIcon={RepoBranchIcon}
               ></BranchStyledTreeItem>
             ))}
           </TreeItem>
@@ -209,7 +225,7 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
               ></TreeItem>
             ))}
           </TreeItem>
-        </StyledTreeItem>
+        </RepoStyledTreeItem>
       ))}
     </TreeView>
   );
