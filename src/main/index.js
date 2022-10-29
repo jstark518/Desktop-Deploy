@@ -11,45 +11,38 @@ const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
 
+
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+
 
 // Create a new instance of the gitHubRepo class
 let githubRepoInstance = new githubRepo();
-// Returns the repo list as a promise from the githubRepo class
+// Returns github repo list from the githubRepo class as a promise
 let RepoList = githubRepoInstance.getRepoList(),
-// Used to store the repo list as a JSON object
+// The resolved value will be stored in this variable
 resolvedRepoList = null;
 // Resolves the promise
-/* Value of list:
-      [
-          {
-              name: 'g4v',
-              branches: [ [Object], [Object] ],
-              tags: [],
-              commits: [],
-              url: 'https://api.github.com/repos/jasonguo258/g4v',
-              clone: 'https://github.com/jasonguo258/g4v.git'
-          }
-      ]
-  */
 RepoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
-  // Save resolved value in a global binding
-  resolvedRepoList = list;
+  // resolved valued is in JSON format
+  console.log(" Github resolved in index: ", list);
 });
 
 // Create a new instance of the bitbucket class
 let bitbucketRepoInstance = new bitbucketRepo();
 // Returns the repo list as a promise from the bitbucket class
-// let firstAuth = bitbucketRepoInstance.auth();
-let bitbucketUserInfo = bitbucketRepoInstance.getUser(),
-resolvedBitbucketUserInfo = null;
-bitbucketUserInfo.then((data) => {
-  resolvedBitbucketUserInfo = data;
-  console.log(resolvedBitbucketUserInfo);
+let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
+resolvedbitbucketRepoList = null;
+// Resolves the promise
+bitbucketRepoList.then((list) => {
+  // Save resolved value in a local cache file
+  bitbucketRepoInstance.cache(list);
+  console.log("Bitbucket resolved in index", list);
 });
-let bitbucketRepoList = bitbucketRepoInstance.getRepos();
+
+
 
 
 ipcMain.on("terminal.ready", (event) => {
@@ -73,8 +66,17 @@ ipcMain.on("terminal.ready", (event) => {
   }); 
 });
 
+ipcMain.handle("bbUser", async (event) => {  
+  // Create a new instance of the bitbucket class
+  let bitbucketRepoInstance = new bitbucketRepo();
+  let bbUser = await bitbucketRepoInstance.getUser();
+  console.log("bbUser: ", bbUser);
+  return bbUser;
+});
+
 // Passing promise to the front-end
-ipcMain.handle("repos.list", (event) => RepoList);
+ipcMain.handle("ghrepos.list", (event) => RepoList);
+ipcMain.handle("bbrepos.list", (event) => bitbucketRepoList);
 // Value from the front-end component CommitView.js
 ipcMain.handle("repo.clone", async (event, url, node) => {
   let repo = resolvedRepoList.find((e) => e.clone === url),
@@ -258,12 +260,12 @@ app.on("ready", () => {
   session.defaultSession.webRequest.onBeforeSendHeaders(
     filter,
     async (details, callback) => {
-      const auth = null;
-      if (details.url.includes('https;//api.github.com/')){
+      let auth = null;
+      if (details.url.includes('https://api.github.com/')){
         auth = await githubRepoInstance.getAuth();
         details.requestHeaders["Authorization"] = "bearer " + auth.token;
         callback({ requestHeaders: details.requestHeaders });
-      }else if (details.url.includes('https;//api.bitbucket.org/')){
+      }else if (details.url.includes('https://api.bitbucket.org/')){
         auth = await bitbucketRepoInstance.auth();
         details.requestHeaders["Authorization"] = "bearer " + auth.access_token;
         callback({ requestHeaders: details.requestHeaders });

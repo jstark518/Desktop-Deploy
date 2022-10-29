@@ -9,15 +9,16 @@ import CloneButton from "./MUIButton";
 const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '16px' });
 
 const RepoContainerStyle = styled("div")({
-    background: "#88D3A0",
-    padding: '16px',
-    margin: '16px',
+    background: "#b7e4c6",
+    padding: '20px',
+    margin: '20px',
     borderRadius: "5px",
     marginBottom: "10px",
   });
 
 export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
     const url = selectedNode.selection.url;
+    console.log(url);
     const [data, setData] = useState(null);
 
     useEffect(() => {

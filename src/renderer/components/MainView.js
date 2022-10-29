@@ -13,7 +13,7 @@ const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
 
 
 // The main viewer. This calls the other views when needed.
-export default function MainView({ selectedNode }) {
+export default function MainView({ selectedNode, authType }) {
   const [cloneData, setCloneData] = useState(null);
 
   if (selectedNode == null)
@@ -65,7 +65,8 @@ export default function MainView({ selectedNode }) {
       <div>
         <BranchViewer
           setCloneData={setCloneData}
-          selectedNode={selectedNode} 
+          selectedNode={selectedNode}
+          authType={authType}
         />
         <CloneViewer cloneData={cloneData} />
       </div>
@@ -85,4 +86,4 @@ export default function MainView({ selectedNode }) {
       selectedNode={selectedNode} 
     />;
     }
-}
+} 

@@ -17,7 +17,7 @@ const RepoContainerStyle = styled("div")({
     marginBottom: "10px",
 });
 
-export default function BranchViewer({ selectedNode, setCloneData, cloneData }) {
+export default function BranchViewer({ selectedNode, setCloneData, cloneData, authType }) {
     const url = selectedNode.selection.url;
     const [data, setData] = useState(null);
     console.log(selectedNode);
@@ -47,8 +47,18 @@ export default function BranchViewer({ selectedNode, setCloneData, cloneData }) 
         <span>Loading....</span>
       </RepoFlexContainerStyle>
     );
-  
-    const localDate = new Date(data.commit.author.date);
+    console.log(data);
+    let localDate = new Date(0);
+    let message = "";
+    if (authType === 'github') {
+      localDate = new Date(data.commit.author.date)
+      message = data.commit.message
+    } else if (authType === 'bitbucket') {
+      localDate = new Date(data.target.date)
+      message = data.target.message
+    }
+    console.log(localDate);
+    
     return (
       <div>
         <RepoContainerStyle>
@@ -63,20 +73,18 @@ export default function BranchViewer({ selectedNode, setCloneData, cloneData }) 
                 Latest commit: {localDate.toLocaleString()}
               </Typography>
             </Grid>
-            <Grid 
-                item={true} 
-                xs={12}
-                sx={{
-                    height: "12rem",
-                    overflow: "scroll",
-                    overflowX: "hidden",
-                    "&::-webkit-scrollbar": {
-                      width: 2
-                    }
-                }}
+            <Grid item={true} xs={12}
+              sx={{
+                  height: "12rem",
+                  overflow: "scroll",
+                  overflowX: "hidden",
+                  "&::-webkit-scrollbar": {
+                    width: 2
+                  }
+              }}
             >
               <Typography variant="subtitle1" sx={{ color: "#71697A" }}>
-                {data.commit.message}
+                {message}
               </Typography>
             </Grid>
             <Grid item={true} xs={8}>
@@ -90,9 +98,7 @@ export default function BranchViewer({ selectedNode, setCloneData, cloneData }) 
                 URL -{selectedNode.selection.url}:{" "}
               </Typography>
             </Grid>
-            <Grid
-              item={true}
-              xs={4}
+            <Grid item={true} xs={4}
               sx={{
                 display: "flex",
                 justifyContent: "right",

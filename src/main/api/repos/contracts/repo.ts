@@ -12,6 +12,7 @@ interface Repo {
     clone?: string
     path?: string
     description?: string
+    updated_on?: Date
 }
 
 interface Branch {
@@ -47,7 +48,7 @@ interface Author {
 }
 
 interface repoCache {
-    lastModified: Date,
+    lastModified: any,
     repos?: Repo[]
 }
 
