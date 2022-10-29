@@ -107,6 +107,6 @@ dist
 /.tmp/
 /.idea/
 /.env.json
-/.cache.data.gh.json
+/.cache*.json
 **/.DS_Store
 /.library/
