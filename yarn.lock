@@ -1029,15 +1029,15 @@
     "@octokit/types" "^7.0.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/auth-oauth-user@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@octokit/auth-oauth-user/-/auth-oauth-user-2.0.3.tgz#27ef49d87d31848e8a45973cd5396e9eb2b1b59d"
-  integrity sha512-NMGTTGa1j6JVtlpZUOrhi1RxBjHaogS0p59qV8HtFOx3Rgq503xfjjA8npyVbRuAf30iW/K5YueZKivMkhBITA==
+"@octokit/auth-oauth-user@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@octokit/auth-oauth-user/-/auth-oauth-user-2.0.4.tgz#88f060ec678d7d493695af8d827e115dd064e212"
+  integrity sha512-HrbDzTPqz6GcGSOUkR+wSeF3vEqsb9NMsmPja/qqqdiGmlk/Czkxctc3KeWYogHonp62Ml4kjz2VxKawrFsadQ==
   dependencies:
     "@octokit/auth-oauth-device" "^4.0.0"
     "@octokit/oauth-methods" "^2.0.0"
     "@octokit/request" "^6.0.0"
-    "@octokit/types" "^7.0.0"
+    "@octokit/types" "^8.0.0"
     btoa-lite "^1.0.0"
     universal-user-agent "^6.0.0"
 
