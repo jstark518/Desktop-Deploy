@@ -6,23 +6,22 @@ const authContext = React.createContext();
 export function useAuth() {
     const [authed, setAuthed] = React.useState(false);
     const [authType, setAuthType] = React.useState(null);
-    const navigate = useNavigate();
+   // const navigate = useNavigate();
     return {
         authed,
         authType,
         bitbucketLogin() {
             return new Promise((resolve) => {
-                if (window.repo.bbUser!== undefined || window.repo.bbUser !== null) {
+                if (typeof window.repo.bbUser !== undefined && window.repo.bbUser !== null) {
                     setAuthType("bitbucket");
                     setAuthed(true);
                 }
                 resolve(authType);
-
             });
         },
         githubLogin() {
             return new Promise((resolve) => {
-                if (window.repo.ghList !== undefined || window.repo.ghUser !== null) {
+                if (typeof window.repo.ghUser !== undefined && window.repo.ghUser !== null) {
                     setAuthType("github");
                     setAuthed(true);
                 }
