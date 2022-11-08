@@ -88,26 +88,11 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
   const [repoData, setRepoData] = useState([]);
   const [selected, setSelected] = useState([]);
   const [listTitle, setListTitle] = useState('Repositories:');
+  const [repoSrc, setRepoSrc] = useState([]);
 
   const handleSelect = (event, nodeIds) => {
     setSelected(nodeIds);
-
-    /* Data from the TreeItem selected, nodeId string:
-        {
-            type: 'repo',
-            repoIndex: number,
-            name: repo.name,
-            branches: [obejct],
-            clone: string,
-            commits: [object],
-            tags: [object],
-            url: string
-        }
-    */
     const nodeData = JSON.parse(nodeIds);
-    console.log("TreeItem selected returns string converted to this JSON");
-    console.log(nodeData);
-    console.log(repoData);
     // sending node data to MainContainer.js
     if (
       nodeData.type === "repo" ||
@@ -118,7 +103,7 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
       nodeData.type === "commits" ||
       nodeData.type === "tags"
     ) {
-      onSelectNode({ selection: nodeData, repo: repoData[nodeData.repoIndex] });
+      onSelectNode({ selection: nodeData, repo: repoData[nodeData.repoIndex], repoSrc });
     }
   };
   /*
@@ -126,17 +111,17 @@ export default function RepoTreeView({ onSelectNode, currentAuthType }) {
   */
   useEffect(() => {
    if (currentAuthType === "bitbucket") {
-    window.repo.bblist().then((list) => {
+    window.repo.bbList().then((list) => {
       setListTitle('Bitbucket Repositories:');
+      setRepoSrc("bb");
       setRepoData(list);
-      console.log('From useEffect: ',list);
     })
   };
     if (currentAuthType === "github") {
-      window.repo.ghlist().then((list) => {
+      window.repo.ghList().then((list) => {
         setListTitle('Github Repositories:');
+        setRepoSrc("gh");
         setRepoData(list);
-        console.log('From useEffect: ',list);
       })}
   }, []);
 

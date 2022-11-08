@@ -2,59 +2,56 @@
 const os = require("os"); // node.js module providing operating system related utility and methods
 const pty = require("node-pty"); // Useful for writing the terminal emulator (using xterm.js)
 const crypto = require("crypto");
-import { app, BrowserWindow, ipcMain } from "electron";
+import {app, BrowserWindow, ipcMain} from "electron";
 import * as path from "path";
-import { githubRepo } from "./api/repos/github.ts";
-import { simpleGit, CleanOptions } from "simple-git";
+import {githubRepo} from "./api/repos/github.ts";
+import {CleanOptions, simpleGit} from "simple-git";
 import {bitbucketRepo} from "./api/repos/bitbucket.ts";
+
 const fs = require("fs");
 simpleGit().clean(CleanOptions.FORCE);
 const { dialog, session } = require("electron");
-
-
 const isDevelopment = process.env.NODE_ENV !== "production";
 
+let githubRepoInstance = new githubRepo(),           // Create a new instance of the gitHubRepo class
+    repoList = githubRepoInstance.getRepoList(),     // Returns github repo list from the githubRepo class as a promise
+    resolvedRepoList = null;                         // The resolved value will be stored in this variable
 
-
-// Create a new instance of the gitHubRepo class
-let githubRepoInstance = new githubRepo();
-// Returns github repo list from the githubRepo class as a promise
-let RepoList = githubRepoInstance.getRepoList(),
-// The resolved value will be stored in this variable
-resolvedRepoList = null;
 // Resolves the promise
-RepoList.then((list) => {
+repoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
+  resolvedRepoList = list;
   // resolved valued is in JSON format
   console.log(" Github resolved in index: ", list);
 });
 
-// Create a new instance of the bitbucket class
-let bitbucketRepoInstance = new bitbucketRepo();
-// Returns the repo list as a promise from the bitbucket class
-let bitbucketRepoList = bitbucketRepoInstance.getRepos(),
-resolvedbitbucketRepoList = null;
+let bitbucketRepoInstance = new bitbucketRepo(),          // Create a new instance of the bitbucket class
+    bitBucketRepoList = bitbucketRepoInstance.getRepos(), // Returns the repo list as a promise from the bitbucket class
+    resolvedBitBucketRepoList = null;                     // The resolved value will be stored in this variable
+
 // Resolves the promise
-bitbucketRepoList.then((list) => {
+bitBucketRepoList.then((list) => {
   // Save resolved value in a local cache file
   bitbucketRepoInstance.cache(list);
-  console.log("Bitbucket resolved in index", list);
+  resolvedBitBucketRepoList = list;
 });
 
 
-
+let ptyProcess = null;
 
 ipcMain.on("terminal.ready", (event) => {
-  const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh",
-    ptyProcess = pty.spawn(shellName, [], {
-      name: "xterm-color",
-      cols: 80,
-      rows: 30,
-      cwd: process.env.HOME,
-      env: process.env,
-      encoding: "UTF-8",
-    });
+  if (ptyProcess != null) return ptyProcess;
+  const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh";
+
+  ptyProcess = pty.spawn(shellName, [], {
+    name: "xterm-color",
+    cols: 80,
+    rows: 30,
+    cwd: process.env.HOME,
+    env: process.env,
+    encoding: "UTF-8",
+  });
   ptyProcess.on("data", function (data) {
     // Filter out the weird line with just a % sign
     if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
@@ -63,31 +60,52 @@ ipcMain.on("terminal.ready", (event) => {
   });
   ipcMain.on("terminal.keystroke", (event, key) => {
     ptyProcess.write(key);
-  }); 
+  });
 });
 
 ipcMain.handle("bbUser", async (event) => {  
   // Create a new instance of the bitbucket class
   let bitbucketRepoInstance = new bitbucketRepo();
-  let bbUser = await bitbucketRepoInstance.getUser();
-  console.log("bbUser: ", bbUser);
-  return bbUser;
+  return await bitbucketRepoInstance.getUser();
 });
 
 // Passing promise to the front-end
-ipcMain.handle("ghrepos.list", (event) => RepoList);
-ipcMain.handle("bbrepos.list", (event) => bitbucketRepoList);
+ipcMain.handle("repo.gh.list", (event) => repoList);
+ipcMain.handle("repo.bb.list", (event) => bitBucketRepoList);
+
+ipcMain.handle("repo.details", (event, path) => {
+  return new Promise(async (resolve, reject) => {
+    const git = simpleGit(path),
+        branch = await git.revparse(['--abbrev-ref', 'HEAD']),
+        commit = await git.revparse(['HEAD']),
+        status = await git.status(['-s', '--branch']);
+
+    resolve(JSON.stringify({branch, commit, status}));
+  });
+});
+
+// Check if repo is cloned
+ipcMain.handle("repo.isCloned", async (event, url) => {
+  const repo = resolvedRepoList.find((e) => e.clone === url),
+  repoPath = path.join(
+      app.getAppPath(),
+      "/.library/repo/",
+      url.replace("https://", "")
+  );
+  return repo.path && repo.path === repoPath && fs.existsSync(repoPath) ? repoPath : false;
+});
+
 // Value from the front-end component CommitView.js
-ipcMain.handle("repo.clone", async (event, url, node) => {
+ipcMain.handle("repo.gh.clone", async (event, url, node) => {
   let repo = resolvedRepoList.find((e) => e.clone === url),
     parsedUrl = new URL(url);
+
   const auth = await githubRepoInstance.getAuth(),
     repoPath = path.join(
       app.getAppPath(),
       "/.library/repo/",
       url.replace("https://", "")
     );
-  console.log(repoPath);
 
   parsedUrl.username = auth.username.login;
   parsedUrl.password = auth.token;
@@ -97,8 +115,6 @@ ipcMain.handle("repo.clone", async (event, url, node) => {
      * repo is already checked out
      */
     const git = simpleGit(repoPath);
-    console.log(git);
-    console.log("Updating Repo...", node.commitHash);
     await git.fetch().checkout(node.commitHash || node.hash, ["-f"]);
     return loadRepoPackageFile(repoPath);
     // return repoPath;
@@ -210,8 +226,6 @@ function loadRepoPackageFile(repoPath) {
   if (packageManagers.composer && !packageManagers.composerVendor) {
     console.log("vendor does not exist, but should");
   }
-
-  console.log(packageManagers);
 }
 
 const filter = {
