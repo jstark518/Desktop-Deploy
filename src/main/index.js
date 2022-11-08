@@ -75,7 +75,7 @@ ipcMain.handle("repo.bb.list", (event) => bitBucketRepoList);
 
 ipcMain.handle("repo.details", (event, path) => {
   return new Promise(async (resolve, reject) => {
-    const git = simpleGit(path),
+    const git = simpleGit(path).fetch(),
         branch = await git.revparse(['--abbrev-ref', 'HEAD']),
         commit = await git.revparse(['HEAD']),
         status = await git.status(['-s', '--branch']);
