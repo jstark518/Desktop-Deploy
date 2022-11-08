@@ -41,26 +41,30 @@ bitBucketRepoList.then((list) => {
 let ptyProcess = null;
 
 ipcMain.on("terminal.ready", (event) => {
-  if (ptyProcess != null) return ptyProcess;
-  const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh";
+  if (ptyProcess == null) {
+    const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh";
 
-  ptyProcess = pty.spawn(shellName, [], {
-    name: "xterm-color",
-    cols: 80,
-    rows: 30,
-    cwd: process.env.HOME,
-    env: process.env,
-    encoding: "UTF-8",
-  });
-  ptyProcess.on("data", function (data) {
-    // Filter out the weird line with just a % sign
-    if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
-      mainWindow.webContents.send("terminal.incomingData", data);
-    }
-  });
-  ipcMain.on("terminal.keystroke", (event, key) => {
-    ptyProcess.write(key);
-  });
+    ptyProcess = pty.spawn(shellName, [], {
+      name: "xterm-color",
+      cols: 80,
+      rows: 30,
+      cwd: process.env.HOME,
+      env: process.env,
+      encoding: "UTF-8",
+    });
+
+    ptyProcess.on("data", function (data) {
+      // Filter out the weird line with just a % sign
+      if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
+        mainWindow.webContents.send("terminal.incomingData", data);
+      }
+    });
+    ipcMain.on("terminal.keystroke", (event, key) => {
+      ptyProcess.write(key);
+    });
+  } else {
+    ptyProcess.write("clear; clear;\n");
+  }
 });
 
 ipcMain.handle("bbUser", async (event) => {  
