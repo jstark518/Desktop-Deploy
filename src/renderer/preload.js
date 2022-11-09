@@ -2,9 +2,11 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("repo", {
   bbUser: () => ipcRenderer.invoke("bbUser"),
-  ghlist: () => ipcRenderer.invoke("ghrepos.list"),
-  bblist: () => ipcRenderer.invoke("bbrepos.list"),
-  clone: (url, node) => ipcRenderer.invoke("repo.clone", url, node),
+  ghList: () => ipcRenderer.invoke("repo.gh.list"),
+  bbList: () => ipcRenderer.invoke("repo.bb.list"),
+  ghClone: (url, node) => ipcRenderer.invoke("repo.gh.clone", url, node),
+  isCloned: (url) =>  ipcRenderer.invoke("repo.isCloned", url),
+  details: (path) => ipcRenderer.invoke("repo.details", path),
 });
 
 contextBridge.exposeInMainWorld("termAPI", {

@@ -18,24 +18,28 @@ const RepoContainerStyle = styled("div")({
 
 export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
     const url = selectedNode.selection.url;
-    console.log(url);
+    const path = selectedNode.repo.path;
     const [data, setData] = useState(null);
 
     useEffect(() => {
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
+            if(path) {
+                window.repo.details(path).then((d) => {
+                    const data = JSON.parse(d);
+                    setCloneData(data);
+                });
+            }
           setData(data);
         });
         // resets CloneViewer when changing repos
         setCloneData(null)
     }, [url]);
-    console.log(data);
   
     const clone = () => {
-      console.log(selectedNode.repo.clone);
       window.repo
-        .clone(selectedNode.repo.clone, selectedNode.selection)
+        .ghClone(selectedNode.repo.clone, selectedNode.selection)
         .then((resp) => setCloneData(resp));
     };
   
@@ -50,7 +54,6 @@ export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
   
     return (
       <div>
-        {console.log(data)}
         <RepoContainerStyle>
           <Grid container spacing={2}>
             <Grid item={true} xs={12}>
@@ -71,7 +74,7 @@ export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
               xs={4}
               sx={{ display: "flex", justifyContent: "right" }}
             >
-              <CloneButton onClick={clone}/>
+                {path ? "" : (<CloneButton onClick={clone}/>)}
             </Grid>
           </Grid>
         </RepoContainerStyle>

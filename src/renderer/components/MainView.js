@@ -7,10 +7,7 @@ import CommitDetailViewer from "./CommitDetailViewer";
 import TagViewer from "./TagViewer";
 import CloneViewer from "./CloneViewer";
 
-
-
 const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
-
 
 // The main viewer. This calls the other views when needed.
 export default function MainView({ selectedNode, authType }) {
@@ -22,8 +19,6 @@ export default function MainView({ selectedNode, authType }) {
         <span>Select a Repo</span>
       </RepoFlexContainerStyle>
     )
-
-  console.log(selectedNode.selection);
 
   if (selectedNode.selection.type === "branches") {
     return (
