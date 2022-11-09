@@ -6,11 +6,8 @@ import MainContainer from '../routes/MainContainer';
 import MainEntrance from '../routes/MainEntrance';
 import {AuthProvider, useAuth} from './components/CustomHooks/useAuth';
 
-
-//let parsedData = JSON.parse(exampleData);
-
 let isLoggedIn = false;
-console.log(window);
+
 const root = createRoot(document.getElementById('main'));
 root.render(
 <HashRouter >
@@ -19,7 +16,6 @@ root.render(
             path="*" 
             element={<AuthProvider><MainEntrance/></AuthProvider>} 
         />
-        
     </Routes>
 </HashRouter>
 );

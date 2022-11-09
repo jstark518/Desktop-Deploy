@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import { Container, Button, Box } from '@mui/material'
 import Xterm from "./XTerm";
@@ -20,19 +20,21 @@ export default function BottomViewContainer() {
     return (
         <BottomViewContainerStyle>
             <Container>
-                <Button variant='contained' 
-                    startIcon={<TerminalIcon/>}
-                    onClick={()=> {
-                        if(bottomCont==''){
-                        setBottomCont('term')
-                        }else{setBottomCont('')}
-                    }}
-                    sx={{fontSize: '10px', height: '18px', padding: '5px', borderRadius: '5px 5px 0 0'}}
+                <Button variant='contained'
+                        startIcon={<TerminalIcon/>}
+                        onClick={() => {
+                            if (bottomCont == '') {
+                                setBottomCont('term')
+                            } else {
+                                setBottomCont('')
+                            }
+                        }}
+                        sx={{fontSize: '10px', height: '18px', padding: '5px', borderRadius: '5px 5px 0 0'}}
                 >
-                Terminal
+                    Terminal
                 </Button>
             </Container>
-            <Box sx={{display: bottomCont == 'term' ?'block':'none'}}>
+            <Box sx={{display: bottomCont === 'term' ? 'block' : 'none'}}>
                 <Xterm></Xterm>
             </Box>
         </BottomViewContainerStyle>

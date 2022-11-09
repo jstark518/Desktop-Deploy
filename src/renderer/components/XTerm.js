@@ -1,7 +1,7 @@
-import { Hidden } from "@mui/material";
-import { styled } from "@mui/system";
-import React, { useEffect, useRef, useState } from "react";
-import { Terminal } from "xterm";
+import React, {useEffect, useRef, useState} from "react";
+import {styled} from "@mui/system";
+import {Terminal} from "xterm";
+import PubSub from "pubsub-js";
 
 require("xterm/css/xterm.css");
 
@@ -14,6 +14,10 @@ export default function Xterm() {
   const [term, setTerm] = useState(null);
   const termElement = useRef(null);
 
+  const subscribeMethod = (topic, msg) => {
+    console.log("XTERM", topic, msg);
+  };
+
   useEffect(() => {
     if (termElement) {
       const terminal = new Terminal();
@@ -23,8 +27,8 @@ export default function Xterm() {
       window.termAPI.onData((e, data) => terminal.write(data));
       terminal.onData((e) => window.termAPI.send(e));
       window.termAPI.ready();
+      PubSub.subscribe("runScript", subscribeMethod);
     }
-    console.trace();
   }, []);
 
   return <XTermStyle ref={termElement}></XTermStyle>;

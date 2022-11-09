@@ -959,6 +959,20 @@
     csstype "^3.1.1"
     prop-types "^15.8.1"
 
+"@mui/system@^5.10.13":
+  version "5.10.13"
+  resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.10.13.tgz#b32a4441f9dd0760724cdbccf0a09728e63e3674"
+  integrity sha512-Xzx26Asu5fVlm0ucm+gnJmeX4Y1isrpVDvqxX4yJaOT7Fzmd8Lfq9ih3QMfZajns5LMtUiOuCQlVFRtUG5IY7A==
+  dependencies:
+    "@babel/runtime" "^7.19.0"
+    "@mui/private-theming" "^5.10.9"
+    "@mui/styled-engine" "^5.10.8"
+    "@mui/types" "^7.2.0"
+    "@mui/utils" "^5.10.9"
+    clsx "^1.2.1"
+    csstype "^3.1.1"
+    prop-types "^15.8.1"
+
 "@mui/types@^7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.0.tgz#91380c2d42420f51f404120f7a9270eadd6f5c23"
@@ -5262,6 +5276,11 @@ proxy-addr@~2.0.7:
   dependencies:
     forwarded "0.2.0"
     ipaddr.js "1.9.1"
+
+pubsub-js@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/pubsub-js/-/pubsub-js-1.9.4.tgz#5c8678600e34e95b1269e96c17e1b51dab3ecb5a"
+  integrity sha512-hJYpaDvPH4w8ZX/0Fdf9ma1AwRgU353GfbaVfPjfJQf1KxZ2iHaHl3fAUw1qlJIR5dr4F3RzjGaWohYUEyoh7A==
 
 pump@^3.0.0:
   version "3.0.0"

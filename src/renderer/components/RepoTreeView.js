@@ -1,18 +1,15 @@
+import React, { useEffect, useState } from "react";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TreeItem, { treeItemClasses } from "@mui/lab/TreeItem";
 import TreeView from "@mui/lab/TreeView";
 import { styled } from "@mui/system";
-import React from "react";
-import { useEffect, useState } from "react";
-import RightArrowIcon from "./CustomIcons/RightArrowIcon";
 import RepoIcon from "./CustomIcons/RepoIcon";
 import RepoBranchIcon from "./CustomIcons/RepoBranchIcon";
 import { Box } from "@mui/system";
 import { Typography } from "@mui/material";
 
-const RepoStyledTreeItemRoot = styled(TreeItem, {
-  shouldForwardProp: (props) => props !== "key" || props !== "nodeId" || props !== "label"})({
+const RepoStyledTreeItemRoot = styled(TreeItem)({
     color: "black", 
     borderRadius: "5px", 
     backgroundColor: "#d9d9d9", 
@@ -45,8 +42,7 @@ function RepoStyledTreeItem(props) {
   );
 }
 
-const BranchStyledTreeItemRoot = styled(TreeItem, {
-  shouldForwardProp: (props) => props !== "key" || props !== "nodeId" || props !== "label"})({
+const BranchStyledTreeItemRoot = styled(TreeItem)({
     [`& .${treeItemClasses.label}`]: {
       '&.MuiTreeItem-label': {
         fontSize: "0.7rem",
@@ -72,8 +68,7 @@ function BranchStyledTreeItem(props) {
   );
 }
 
-const CommitStyledTreeItem = styled(TreeItem, {
-  shouldForwardProp: (props) => props !== "key" || props !== "nodeId" || props !== "label"})({
+const CommitStyledTreeItem = styled(TreeItem)({
     [`& .${treeItemClasses.label}`]: {
       '&.MuiTreeItem-label': {
         fontSize: "0.7rem",

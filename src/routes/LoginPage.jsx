@@ -3,19 +3,15 @@ import { Typography } from '@mui/material'
 import React, { useState } from 'react'
 import BitbucketIcon from '../renderer/components/CustomIcons/BitbucketIcon.js'
 import GitHubIcon from '@mui/icons-material/GitHub';
-import {useAuth} from '../renderer/components/CustomHooks/useAuth.js'
-import {createBrowserRouter, RouterProvider, useNavigate, HashRouter, Routes, Route, redirect} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 
 export default function LoginPage(bitbucketLogin, githubLogin) {
     const navigate = useNavigate();
 
-
-
     const handleBitBucketLogin = async () => {
         bitbucketLogin().then((res) => {
             setTimeout(() => {
-                
             console.log(res)
             }, 5000);
         })

@@ -1,41 +1,33 @@
 import React from 'react';
-import { Paper, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Box from '@mui/material/Box';
 import Grid from "@mui/material/Grid"; // Grid version 1
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/system";
-import { useEffect, useState } from "react";
+import {styled} from "@mui/system";
+import {PaperStyledContainer} from "./PaperStyledContainer";
+import {RunScript} from "./RunScript";
 
-const RepoFlexContainerStyle = styled("div")({ flex: 1, height: '30vh' });
-
-const LoadingFlexContainerStyle = styled("div")({ flex: 1, padding: '16px' });
-
-const FlexListStyle = styled("div")({ 
-  flex: 1, 
-  height: '5rem',
-  marginLeft: "16px",
-  overflow: "scroll",
-  overflowX: "hidden",
-  "&::-webkit-scrollbar": {
-  width: 2
-  } 
-
+const FlexListStyle = styled("div")({
+    flex: 1,
+    maxHeight: '8rem',
+    marginLeft: "16px",
+    overflow: "scroll",
+    overflowX: "hidden",
+    "&::-webkit-scrollbar": {
+        width: 2
+    }
 });
 
-const CloneContainerStyle = styled(Paper, {
-    shouldForwardProp: (props) => props !== "elevation",
-})({ background: "#E6FEE6", padding: '16px', margin: '16px', flex: 1 });
-
-export default function CloneViewer({ cloneData }) {
-    console.log(cloneData);
+export default function CloneViewer({cloneData, selectedNode}) {
     if (typeof cloneData !== "undefined" && cloneData !== null) {
         // cloneData could be from status or clone.
         const packageMgr = typeof cloneData.packageMgr != "undefined" ? cloneData.packageMgr : cloneData,
             javascript = packageMgr.packageMangers.npm !== false ? "npm" : packageMgr.packageMangers.yarn !== false ? "yarn" : "None",
-            nodeNeedsUpdate = packageMgr.node_modules === false;
+            nodeNeedsUpdate = packageMgr.node_modules === false,
+            path = selectedNode.repo.path;
 
         return (
-            <CloneContainerStyle elevation={2}>
-                <RepoFlexContainerStyle>
+            <PaperStyledContainer elevation={2}>
                     <Grid container spacing={2}>
                         <Grid item={true} xs={12} sx={{marginBottom: "16px"}}>
                             <Typography
@@ -108,14 +100,14 @@ export default function CloneViewer({ cloneData }) {
                                 <FlexListStyle>
                                     <Stack spacing={1}>
                                         {Object.entries(packageMgr.package.scripts).map((script, index) =>
-                                            Scripts({script, index})
+                                            Scripts({script, index, path})
                                         )}
                                     </Stack>
                                 </FlexListStyle>
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2} sx={{flexDirection: "column", justifyContent: "space-between"}}>
                             <Grid item={true} xs={12} sx={{marginTop: "16px"}}>
                                 <Typography
                                     variant="h6"
@@ -124,42 +116,46 @@ export default function CloneViewer({ cloneData }) {
                                         marginLeft: "16px",
                                     }}
                                 >
-                                JavaScript: {javascript} ({nodeNeedsUpdate ? "not up to date" : "is up to date"})
+                                    JavaScript: {javascript} ({nodeNeedsUpdate ? "not up to date" : "is up to date"})
                                 </Typography>
+                            </Grid>
+                            <Grid item={true} xs={12} sx={{marginTop: "16px", textAlign: "right"}}>
+                                <RunScript script={[javascript + " install"]} path={path}/>
                             </Grid>
                         </Grid>
                     </Grid>
-                </RepoFlexContainerStyle>
-            </CloneContainerStyle>
+            </PaperStyledContainer>
         );
     }
 }
-  
-  export function Dependencies({ dep, index }) {
+
+export function Dependencies({dep, index}) {
     return (
-      <Typography variant="body2"
-      key={'dep-' + index}
-        sx={{ 
-          color: "#50514F", 
-          fontSize: "10px" 
-        }}
-      >
-        {dep[0]}: {dep[1]}
-      </Typography>
+        <Typography variant="body2"
+                    key={'dep-' + index}
+                    sx={{
+                        color: "#50514F",
+                        fontSize: "10px"
+                    }}
+        >
+            {dep[0]}: {dep[1]}
+        </Typography>
     );
-  }
-  
-  export function Scripts({ script, index }) {
+}
+
+export function Scripts({script, index, path}) {
     return (
-      <Typography variant="body2"
-        key={'script-' + index}
-        sx={{
-          color: "#50514F",
-          fontSize: '10px'
-        }}
-      >
-        {" "}{script[0]}: {script[1]}{" "}
-      </Typography>
+        <Box sx={{display: "flex", flexDirection: "columns", alignItems: "center", justifyContent: "space-between"}}
+             key={'script-' + index}>
+            <Typography variant="body2"
+                        sx={{
+                            color: "#50514F",
+                            fontSize: '10px'
+                        }}
+            >
+                {" "}{script[0]}: {script[1]}{" "}
+            </Typography>
+            <RunScript script={script} path={path}/>
+        </Box>
     );
-  }
-  
+}

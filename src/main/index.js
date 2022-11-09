@@ -22,8 +22,6 @@ repoList.then((list) => {
   // Save resolved value in a local cache file
   githubRepoInstance.cache(list);
   resolvedRepoList = list;
-  // resolved valued is in JSON format
-  console.log(" Github resolved in index: ", list);
 });
 
 let bitbucketRepoInstance = new bitbucketRepo(),          // Create a new instance of the bitbucket class

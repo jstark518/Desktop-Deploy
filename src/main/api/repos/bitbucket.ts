@@ -63,9 +63,6 @@ export class bitbucketRepo {
                     const token = await self.refreshAccessToken(fromCache.refresh_token);
                     self.AccessToken = token;
                     resolve(token);
-                    console.log(" bitbucket Access Token:");
-                    console.log(token);
-                    resolve(token);
                 }
             }
             // Return AccessToken if we have one in class in case we are in the middle of the auth process

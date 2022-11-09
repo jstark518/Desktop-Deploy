@@ -71,7 +71,6 @@ export class githubRepo {
                     }),
                 server = http.createServer(async function (req, res) {
                     const queryObject = url.parse(req.url, true).query;
-                    console.log(queryObject);
                     res.writeHead(200, {'Content-Type': 'text/plain'});
                     res.write('Good to go, you can close this window now.');
                     res.end();
@@ -133,7 +132,6 @@ export class githubRepo {
             cacheRepo.commits = await this.getCommits(repo.commits_url, lastModified, cacheRepo.commits);
             cacheRepo.url = repo.url;
             cacheRepo.clone = repo.clone_url;
-            
         }
         return Promise.all(repos);
     }
