@@ -35,9 +35,8 @@ export default function BranchViewer({ selectedNode, setCloneData, cloneData, au
     console.log(data);
 
     const clone = () => {
-      console.log(selectedNode.repo.clone);
       window.repo
-        .clone(selectedNode.repo.clone, selectedNode.selection)
+        .ghClone(selectedNode.repo.clone, selectedNode.selection)
         .then((resp) => setCloneData(resp));
     };
 

@@ -84,7 +84,7 @@ ipcMain.handle("repo.details", (event, path) => {
         commit = await git.revparse(['HEAD']),
         status = await git.status(['-s', '--branch']);
 
-    resolve(JSON.stringify({branch, commit, status}));
+    resolve(JSON.stringify({branch, commit, status, packageMgr: loadRepoPackageFile(path)}));
   });
 });
 
@@ -152,84 +152,83 @@ ipcMain.handle("repo.gh.clone", async (event, url, node) => {
 
 function loadRepoPackageFile(repoPath) {
   const packageFile = path.join(repoPath, "package.json"),
-    composerFile = path.join(repoPath, "composer.json");
+      composerFile = path.join(repoPath, "composer.json"),
+      output = {};
+
   if (fs.existsSync(packageFile)) {
     const data = fs.readFileSync(packageFile),
-      packageJSON = JSON.parse(data),
-      scripts = packageJSON.scripts,
-      details = {
-        name: packageJSON.name,
-        version: packageJSON.version,
-        description: packageJSON.description,
-        author: packageJSON.author,
-      };
-    console.log("Node", details);
-    console.table(scripts);
-    return packageJSON;
+        packageJSON = JSON.parse(data),
+        scripts = packageJSON.scripts,
+        details = {
+          name: packageJSON.name,
+          version: packageJSON.version,
+          description: packageJSON.description,
+          author: packageJSON.author,
+        };
+    output.package = packageJSON;
   }
   if (fs.existsSync(composerFile)) {
     const data = fs.readFileSync(composerFile),
-      composerJSON = JSON.parse(data),
-      scripts = composerJSON.scripts,
-      details = {
-        name: composerJSON.name,
-        description: composerJSON.description,
-      };
-    console.log("Composer", details);
-    console.table(scripts);
+        composerJSON = JSON.parse(data),
+        scripts = composerJSON.scripts,
+        details = {
+          name: composerJSON.name,
+          description: composerJSON.description,
+        };
+    output.composer = composerJSON;
   }
   const packageManagers = {
     yarn:
-      fs.existsSync(path.join(repoPath, "yarn.lock")) &&
-      fs.statSync(path.join(repoPath, "yarn.lock")).mtime,
+        fs.existsSync(path.join(repoPath, "yarn.lock")) &&
+        fs.statSync(path.join(repoPath, "yarn.lock")).mtime,
     npm:
-      fs.existsSync(path.join(repoPath, "package-lock.json")) &&
-      fs.statSync(path.join(repoPath, "package-lock.json")).mtime,
+        fs.existsSync(path.join(repoPath, "package-lock.json")) &&
+        fs.statSync(path.join(repoPath, "package-lock.json")).mtime,
     nodeVendor: fs.existsSync(path.join(repoPath, "node_modules")),
     composer:
-      fs.existsSync(path.join(repoPath, "composer.lock")) &&
-      fs.statSync(path.join(repoPath, "composer.lock")).mtime,
+        fs.existsSync(path.join(repoPath, "composer.lock")) &&
+        fs.statSync(path.join(repoPath, "composer.lock")).mtime,
     composerVendor: fs.existsSync(path.join(repoPath, "vendor")),
   };
+
+  output.packageMangers = packageManagers;
 
   if (packageManagers.yarn && packageManagers.nodeVendor) {
     const mtime =
         fs.existsSync(path.join(repoPath, "node_modules", ".yarn-integrity")) &&
         fs.statSync(path.join(repoPath, "node_modules", ".yarn-integrity"))
-          .mtime,
-      isUpToDate = mtime >= packageManagers.yarn;
-    console.log("node_modules is up to date", isUpToDate);
+            .mtime;
+    output.node_modules = mtime >= packageManagers.yarn;
   }
 
   if (packageManagers.npm && packageManagers.nodeVendor) {
     const mtime =
         fs.existsSync(
-          path.join(repoPath, "node_modules", ".package-lock.json")
+            path.join(repoPath, "node_modules", ".package-lock.json")
         ) &&
         fs.statSync(path.join(repoPath, "node_modules", ".package-lock.json"))
-          .mtime,
-      isUpToDate = mtime >= packageManagers.npm;
-    console.log("node_modules is up to date", isUpToDate);
+            .mtime;
+    output.node_modules = mtime >= packageManagers.npm;
   }
 
   if (
-    (packageManagers.yarn || packageManagers.npm) &&
-    !packageManagers.nodeVendor
+      (packageManagers.yarn || packageManagers.npm) &&
+      !packageManagers.nodeVendor
   ) {
-    console.log("node_modules does not exist, but should");
+    output.node_modules = false;
   }
 
   if (packageManagers.composer && packageManagers.composerVendor) {
     const mtime =
         fs.existsSync(path.join(repoPath, "vendor", "autoload.php")) &&
-        fs.statSync(path.join(repoPath, "vendor", "autoload.php")).mtime,
-      isUpToDate = mtime >= packageManagers.composer;
-    console.log("vendor is up to date", isUpToDate);
+        fs.statSync(path.join(repoPath, "vendor", "autoload.php")).mtime;
+    output.vendor = mtime >= packageManagers.composer;
   }
 
   if (packageManagers.composer && !packageManagers.composerVendor) {
-    console.log("vendor does not exist, but should");
+    output.vendor = false;
   }
+  return output;
 }
 
 const filter = {

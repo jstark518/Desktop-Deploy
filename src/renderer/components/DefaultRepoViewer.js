@@ -19,7 +19,6 @@ const RepoContainerStyle = styled("div")({
 export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
     const url = selectedNode.selection.url;
     const path = selectedNode.repo.path;
-    const [details, setDetails] = useState(null);
     const [data, setData] = useState(null);
 
     useEffect(() => {
@@ -28,8 +27,8 @@ export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
         .then((data) => {
             if(path) {
                 window.repo.details(path).then((d) => {
-                    setDetails(JSON.parse(d));
-                    console.log((JSON.parse(d)), path);
+                    const data = JSON.parse(d);
+                    setCloneData(data);
                 });
             }
           setData(data);
@@ -75,7 +74,7 @@ export default function DefaultRepoViewer({ setCloneData, selectedNode }) {
               xs={4}
               sx={{ display: "flex", justifyContent: "right" }}
             >
-                {path && details ? JSON.stringify(details) : (<CloneButton onClick={clone}/>)}
+                {path ? "" : (<CloneButton onClick={clone}/>)}
             </Grid>
           </Grid>
         </RepoContainerStyle>
