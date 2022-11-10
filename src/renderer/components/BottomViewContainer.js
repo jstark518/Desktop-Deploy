@@ -15,27 +15,21 @@ const BottomViewContainerStyle = styled.div`
 `;
 
 export default function BottomViewContainer() {
-    const [bottomCont, setBottomCont] = useState('');
+    const [bottomCont, setBottomCont] = useState(false);
 
     return (
         <BottomViewContainerStyle>
             <Container>
                 <Button variant='contained'
                         startIcon={<TerminalIcon/>}
-                        onClick={() => {
-                            if (bottomCont == '') {
-                                setBottomCont('term')
-                            } else {
-                                setBottomCont('')
-                            }
-                        }}
+                        onClick={() => setBottomCont(!bottomCont)}
                         sx={{fontSize: '10px', height: '18px', padding: '5px', borderRadius: '5px 5px 0 0'}}
                 >
                     Terminal
                 </Button>
             </Container>
-            <Box sx={{display: bottomCont === 'term' ? 'block' : 'none'}}>
-                <Xterm></Xterm>
+            <Box sx={{display: bottomCont ? 'block' : 'none'}}>
+                <Xterm setShowFunc={setBottomCont}></Xterm>
             </Box>
         </BottomViewContainerStyle>
     )
