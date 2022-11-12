@@ -37,7 +37,7 @@ function XTermChild({path}) {
 
   const subscribeMethod = (topic, msg) => {
     // We're just writing the output to the terminal for now, still need to run the script
-    terminal.write(msg.script[0] + "\n");
+    console.log(msg.script[0] + "\n");
   }
 
   useEffect(() => {
@@ -45,10 +45,13 @@ function XTermChild({path}) {
     if (termElement) {
       terminal.options.fontSize = 10;
       terminal.open(termElement.current);
-      terminal.write(path + "\n");
-      // window.termAPI.onData((e, data) => terminal.write(data));
-      // terminal.onData((e) => window.termAPI.send(e));
-      // window.termAPI.ready();
+      window.termAPI.getInstance(path, (e, data) => {
+        // We are getting data, we need to display it in the terminal.
+        terminal.write(data);
+      }).then((write) => {
+        // User is typing, send it to the backend.
+        terminal.onData((e) => write(e));
+      });
     }
   }, []);
   return (<XTermStyle ref={termElement}></XTermStyle>);

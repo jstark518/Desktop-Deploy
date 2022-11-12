@@ -36,33 +36,35 @@ bitBucketRepoList.then((list) => {
 });
 
 
-let ptyProcess = null;
+let ptyProcess = {};
 
-ipcMain.on("terminal.ready", (event) => {
-  if (ptyProcess == null) {
+ipcMain.handle("terminal.getInstance", (event, cwd) => {
+  const instance = md5("terminal.instance." + cwd);
+  if (ptyProcess[cwd] == null) {
     const shellName = os.platform() === "win32" ? "powershell.exe" : "/bin/zsh";
 
-    ptyProcess = pty.spawn(shellName, [], {
+    ptyProcess[cwd] = pty.spawn(shellName, [], {
       name: "xterm-color",
       cols: 80,
       rows: 30,
-      cwd: process.env.HOME,
+      cwd: cwd,
       env: process.env,
       encoding: "UTF-8",
     });
 
-    ptyProcess.on("data", function (data) {
+    ptyProcess[cwd].on("data", function (data) {
       // Filter out the weird line with just a % sign
       if (md5(data) !== "b1d4266a2330b94cd8baa1be8572bd89") {
-        mainWindow.webContents.send("terminal.incomingData", data);
+        mainWindow.webContents.send(instance, data);
       }
     });
-    ipcMain.on("terminal.keystroke", (event, key) => {
-      ptyProcess.write(key);
+    ipcMain.on(instance, (event, key) => {
+      ptyProcess[cwd].write(key);
     });
   } else {
-    ptyProcess.write("clear; clear;\n");
+    ptyProcess[cwd].write("clear; clear;\n");
   }
+  return instance;
 });
 
 ipcMain.handle("bbUser", async (event) => {  

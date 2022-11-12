@@ -10,8 +10,10 @@ contextBridge.exposeInMainWorld("repo", {
 });
 
 contextBridge.exposeInMainWorld("termAPI", {
-  ready: (e) => ipcRenderer.send("terminal.ready", e),
-  send: (e) => ipcRenderer.send("terminal.keystroke", e),
-  onData: (callback) => ipcRenderer.on("terminal.incomingData", callback),
+  getInstance: async (cwd, onData) => {
+    const inst = await ipcRenderer.invoke("terminal.getInstance", cwd);
+    ipcRenderer.on(inst, onData);
+    return (data) => ipcRenderer.send(inst, data);
+  }
 });
  
