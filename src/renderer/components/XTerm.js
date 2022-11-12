@@ -5,13 +5,15 @@ import PubSub from "pubsub-js";
 
 require("xterm/css/xterm.css");
 
-const XTermStyle = styled("div")({
+const XTermStyle = styled('div')((props) => ({
+  display: props.display == "true" ? 'block' : 'none',
   maxHeight: '20vh',
   flex: 1
-});
+}));
 
 export default function Xterm({setShowFunc}) {
   const [children, setChildren] = useState({});
+  const [focused, setFocused] = useState("");
 
   const subscribeMethod = (topic, msg) => {
     if(children[msg.path] == null) {
@@ -19,6 +21,7 @@ export default function Xterm({setShowFunc}) {
         setChildren({...children});
     }
     setShowFunc(true);
+    setFocused(msg.path);
     setTimeout(() => {
       PubSub.publish("runScript-" + msg.path, msg);
     }, 100);
@@ -28,10 +31,10 @@ export default function Xterm({setShowFunc}) {
      PubSub.subscribe("runScript", subscribeMethod);
   }, []);
 
-  return (<>{Object.entries(children).map((v, k) => <XTermChild key={k} path={v[0]}/>)}</>);
+  return (<>{Object.entries(children).map((v, k) => <XTermChild key={k} focused={(v[0] === focused).toString()} path={v[0]}/>)}</>);
 }
 
-function XTermChild({path}) {
+function XTermChild({path, focused}) {
   const termElement = useRef(null);
   const terminal = new Terminal();
 
@@ -49,10 +52,11 @@ function XTermChild({path}) {
         // We are getting data, we need to display it in the terminal.
         terminal.write(data);
       }).then((write) => {
+        console.log("New terminal:", path);
         // User is typing, send it to the backend.
         terminal.onData((e) => write(e));
       });
     }
   }, []);
-  return (<XTermStyle ref={termElement}></XTermStyle>);
+  return (<XTermStyle display={focused} ref={termElement}></XTermStyle>);
 }
