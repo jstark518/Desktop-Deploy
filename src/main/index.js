@@ -46,7 +46,7 @@ ipcMain.handle("terminal.getInstance", (event, cwd) => {
     ptyProcess[cwd] = pty.spawn(shellName, [], {
       name: "xterm-color",
       cols: 80,
-      rows: 30,
+      rows: 14,
       cwd: cwd,
       env: process.env,
       encoding: "UTF-8",

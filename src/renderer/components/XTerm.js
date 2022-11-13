@@ -7,7 +7,7 @@ require("xterm/css/xterm.css");
 
 const XTermStyle = styled('div')((props) => ({
   display: props.display == "true" ? 'block' : 'none',
-  maxHeight: '20vh',
+  maxHeight: '22vh',
   flex: 1
 }));
 
@@ -47,6 +47,7 @@ function XTermChild({path, focused}) {
     PubSub.subscribe("runScript-" + path, subscribeMethod);
     if (termElement) {
       terminal.options.fontSize = 10;
+      terminal.options.cursorBlink = true;
       terminal.open(termElement.current);
       window.termAPI.getInstance(path, (e, data) => {
         // We are getting data, we need to display it in the terminal.

@@ -1,18 +1,18 @@
 import React, {useState} from "react";
-import styled from "styled-components";
 import { Container, Button, Box } from '@mui/material'
 import Xterm from "./XTerm";
 import TerminalIcon from '@mui/icons-material/Terminal';
+import {styled} from "@mui/system";
 
 
-const BottomViewContainerStyle = styled.div`
-  flex: 1;
-  overflow-wrap: anywhere;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  justify-content: end;
-`;
+const BottomViewContainerStyle = styled('div')({
+    flex: 1,
+    overflowWrap: 'anywhere',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    justifyContent: 'end',
+});
 
 export default function BottomViewContainer() {
     const [bottomCont, setBottomCont] = useState(false);
