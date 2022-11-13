@@ -37,14 +37,15 @@
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
-    "@electron-forge/cli": "^6.0.0-beta.66",
-    "@electron-forge/maker-deb": "^6.0.0-beta.70",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.66",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.66",
-    "@electron-forge/maker-zip": "^6.0.0-beta.66",
-    "@electron-forge/plugin-webpack": "6.0.0-beta.66",
+    "@electron-forge/cli": "^6.0.1",
+    "@electron-forge/maker-deb": "^6.0.1",
+    "@electron-forge/maker-rpm": "^6.0.1",
+    "@electron-forge/maker-squirrel": "^6.0.1",
+    "@electron-forge/maker-zip": "^6.0.1",
+    "@electron-forge/plugin-webpack": "6.0.1",
     "@octokit/types": "^8.0.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "webpack": "^5.75.0",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.0.0",
     "electron": "21.2.2",
@@ -80,9 +81,6 @@
     "source-map-support": "^0.5.21",
     "xterm": "^5.0.0"
   },
-  "resolutions": {
-    "nan": "github:jstark518/nan"
-  },
   "optionalDependencies": {
     "dmg-license": "^1.0.11"
   },
@@ -113,9 +111,9 @@
       ],
       "publishers": [],
       "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
+        {
+          "name": "@electron-forge/plugin-webpack",
+          "config": {
             "mainConfig": "./webpack.main.config.js",
             "devContentSecurityPolicy": "connect-src 'self' https://api.github.com https://api.bitbucket.org 'unsafe-eval'",
             "renderer": {
@@ -132,7 +130,7 @@
               ]
             }
           }
-        ]
+        }
       ]
     }
   }
