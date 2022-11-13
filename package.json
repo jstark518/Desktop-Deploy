@@ -81,9 +81,6 @@
     "source-map-support": "^0.5.21",
     "xterm": "^5.0.0"
   },
-  "resolutions": {
-    "nan": "github:jstark518/nan"
-  },
   "optionalDependencies": {
     "dmg-license": "^1.0.11"
   },
@@ -114,9 +111,9 @@
       ],
       "publishers": [],
       "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
+        {
+          "name": "@electron-forge/plugin-webpack",
+          "config": {
             "mainConfig": "./webpack.main.config.js",
             "devContentSecurityPolicy": "connect-src 'self' https://api.github.com https://api.bitbucket.org 'unsafe-eval'",
             "renderer": {
@@ -133,7 +130,7 @@
               ]
             }
           }
-        ]
+        }
       ]
     }
   }
