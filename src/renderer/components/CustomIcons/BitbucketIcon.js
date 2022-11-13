@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 
 // Used https://icon-sets.iconify.design/mdi/bitbucket/ to generate the svg
 // Used https://react-svgr.com/playground/ to convert SVG to React Component

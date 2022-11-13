@@ -1,84 +1,82 @@
-import { styled } from "@mui/system";
-import React from "react";
-import { useState } from "react";
+import React, {useState} from "react";
 import BranchViewer from "./BranchViewer";
 import DefaultRepoViewer from "./DefaultRepoViewer";
 import CommitDetailViewer from "./CommitDetailViewer";
 import TagViewer from "./TagViewer";
 import CloneViewer from "./CloneViewer";
-
-const RepoFlexContainerStyle = styled("div")({ flex: 1, padding: '10px' });
+import {Alert, Container} from "@mui/material";
 
 // The main viewer. This calls the other views when needed.
-export default function MainView({ selectedNode, authType }) {
-  const [cloneData, setCloneData] = useState(null);
+export default function MainView({selectedNode, authType}) {
+    const [cloneData, setCloneData] = useState(null);
 
-  if (selectedNode == null)
-    return (
-      <RepoFlexContainerStyle>
-        <span>Select a Repo</span>
-      </RepoFlexContainerStyle>
-    )
+    if (selectedNode == null)
+        return (
+            <Alert severity="info" sx={{margin: "1rem"}}>Select a Repo</Alert>
+        )
 
-  if (selectedNode.selection.type === "branches") {
-    return (
-      <RepoFlexContainerStyle>
-        <span>Select a Branch</span>
-      </RepoFlexContainerStyle>
-    )
-  }
+    if (selectedNode.selection.type === "branches") {
+        return (
+            <Alert severity="info" sx={{margin: "1rem"}}>Select a Branch</Alert>
+        )
+    }
 
-  if (selectedNode.selection.type === "commits") {
-    return (
-      <RepoFlexContainerStyle>
-        <span>Select a Commit</span>
-      </RepoFlexContainerStyle>
-    )
-  }
+    if (selectedNode.selection.type === "commits") {
+        return (
+            <Alert severity="info" sx={{margin: "1rem"}}>Select a Commit</Alert>
+        )
+    }
 
-  if (selectedNode.selection.type === "tags") {
-    return (
-      <RepoFlexContainerStyle>
-        <span>Select a Tag</span>
-      </RepoFlexContainerStyle>
-    )
-  }
-  
-  if (selectedNode.selection.type === "repo") {
-    return (
-      <div>
-      <DefaultRepoViewer
-        selectedNode={selectedNode}
-        setCloneData={setCloneData}
-      />
-      <CloneViewer cloneData={cloneData} />
-      </div>
-    );
-  }
-  if (selectedNode.selection.type === "branch") {
-    return (
-      <div>
-        <BranchViewer
-          setCloneData={setCloneData}
-          selectedNode={selectedNode}
-          authType={authType}
-        />
-        <CloneViewer cloneData={cloneData} />
-      </div>
-    );
-  }
-  if (selectedNode.selection.type === "tag") {
-    return <TagViewer 
-      cloneData={cloneData}
-      setCloneData={setCloneData}
-      selectedNode={selectedNode} 
-    />;
-  }
-  if (selectedNode.selection.type === "commit") {
-    return <CommitDetailViewer 
-      cloneData={cloneData}
-      setCloneData={setCloneData}
-      selectedNode={selectedNode} 
-    />;
+    if (selectedNode.selection.type === "tags") {
+        return (
+            <Alert severity="info" sx={{margin: "1rem"}}>Select a Tag</Alert>
+        )
+    }
+
+    if (selectedNode.selection.type === "repo") {
+        return (
+            <Container>
+                <DefaultRepoViewer
+                    selectedNode={selectedNode}
+                    setCloneData={setCloneData}
+                />
+                <CloneViewer cloneData={cloneData} selectedNode={selectedNode}/>
+            </Container>
+        );
+    }
+    if (selectedNode.selection.type === "branch") {
+        return (
+            <Container>
+                <BranchViewer
+                    setCloneData={setCloneData}
+                    selectedNode={selectedNode}
+                    authType={authType}
+                />
+                <CloneViewer cloneData={cloneData} selectedNode={selectedNode}/>
+            </Container>
+        );
+    }
+    if (selectedNode.selection.type === "tag") {
+        return (
+            <Container>
+                <TagViewer
+                    cloneData={cloneData}
+                    setCloneData={setCloneData}
+                    selectedNode={selectedNode}
+                />
+                <CloneViewer cloneData={cloneData} selectedNode={selectedNode}/>
+            </Container>);
+    }
+    if (selectedNode.selection.type === "commit") {
+        return (
+            <Container>
+                <CommitDetailViewer
+                    cloneData={cloneData}
+                    setCloneData={setCloneData}
+                    selectedNode={selectedNode}
+                />
+                <CloneViewer cloneData={cloneData} selectedNode={selectedNode}/>
+            </Container>
+        );
     }
 } 
