@@ -1750,10 +1750,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-bitbucket@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.8.0.tgz#59ceeff598d6212d6a0ba6e9029412143b3267fb"
-  integrity sha512-KMpQe1y5gKDEtp+4cYxJEXzAsfyNltctOaPo1sKFGr2v4EoG8Ni0Yd2WAKgwSMWPV0pWh3PA5cJyg/Qr/hi00g==
+bitbucket@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.9.0.tgz#29c0f96ca59db74f3b7429c071be1e0646372fda"
+  integrity sha512-ITr0bQaKezsiQbE19ISGr93IoXotoyv/XaBqImpKKnoVeO3ClWGQxSziSq7wh+4JBQ6aEFVaeoLGINjsgvkjHA==
   dependencies:
     before-after-hook "^2.1.0"
     deepmerge "^4.2.2"
