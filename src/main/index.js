@@ -275,19 +275,19 @@ app.on("activate", () => {
 app.on("ready", () => {
   mainWindow = createMainWindow();
   session.defaultSession.webRequest.onBeforeSendHeaders(
-    filter,
-    async (details, callback) => {
-      let auth = null;
-      if (details.url.includes('https://api.github.com/')){
-        auth = await githubRepoInstance.getAuth();
-        details.requestHeaders["Authorization"] = "bearer " + auth.token;
-        callback({ requestHeaders: details.requestHeaders });
-      }else if (details.url.includes('https://api.bitbucket.org/')){
-        auth = await bitbucketRepoInstance.auth();
-        details.requestHeaders["Authorization"] = "bearer " + auth.access_token;
-        callback({ requestHeaders: details.requestHeaders });
+      filter,
+      async (details, callback) => {
+        let auth = null;
+        if (details.url.includes('https://api.github.com/')) {
+          auth = await githubRepoInstance.getAuth();
+          details.requestHeaders["Authorization"] = "bearer " + auth.token;
+          callback({requestHeaders: details.requestHeaders});
+        } else if (details.url.includes('https://api.bitbucket.org/')) {
+          auth = await bitbucketRepoInstance.auth();
+          details.requestHeaders["Authorization"] = "bearer " + auth.access_token;
+          callback({requestHeaders: details.requestHeaders});
+        }
       }
-    }
   );
 });
 
