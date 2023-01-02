@@ -42,7 +42,7 @@
     "@electron-forge/maker-rpm": "^6.0.4",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
-    "@electron-forge/plugin-webpack": "6.0.3",
+    "@electron-forge/plugin-webpack": "6.0.4",
     "@octokit/types": "^8.0.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "babel-loader": "^9.1.0",
