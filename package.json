@@ -59,7 +59,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.16",
-    "@mui/lab": "^5.0.0-alpha.112",
+    "@mui/lab": "^5.0.0-alpha.114",
     "@mui/material": "^5.11.2",
     "@mui/styled-engine-sc": "^5.10.16",
     "@mui/system": "^5.11.0",
