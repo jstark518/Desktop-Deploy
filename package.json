@@ -60,7 +60,7 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.16",
     "@mui/lab": "^5.0.0-alpha.114",
-    "@mui/material": "^5.11.2",
+    "@mui/material": "^5.11.3",
     "@mui/styled-engine-sc": "^5.10.16",
     "@mui/system": "^5.11.0",
     "@octokit/auth-oauth-user": "^2.0.4",
