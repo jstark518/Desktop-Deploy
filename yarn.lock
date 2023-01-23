@@ -1247,7 +1247,7 @@
   dependencies:
     "@octokit/openapi-types" "^13.11.0"
 
-"@octokit/types@^8.0.0", "@octokit/types@^8.1.1":
+"@octokit/types@^8.0.0":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-8.1.1.tgz#92e304e0f00d563667dfdbe0ae6b52e70d5149bb"
   integrity sha512-7tjk+6DyhYAmei8FOEwPfGKc0VE1x56CKPJ+eE44zhDbOyMT+9yan8apfQFxo8oEFsy+0O7PiBtH8w0Yo0Y9Kw==
