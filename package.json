@@ -64,7 +64,7 @@
     "@mui/styled-engine-sc": "^5.11.0",
     "@mui/system": "^5.11.0",
     "@octokit/auth-oauth-user": "^2.0.4",
-    "@octokit/core": "^4.1.0",
+    "@octokit/core": "^4.2.0",
     "@octokit/oauth-authorization-url": "^5.0.0",
     "@octokit/oauth-methods": "^2.0.4",
     "bitbucket": "^2.9.0",
