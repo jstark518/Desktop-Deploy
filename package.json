@@ -62,7 +62,7 @@
     "@mui/lab": "^5.0.0-alpha.118",
     "@mui/material": "^5.11.7",
     "@mui/styled-engine-sc": "^5.11.0",
-    "@mui/system": "^5.11.8",
+    "@mui/system": "^5.11.9",
     "@octokit/auth-oauth-user": "^2.1.1",
     "@octokit/core": "^4.2.0",
     "@octokit/oauth-authorization-url": "^5.0.0",
