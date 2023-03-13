@@ -67,7 +67,7 @@
     "@octokit/core": "^4.2.0",
     "@octokit/oauth-authorization-url": "^5.0.0",
     "@octokit/oauth-methods": "^2.0.5",
-    "bitbucket": "^2.9.0",
+    "bitbucket": "^2.11.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "node-fetch": "^3.3.0",

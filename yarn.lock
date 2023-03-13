@@ -1960,10 +1960,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-bitbucket@^2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.9.0.tgz#29c0f96ca59db74f3b7429c071be1e0646372fda"
-  integrity sha512-ITr0bQaKezsiQbE19ISGr93IoXotoyv/XaBqImpKKnoVeO3ClWGQxSziSq7wh+4JBQ6aEFVaeoLGINjsgvkjHA==
+bitbucket@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.11.0.tgz#21d6f27f7e6acd1fa215d957aa81b369be5d2802"
+  integrity sha512-YoUekxzBybCnwbh+9IzKE0sEWIp/nz1JId+yGc5qXFCFN1cZnUCDSesWYQokG1NvXXNE4oPdRezhwgyjBhIckg==
   dependencies:
     before-after-hook "^2.1.0"
     deepmerge "^4.2.2"
