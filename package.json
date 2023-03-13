@@ -76,7 +76,7 @@
     "pubsub-js": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router": "^6.8.2",
+    "react-router": "^6.9.0",
     "react-router-dom": "6",
     "simple-git": "^3.17.0",
     "source-map-support": "^0.5.21",
