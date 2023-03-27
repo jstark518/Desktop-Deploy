@@ -52,7 +52,7 @@
     "style-loader": "^3.3.2",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.2",
-    "webpack": "^5.76.1"
+    "webpack": "^5.76.3"
   },
   "dependencies": {
     "@changesets/cli": "^2.26.0",
