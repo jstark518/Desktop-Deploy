@@ -70,7 +70,7 @@
     "bitbucket": "^2.11.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
-    "node-fetch": "^3.3.0",
+    "node-fetch": "^3.3.1",
     "node-pty": "^0.10.1",
     "prop-types": "^15.8.1",
     "pubsub-js": "^1.9.4",
