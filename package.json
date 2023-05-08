@@ -43,7 +43,7 @@
     "@electron-forge/maker-squirrel": "^6.1.1",
     "@electron-forge/maker-zip": "^6.1.1",
     "@electron-forge/plugin-webpack": "6.1.1",
-    "@octokit/types": "^9.1.2",
+    "@octokit/types": "^9.2.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
