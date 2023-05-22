@@ -46,7 +46,7 @@
     "@octokit/types": "^9.2.2",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "babel-loader": "^9.1.2",
-    "css-loader": "^6.7.3",
+    "css-loader": "^6.7.4",
     "electron": "24.3.0",
     "node-loader": "^2.0.0",
     "style-loader": "^3.3.2",
