@@ -36,7 +36,7 @@
   "homepage": "https://github.com/jstark518/Desktop-Deploy#readme",
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-react": "^7.22.3",
     "@electron-forge/cli": "^6.1.1",
     "@electron-forge/maker-deb": "^6.1.1",
     "@electron-forge/maker-rpm": "^6.1.1",
