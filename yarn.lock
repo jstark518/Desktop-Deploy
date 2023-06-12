@@ -1189,10 +1189,10 @@
   resolved "https://registry.yarnpkg.com/@octokit/oauth-authorization-url/-/oauth-authorization-url-5.0.0.tgz#029626ce87f3b31addb98cd0d2355c2381a1c5a1"
   integrity sha512-y1WhN+ERDZTh0qZ4SR+zotgsQUE1ysKnvBt1hvDRB2WRzYtVKQjn97HEPzoehh66Fj9LwNdlZh+p6TJatT0zzg==
 
-"@octokit/oauth-methods@^2.0.0", "@octokit/oauth-methods@^2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@octokit/oauth-methods/-/oauth-methods-2.0.5.tgz#b11ce2205c46ffcd731c7332b21bb62dad10ce24"
-  integrity sha512-yQP6B5gE3axNxuM3U9KqWs/ErAQ+WLPaPgC/7EjsZsQibkf8sjdAfF8/y/EJW+Dd05XQvadX4WhQZPMnO1SE1A==
+"@octokit/oauth-methods@^2.0.0", "@octokit/oauth-methods@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@octokit/oauth-methods/-/oauth-methods-2.0.6.tgz#3a089781e90171cbe8a0efa448a6a60229bdd3fb"
+  integrity sha512-l9Uml2iGN2aTWLZcm8hV+neBiFXAQ9+3sKiQe/sgumHlL6HDg0AQ8/l16xX/5jJvfxueqTW5CWbzd0MjnlfHZw==
   dependencies:
     "@octokit/oauth-authorization-url" "^5.0.0"
     "@octokit/request" "^6.2.3"
