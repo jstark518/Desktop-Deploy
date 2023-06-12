@@ -1134,10 +1134,10 @@
     "@octokit/types" "^9.0.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/auth-oauth-user@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@octokit/auth-oauth-user/-/auth-oauth-user-2.1.1.tgz#d900972f3d9247924637ab3343a8305746feadb2"
-  integrity sha512-JgqnNNPf9CaWLxWm9uh2WgxcaVYhxBR09NVIPTiMU2dVZ3FObOHs3njBiLNw+zq84k+rEdm5Y7AsiASrZ84Apg==
+"@octokit/auth-oauth-user@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@octokit/auth-oauth-user/-/auth-oauth-user-2.1.2.tgz#7091e1b29527e577b16d0f1699d49fe3d39946ff"
+  integrity sha512-kkRqNmFe7s5GQcojE3nSlF+AzYPpPv7kvP/xYEnE57584pixaFBH8Vovt+w5Y3E4zWUEOxjdLItmBTFAWECPAg==
   dependencies:
     "@octokit/auth-oauth-device" "^4.0.0"
     "@octokit/oauth-methods" "^2.0.0"
