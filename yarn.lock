@@ -1217,17 +1217,6 @@
   resolved "https://registry.yarnpkg.com/@octokit/oauth-authorization-url/-/oauth-authorization-url-6.0.2.tgz#cc82ca29cc5e339c9921672f39f2b3f5c8eb6ef2"
   integrity sha512-CdoJukjXXxqLNK4y/VOiVzQVjibqoj/xHgInekviUJV73y/BSIcwvJ/4aNHPBPKcPWFnd4/lO9uqRV65jXhcLA==
 
-"@octokit/oauth-methods@^2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@octokit/oauth-methods/-/oauth-methods-2.0.5.tgz#b11ce2205c46ffcd731c7332b21bb62dad10ce24"
-  integrity sha512-yQP6B5gE3axNxuM3U9KqWs/ErAQ+WLPaPgC/7EjsZsQibkf8sjdAfF8/y/EJW+Dd05XQvadX4WhQZPMnO1SE1A==
-  dependencies:
-    "@octokit/oauth-authorization-url" "^5.0.0"
-    "@octokit/request" "^6.2.3"
-    "@octokit/request-error" "^3.0.3"
-    "@octokit/types" "^9.0.0"
-    btoa-lite "^1.0.0"
-
 "@octokit/oauth-methods@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@octokit/oauth-methods/-/oauth-methods-3.0.1.tgz#c7890a6018df3c98d0a32d07f8b2a2ad13210993"
@@ -1249,7 +1238,7 @@
   resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-18.0.0.tgz#f43d765b3c7533fd6fb88f3f25df079c24fccf69"
   integrity sha512-V8GImKs3TeQRxRtXFpG2wl19V7444NIOTDF24AWuIbmNaNYOQMWRbjcGDXV5B+0n887fgDcuMNOmlul+k+oJtw==
 
-"@octokit/request-error@^3.0.0", "@octokit/request-error@^3.0.3":
+"@octokit/request-error@^3.0.0":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@octokit/request-error/-/request-error-3.0.3.tgz#ef3dd08b8e964e53e55d471acfe00baa892b9c69"
   integrity sha512-crqw3V5Iy2uOU5Np+8M/YexTlT8zxCfI+qu+LxUB7SZpje4Qmx3mub5DfEKSO8Ylyk0aogi6TYdf6kxzh2BguQ==
@@ -1267,7 +1256,7 @@
     deprecation "^2.0.0"
     once "^1.4.0"
 
-"@octokit/request@^6.0.0", "@octokit/request@^6.2.3":
+"@octokit/request@^6.0.0":
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/@octokit/request/-/request-6.2.3.tgz#76d5d6d44da5c8d406620a4c285d280ae310bdb4"
   integrity sha512-TNAodj5yNzrrZ/VxP+H5HiYaZep0H3GU0O7PaF+fhDrt8FPrnkei9Aal/txsN/1P7V3CPiThG0tIvpPDYUsyAA==
