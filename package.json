@@ -71,7 +71,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "node-fetch": "^3.3.1",
-    "node-pty": "^0.10.1",
+    "node-pty": "^1.0.0",
     "prop-types": "^15.8.1",
     "pubsub-js": "^1.9.4",
     "react": "^18.2.0",
