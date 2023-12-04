@@ -1267,15 +1267,15 @@
     "@octokit/types" "^11.0.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/auth-oauth-user@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@octokit/auth-oauth-user/-/auth-oauth-user-4.0.0.tgz#2499f25cf64ce2911ba3f2f12de176bfbc1a3805"
-  integrity sha512-VOm5aIkVGHaOhIvsF/4YmSjoYDzzrKbbYkdSEO0KqHK7I8SlO3ZndSikQ1fBlNPUEH0ve2BOTxLrVvI1qBf9/Q==
+"@octokit/auth-oauth-user@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@octokit/auth-oauth-user/-/auth-oauth-user-4.0.1.tgz#c8267883935c83f78318c726ff91d7e98de05517"
+  integrity sha512-N94wWW09d0hleCnrO5wt5MxekatqEJ4zf+1vSe8MKMrhZ7gAXKFOKrDEZW2INltvBWJCyDUELgGRv8gfErH1Iw==
   dependencies:
     "@octokit/auth-oauth-device" "^6.0.0"
     "@octokit/oauth-methods" "^4.0.0"
     "@octokit/request" "^8.0.2"
-    "@octokit/types" "^11.0.0"
+    "@octokit/types" "^12.0.0"
     btoa-lite "^1.0.0"
     universal-user-agent "^6.0.0"
 
@@ -1341,6 +1341,11 @@
   resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-18.0.0.tgz#f43d765b3c7533fd6fb88f3f25df079c24fccf69"
   integrity sha512-V8GImKs3TeQRxRtXFpG2wl19V7444NIOTDF24AWuIbmNaNYOQMWRbjcGDXV5B+0n887fgDcuMNOmlul+k+oJtw==
 
+"@octokit/openapi-types@^19.0.2":
+  version "19.1.0"
+  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-19.1.0.tgz#75ec7e64743870fc73e1ab4bc6ec252ecdd624dc"
+  integrity sha512-6G+ywGClliGQwRsjvqVYpklIfa7oRPA0vyhPQG/1Feh+B+wU0vGH1JiJ5T25d3g1JZYBHzR2qefLi9x8Gt+cpw==
+
 "@octokit/request-error@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@octokit/request-error/-/request-error-5.0.0.tgz#060c5770833f9d563ad9a49fec6650c41584bc40"
@@ -1367,6 +1372,13 @@
   integrity sha512-Fz0+7GyLm/bHt8fwEqgvRBWwIV1S6wRRyq+V6exRKLVWaKGsuy6H9QFYeBVDV7rK6fO3XwHgQOPxv+cLj2zpXQ==
   dependencies:
     "@octokit/openapi-types" "^18.0.0"
+
+"@octokit/types@^12.0.0":
+  version "12.3.0"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-12.3.0.tgz#e3f8bc53f65ef551e19cc1a0fea15adadec17d2d"
+  integrity sha512-nJ8X2HRr234q3w/FcovDlA+ttUU4m1eJAourvfUUtwAWeqL8AsyRqfnLvVnYn3NFbUnsmzQCzLNdFerPwdmcDQ==
+  dependencies:
+    "@octokit/openapi-types" "^19.0.2"
 
 "@popperjs/core@^2.11.8":
   version "2.11.8"
